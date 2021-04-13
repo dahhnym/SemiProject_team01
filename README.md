@@ -1,19 +1,17 @@
 # SemiProject_team01
-세미 프로젝트 1조 - 가방 쇼핑몰
+### 세미 프로젝트 1조 - 가방 쇼핑몰
 
-####1. 벤치마킹 사이트
-  - 젠테스토어 https://jentestore.com/
-  - 쉬이즈백 https://sheisbag.com/?NaPm=ct%3Dkn9xhakh%7Cci%3Dcheckout%7Ctr%3Dds%7Ctrx%3D%7Chk%3D9f5be4e145ceb6ab03224330f1e4be9f662cfe07
-  - 엠제이드https://www.m-jade.co.kr/
-  - 매니모어 https://manymore.co.kr/index.html 
-    // 상품이미지 위에 Mouse Hover 시 상품명 및 가격 보이기 기능 참고
-  - https://jentestore.com/goods/list?gender=0001&per=20&page=1&sort=regist
-    // 카테고리메뉴를 클릭해서 이동하면 보이는 상품 페이지
-
-  - 부트스트랩 템플릿 https://bootstrapmade.com/bethany-free-onepage-bootstrap-theme/ 
+#### 1. 벤치마킹 사이트
+* 젠테스토어 https://jentestore.com/
+* 쉬이즈백 https://sheisbag.com/?NaPm=ct%3Dkn9xhakh%7Cci%3Dcheckout%7Ctr%3Dds%7Ctrx%3D%7Chk%3D9f5be4e145ceb6ab03224330f1e4be9f662cfe07
+* 엠제이드https://www.m-jade.co.kr/
+* 매니모어 https://manymore.co.kr/index.html (상품이미지 위에 Mouse Hover 시 상품명 및 가격 보이기 기능 참고)
+* https://jentestore.com/goods/list?gender=0001&per=20&page=1&sort=regist (카테고리메뉴를 클릭해서 이동하면 보이는 상품 페이지)
+<br>
+* 부트스트랩 템플릿 https://bootstrapmade.com/bethany-free-onepage-bootstrap-theme/ 
 
 
-2. 메뉴 카테고리
+#### 2. 메뉴 카테고리
   2-1. 좌측 상단 메인메뉴
   - Best 상품
   - 세일상품
@@ -34,7 +32,7 @@
   4) Cart
   5) Customer Service
 
-3.업무분담
+#### 3.업무분담
 
 - 김다님
   메인 페이지
@@ -61,5 +59,5 @@
   주문내역 페이지
 
 
-4. DB 모델링
+#### 4. DB 모델링
 https://search.musinsa.com/category/004 - DB 참고용
