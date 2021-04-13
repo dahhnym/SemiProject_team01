@@ -1,7 +1,7 @@
 # SemiProject_team01
 세미 프로젝트 1조 - 가방 쇼핑몰
 
-1. 벤치마킹 사이트
+####1. 벤치마킹 사이트
   - 젠테스토어 https://jentestore.com/
   - 쉬이즈백 https://sheisbag.com/?NaPm=ct%3Dkn9xhakh%7Cci%3Dcheckout%7Ctr%3Dds%7Ctrx%3D%7Chk%3D9f5be4e145ceb6ab03224330f1e4be9f662cfe07
   - 엠제이드https://www.m-jade.co.kr/
