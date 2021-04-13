@@ -1,5 +1,5 @@
 package Yehyeon;
 
 public class yehyeon02 {
-	String = "hello world";
+	String name = "hello world";
 }
