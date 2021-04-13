@@ -6,12 +6,11 @@
   2) 쉬이즈백 https://sheisbag.com/?NaPm=ct%3Dkn9xhakh%7Cci%3Dcheckout%7Ctr%3Dds%7Ctrx%3D%7Chk%3D9f5be4e145ceb6ab03224330f1e4be9f662cfe07
   3) 엠제이드https://www.m-jade.co.kr/
   4) 매니모어 https://manymore.co.kr/index.html 
-    - 상품이미지 위에 Mouse Hover 시 상품명 및 가격 보이기 기능 참고
+    // 상품이미지 위에 Mouse Hover 시 상품명 및 가격 보이기 기능 참고
   5) https://jentestore.com/goods/list?gender=0001&per=20&page=1&sort=regist
-    - 카테고리메뉴를 클릭해서 이동하면 보이는 상품 페이지
+    // 카테고리메뉴를 클릭해서 이동하면 보이는 상품 페이지
 
-  * 부트스트랩 템플릿
-  https://bootstrapmade.com/bethany-free-onepage-bootstrap-theme/ 
+  * 부트스트랩 템플릿 https://bootstrapmade.com/bethany-free-onepage-bootstrap-theme/ 
 
 
 2. 메뉴 카테고리
@@ -23,9 +22,9 @@
   5) 백팩
   6) 클러치
   7) 악세사리
-
-- 상품이미지 위에 Mouse Hover 시 상품명 및 가격 보이기
-- 세일상품은 이미지에 Sale 표시하기 
+    
+    // 상품이미지 위에 Mouse Hover 시 상품명 및 가격 보이기
+    // 세일상품은 이미지에 Sale 표시하기 
 
   2-2. 우측 상단
   1) 검색창
