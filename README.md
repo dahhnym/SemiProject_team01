@@ -10,8 +10,8 @@
 * <https://jentestore.com/goods/list?gender=0001&per=20&page=1&sort=regist> (카테고리메뉴를 클릭해서 이동하면 보이는 상품 페이지)
 #### 1.1 참고용 사이트
 * 부트스트랩 템플릿 <https://bootstrapmade.com/bethany-free-onepage-bootstrap-theme/>
-* 무신사 https://search.musinsa.com/category/004> DB 참고용
-
+* 무신사 <https://search.musinsa.com/category/004> (DB 참고용)
+<br>
 
 #### 2. 메뉴 카테고리
 #### --2.1 좌측 상단 메인메뉴
@@ -28,12 +28,13 @@
 💡 상품이미지 위에 Mouse Hover 시 상품명 및 가격 보이기<br>
 💡 세일상품은 이미지에 Sale 표시하기<br>
     
-#### --2-2. 우측 상단
+#### 2-2. 우측 상단
 * 검색창
 * My Account
 * Whislist
 * Cart
 * Customer Service
+<br>
 
 #### 3.업무분담
 
