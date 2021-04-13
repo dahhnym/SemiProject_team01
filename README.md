@@ -31,7 +31,7 @@
 #### 2-2. 우측 상단
 * 검색창
 * My Account
-* Whislist
+* Wishlist
 * Cart
 * Customer Service
 <br>
