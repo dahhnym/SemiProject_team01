@@ -23,9 +23,9 @@
   6) 클러치
   7) 악세사리
     
-    // 상품이미지 위에 Mouse Hover 시 상품명 및 가격 보이기
-    // 세일상품은 이미지에 Sale 표시하기 
-
+    /* 상품이미지 위에 Mouse Hover 시 상품명 및 가격 보이기 */
+    /* 세일상품은 이미지에 Sale 표시하기 */
+    
   2-2. 우측 상단
   1) 검색창
   2) My Account
@@ -56,5 +56,5 @@
 주문내역 페이지
 
 
-6. DB 모델링
+4. DB 모델링
 https://search.musinsa.com/category/004 - DB 참고용
