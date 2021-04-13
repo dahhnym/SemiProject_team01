@@ -8,7 +8,7 @@
 * 엠제이드<https://www.m-jade.co.kr/>
 * 매니모어 <https://manymore.co.kr/index.html> (상품이미지 위에 Mouse Hover 시 상품명 및 가격 보이기 기능 참고)
 * <https://jentestore.com/goods/list?gender=0001&per=20&page=1&sort=regist> (카테고리메뉴를 클릭해서 이동하면 보이는 상품 페이지)
-#### --1.1 참고용 사이트
+#### 1.1 참고용 사이트
 * 부트스트랩 템플릿 <https://bootstrapmade.com/bethany-free-onepage-bootstrap-theme/>
 * 무신사 https://search.musinsa.com/category/004> DB 참고용
 
