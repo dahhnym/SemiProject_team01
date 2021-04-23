@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @WebServlet(
-		description = "사용자가 웹에서 *.up을 했을 경우 응답해주는 서블릿", 
-		urlPatterns = { "*.up" }, 
+		description = "사용자가 웹에서 *.to을 했을 경우 응답해주는 서블릿", 
+		urlPatterns = { "*.to" }, 
 		initParams = { 
-				@WebInitParam(name = "propertyConfig", value = "C:/SemiProject_team01/SemiProject_team01/WebContent/WEB-INF/Command.properties", description = "*.up에 대한 클래스의 매핑파일")
+				@WebInitParam(name = "propertyConfig", value = "C:/SemiProject_team01/SemiProject_team01/WebContent/WEB-INF/Command.properties", description = "*.to에 대한 클래스의 매핑파일")
 		})
 public class FrontControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
