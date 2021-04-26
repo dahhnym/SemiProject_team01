@@ -20,7 +20,7 @@
 	<div id="header-div">
 		<nav id="header-top-nav">
 			<ul>
-				<li>회원가입</li>
+				<li id="register">회원가입</li>
 				<li>로그인</li>
 				<li>마이페이지</li>
 				<li>장바구니</li>
