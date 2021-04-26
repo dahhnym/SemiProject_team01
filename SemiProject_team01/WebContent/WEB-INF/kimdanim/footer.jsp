@@ -18,9 +18,9 @@
 			<li>제휴문의</li>
 		</ul>
 		<ul id="sns">
-			<li><a href="https://facebook.com" target="_blank"><img class="snsicon" id="facebook" src="<%=ctxPath%>/images/facebook.png" /></a></li>
-			<li><a href="https://instagram.com" target="_blank"><img class="snsicon" id="instagram" src="<%=ctxPath%>/images/instagram.png" /></a></li>
-			<li><a href="https://twitter.com" target="_blank"><img class="snsicon" id="twitter" src="<%=ctxPath%>/images/twitter.png" /></a></li>
+			<li><a href="https://facebook.com" target="_blank"><img class="snsicon" id="facebook" src="<%=request.getContextPath()%>/images/facebook.png" /></a></li>
+			<li><a href="https://instagram.com" target="_blank"><img class="snsicon" id="instagram" src="<%=request.getContextPath()%>/images/instagram.png" /></a></li>
+			<li><a href="https://twitter.com" target="_blank"><img class="snsicon" id="twitter" src="<%=request.getContextPath()%>/images/twitter.png" /></a></li>
 		</ul>
 	</nav>
 </div>
