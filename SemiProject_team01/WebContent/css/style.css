@@ -4,6 +4,8 @@
 	font-family: 'Noto Sans KR', sans-serif;
 }
 
+/* ==== header CSS ==== */
+
 div#content-container{
 	width:1500px;
 	margin-left: auto;
@@ -79,6 +81,8 @@ div#container {
 	float: left;
 }
 
+/* ==== footer CSS ==== */
+
 .div-footer {
 	width: 1500px;
 	margin-left: auto;
@@ -149,4 +153,8 @@ div.col-container{
 p.colname {
 	font-weight: bolder;
 }
+
+
+
+
 
