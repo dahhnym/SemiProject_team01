@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% String ctxPath = request.getContextPath(); %>
 
 <jsp:include page="../header.jsp" />
 
@@ -137,7 +138,11 @@
 			ph2Check();
 		});
 		
-		//
+		// 우편번호 체크
+		postcodeCheck();
+		$("input#postcode").blur(function(){
+			postcodeCheck();
+		});
 		
 	}// end of function goCheck() ------------------------------------------------------------------
 	
@@ -273,8 +278,54 @@
 			$(this).focus();
 			bool=true;
 		} else {
-			$("span#ph2Check").hide();
+			// 010 뒤 8자리 정규표현식
+			var regExp=/[0-9]{8}/;
+			var bool = regExp.test(ph2);
+			if(!bool){
+				$("span#ph2Check").show();
+				$("span#ph2Check").html("010 뒤 숫자 8자리를 입력해주세요.");
+			} else {
+				$("span#ph2Check").hide();
+			}
 		}
+	}
+	
+	
+	// 우편번호 체크 함수
+	function postcodeCheck(){
+		var postcode = $("input#postcode").val().trim();
+		if(postcode==""){
+			$("span#postcodeCheck").show();
+			$("span#postcodeCheck").html("우편번호 찾기를 해주세요.");
+			$(this).focus();
+			bool=true;
+		} else {
+			$("span#postcodeCheck").hide();
+		}
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	// 아이디 중복확인 함수
+	function idDuplicateCheck() {
+		$.ajax({
+				url:"<%= ctxPath%>/member/idDuplicateCheck.to",
+				data:{"userid":$("input#userid").val()},
+				dataType:"json",	
+				success:function(json){
+					if(json.idDuplicated) {
+	 					// 입력한 userid 가 이미 사용중이라면
+	 					$("span#useridCheck").show();
+	 					$("span#useridCheck").html($("input#userid").val()+" 은 중복된 ID 이므로 사용불가 합니다.").css("color","red");
+	 					$("input#userid").val("");
+	 				} else {
+	 					// 입력한 userid 가 DB 테이블에 존재하지 않는 경우라면
+	 					$("span#useridCheck").html("사용가능한 ID 입니다.").css("color","green");
+	 				}            
+				},
+				error: function(request, status, error){
+                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }    				
+			}); // end of $.ajax ----------------------------------------------
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -327,6 +378,7 @@
         }).open();
     }// end of function execDaumPostcode() --------------------------------------------------------
 	////////////////////////////////////////////////////////////////////////////////////////////////
+	
 </script> 
 
 
@@ -342,7 +394,7 @@
 			      	 <td class="star">*</td>
 			      	 <td>
 			      	 	<input type="text" name="userid" id="userid" class="space" placeholder="아이디"/>
-			      	 	<button type="button" class="check">아이디 중복확인</button>
+			      	 	<button type="button" class="check" onclick="idDuplicateCheck()">아이디 중복확인</button>
 			      	 	<span id="useridCheck" class="confirm"></span>
 			      	 </td>
 			      </tr>
@@ -422,7 +474,7 @@
 			      	 <td class="star design">*</td>
 			         <td class="design">
 				         <input type="text" name="postcode" id="postcode"  style="width: 100px;" placeholder="우편번호" />
-				         <button type="button" class="check" id="zipcodeSearch" onclick="execDaumPostcode()" >우편번호 찾기</button>
+				         <button type="button" class="check" id="zipcodeSearch" style="margin-right:81px;" onclick="execDaumPostcode()" >우편번호 찾기</button>
 			        	 <span id="postcodeCheck" class="confirm"></span>
 			         </td>
 			      </tr>
