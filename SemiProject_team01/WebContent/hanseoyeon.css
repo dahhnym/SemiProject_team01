@@ -1,0 +1,92 @@
+@charset "UTF-8";
+
+
+*{
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* ==== orderList CSS ==== */
+
+
+	a { text-decoration: none; color: black; }
+    a:visited { text-decoration: none; }
+    a:hover { text-decoration: none; }
+    a:focus { text-decoration: none; }
+    a:hover, a:active { text-decoration: none; }
+
+	div.container{
+		width: 100%;
+		margin:0 auto;
+		margin-top:50px;
+		text-align: center;
+		margin-bottom:100px;
+	}
+	
+	#left{
+		text-align: left;
+	}
+	
+	ul.tabs{
+		margin: 0px;
+		padding: 0px;
+		list-style: none;
+	}
+	
+	div.tab{
+		text-align: center;
+		background-color: #e6e6e6;
+		display:flex;
+		justify-content:flex-start;
+		padding:1% 2%;
+		height: 50px;
+		
+	}
+	
+	select.orderStatus, div#days, button#search {
+		margin-right:15px;
+		margin-left:15px;
+	}
+	
+
+	table#prodInfo{
+		width:100%;
+		border-top: solid 1px gray;
+		border-bottom: solid 1px gray;
+	}
+	
+	tr{
+		border-top: solid 1px gray;
+		border-bottom: solid 1px gray;
+	}
+	
+	ul.tabs li{
+	  	display: inline-block;
+		padding: 10px 15px;
+		cursor: pointer;
+		color: gray;
+		border-bottom: thin gray solid;
+		margin-right: 10px; 
+		width: 30%;
+		text-align: center;
+		
+	}
+	
+	ul.tabs li.current{
+		font-weight: bold;
+		border-bottom: thin black solid;
+		color: black;
+	}
+	
+	.tab-content{
+	  display: none;
+		padding: 12px;
+	}
+	
+	.tab-content.current{
+		display: inherit;
+	}
+		
+		
+/* ==== order CSS ==== */
+	
+	
