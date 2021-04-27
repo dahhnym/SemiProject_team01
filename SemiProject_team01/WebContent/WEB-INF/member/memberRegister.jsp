@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <% String ctxPath = request.getContextPath(); %>
 
 <jsp:include page="../header.jsp" />
@@ -54,7 +56,8 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
     var bool = false;
-
+	var b_sendCode = false;
+	
 	$(function(){
 
 		$("span.confirm").hide();
@@ -69,6 +72,11 @@
 				$("tr#etc").hide();		
 			}
 		});		
+		
+		// 전화번호 인증발송을 누른 경우
+		$("button#sendCode").click(function(){
+			sendCode();
+		});
 		
 		// 회원가입 버튼을 누른 경우
 		$("button#submit").click(function(){
@@ -305,11 +313,11 @@
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	// 아이디 중복확인 함수
+	// 아이디 중복확인 함수	==> DB 확인 필요사항
 	function idDuplicateCheck() {
 		$.ajax({
 				url:"<%= ctxPath%>/member/idDuplicateCheck.to",
-				data:{"userid":$("input#userid").val()},
+				data:{"userid":$("input#userid").val().trim()},
 				dataType:"json",	
 				success:function(json){
 					if(json.idDuplicated) {
@@ -319,14 +327,41 @@
 	 					$("input#userid").val("");
 	 				} else {
 	 					// 입력한 userid 가 DB 테이블에 존재하지 않는 경우라면
+	 					$("span#useridCheck").show();
 	 					$("span#useridCheck").html("사용가능한 ID 입니다.").css("color","green");
 	 				}            
 				},
 				error: function(request, status, error){
                 alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
             }    				
-			}); // end of $.ajax ----------------------------------------------
+		}); // end of $.ajax ----------------------------------------------
+			
 	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	// 전화번호 인증번호 발송 함수
+	function sendCode() {
+		$.ajax({
+				url:"<%= ctxPath%>/member/sendCode.to",
+				data:{"ph2":$("input#ph2").val().trim()},
+				dataType:"json",	
+				success:function(json){
+					if(json!=null&&json!="") {
+	 					// 인증코드가 발송되었다면
+	 					$("span#sendCodeCheck").show();
+	 					$("span#sendCodeCheck").html("인증번호가 발송되었습니다.").css("color","green");
+	 					$("input#userid").val("");
+	 				} else {
+	 					// 인증코드가 발송되지 않았다면
+	 					$("span#sendCodeCheck").show();
+	 					$("span#sendCodeCheck").html("인증번호 발송에 실패했습니다.").css("color","red");
+	 				} 
+				},
+				error: function(request, status, error){
+                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }    				
+		}); // end of $.ajax ----------------------------------------------
+	}	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	// 카카오 우편번호 API
@@ -459,8 +494,8 @@
 			      <tr>
 			         <td class="star">*</td>
 			      	 <td>
-			      	 	<button type="button" id="sendCode" class="space">인증번호 발송</button>
-			      	 	<span id="sendCode" class="confirm"></span>
+			      	 	<button type="button" id="sendCode" class="space" >인증번호 발송</button>
+			      	 	<span id="sendCodeCheck" class="confirm"></span>
 			      	 </td>
 			      <tr>
 			         <td class="star">*</td>
