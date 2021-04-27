@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<% String ctxPath = request.getContextPath(); %>
+<% String ctxPath=request.getContextPath(); %>
 <!DOCTYPE html>
 <html>
 <head>
-<title>::: ladies and gents:::</title>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="<%=ctxPath%>/css/common.css"/>
+
+<!-- common.css -->
+<link rel="stylesheet" href="css/common.css"/>
 
 <!-- Google Font -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -19,40 +19,60 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+<script type="text/javascript">
+
+$(document).ready(function(){
+	window.onscroll = function() {myFunction()};
+
+	var navbarfixed = document.getElementById("navbar-fixed");
+	var navbar = document.getElementById("navbar");
+
+	var sticky = navbar.offsetTop;
+
+	console.log(sticky);
+
+	function myFunction() {
+	  if (window.pageYOffset >= sticky) {
+	    navbar.classList.add("sticky");
+	  } else {
+	    navbar.classList.remove("sticky");
+	  }
+	}
+	
+});
+
+
+</script>
+
 </head>
 <body>
 
-<header id="header" class="fixed-top header-scrolled">
-	<div id="header-div" class="content-width">
-		<nav id="header-top-nav">
-			<ul>
-				<li>회원가입</li>
-				<li>로그인</li>
-				<li>마이페이지</li>
-				<li>장바구니</li>
-				<li>고객센터</li>
-			</ul>
-			
-		</nav>
-		<a href="<%=ctxPath%>/home.to"><img id="logo" src="images/logo.jpg"/></a>
-		<nav id="header-bottom-nav">
-			<ul>
-				<li>Best상품</li>
-				<li>Sale상품</li>
-				<li>토트백</li>
-				<li>숄더백</li>
-				<li>백팩</li>
-				<li>클러치백</li>
-				<li>악세사리</li>
-			</ul>
-		</nav>
-	
+<div id="navbar-fixed">
+  <div id="top-nav-container" class="content-width">
+	  <a href="javascript:void(0)">고객센터</a>
+	  <a href="javascript:void(0)">장바구니</a>
+	  <a href="javascript:void(0)">마이페이지</a>
+	  <a href="javascript:void(0)">로그인</a>
+	  <a href="javascript:void(0)">회원가입</a>
+  </div>
+</div>
+
+<div class="header">
+	<img style="margin-top: 5px;"src="<%=ctxPath%>/images/logo.jpg"/>
+</div>
+
+<div id="navbar">
+	<div id="bottom-nav-container" class="content-width">
+		<div id="bottom-nav-first" >
+		  <a href="javascript:void(0)">Best상품</a>
+		  <a href="javascript:void(0)">Sale상품</a>
+		</div>  
+		<div id="bottom-nav-second">
+		  <a href="javascript:void(0)">토트백</a>
+		  <a href="javascript:void(0)">숄더백</a>
+		  <a href="javascript:void(0)">백백</a>
+		  <a href="javascript:void(0)">클러치백</a>
+		  <a href="javascript:void(0)">악세사리</a>
+		</div>
 	</div>
-	
-</header>
-
-<!-- header 뒤에 내용물 감춰지지 않게 하기 위함 -->
-<div id="block-container" style="height: 250px;"></div>
-
-
-
+</div>
