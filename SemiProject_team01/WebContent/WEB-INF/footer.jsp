@@ -6,9 +6,16 @@
     
 </div>
 
+
+
+
+
+
+
+
 <footer id="footer">
 <hr style="margin-bottom: 15px;">
-<div class="div-footer">
+<div class="div-footer content-width">
 	<nav id="footer-nav">
 		<ul>
 			<li>회사소개</li><div class="divider"></div>
@@ -26,8 +33,7 @@
 </div>
 <hr style="margin-top: 15px; margin-bottom: 0">
 
-<div class="container-fluid div-footer">
-  <div class="row" style="height: 180px;">
+  <div class="row content-width">
     <div class="col-sm-4">
     	<div class="col-container">
 	    	<p class="colname">고객센터</p>
@@ -58,10 +64,9 @@
     	
     </div>
   </div>
-</div>
 <hr style="margin: 0;">
 <div class="bottom-footer" style="background-color: #f2f2f2; padding: 20px 0;">
-	<div class="div-footer">
+	<div class="div-footer bottom-footer-content content-width">
 		<p>COMPANY : Ladies and gents&nbsp;&nbsp;&nbsp;OWNER: 김OO&nbsp;&nbsp;BUSINESS LICENSE : 000-00-00000 &nbsp;&nbsp;<span><button type="button" style="display: inline-block;">사업자정보조회</button></span></p>
 		<p>ADDRESS: 12345 서울특별시 강남구 oo대로 ooo oo빌딩 7층 ooo호&nbsp;&nbsp;&nbsp;TEL : 000-0000-0000&nbsp;&nbsp;FAX: 0000-000-0000</p>
 		<p>CPO: 최OO&nbsp;&nbsp;&nbsp;&nbsp;CONTACT US: abcd@gmail.com</p>
