@@ -4,19 +4,20 @@
 <jsp:include page="../header.jsp" />
 
 <style type="text/css">
+	
 	table {
 		height: 500px;
 		margin-top: 50px;
 	}
 	td {
 		margin-top: 30px;	
-		/* border: solid 1px black; */	
+		border: solid 1px green;	
 	}
 	td.star {
 		width: 20px;
 		font-weight: bold;
 	}
-	input.space {	<%-- 정정해야할 사항 --%>
+	.space {	
 		margin-right: 20px;	
 		height: 30px;
 		width: 240px;
@@ -38,7 +39,7 @@
 		margin-right: 0;	
 	}
 	button#submit {
-		margin-left: 60%;
+		margin-left: 70%;
 		width: 200px;
 		height: 40px;	
 	}
@@ -70,6 +71,7 @@
 		
 		// 회원가입 버튼을 누른 경우
 		$("button#submit").click(function(){
+			window.scrollTo(0,0);
 			goCheck();
 			
 			if(!bool) {
@@ -122,10 +124,20 @@
 		});
 		
 		// 기타 이메일 주소 입력여부
-		if($("select#emailAddress").val()=="6"){
-			
+		if($('tr#etc').is(':visible')){
+			etcEmailAddressCheck();
+			$("input#etcEmailAddress").blur(function(){
+				etcEmailAddressCheck();
+			});	
 		}
+
+		// 전화번호 체크
+		ph2Check();
+		$("input#ph2").blur(function(){
+			ph2Check();
+		});
 		
+		//
 		
 	}// end of function goCheck() ------------------------------------------------------------------
 	
@@ -233,7 +245,6 @@
 			$(this).focus();
 			bool=true;
 		} else {
-			$("span#emailIDCheck").show();
 			$("span#emailIDCheck").hide();
 		}
 	}
@@ -243,11 +254,26 @@
 	function etcEmailAddressCheck(){
 		var etcEmailAddress = $("input#etcEmailAddress").val().trim();
 		if(etcEmailAddress==""){
+			$("span#etcEmailAddressCheck").show();
 			$("span#etcEmailAddressCheck").html("이메일 주소를 입력해주세요.");
 			$(this).focus();
 			bool=true;
 		} else {
 			$("span#etcEmailAddressCheck").hide();
+		}
+	}
+	
+	
+	// 전화번호 체크 함수
+	function ph2Check(){
+		var ph2 = $("input#ph2").val().trim();
+		if(ph2==""){
+			$("span#ph2Check").show();
+			$("span#ph2Check").html("전화번호를 입력해주세요.");
+			$(this).focus();
+			bool=true;
+		} else {
+			$("span#ph2Check").hide();
 		}
 	}
 	
@@ -304,49 +330,55 @@
 </script> 
 
 
-<div style="padding-top: 200px;">	<%-- 정정해야할 사항 --%>
+<div id="registerContainer">
    <form name="registerFrm">
    	   <div style="margin-left:500px;" id="main">
    	   	   <h2 style="margin-left:20%;">회원가입</h2>
-   	   	   <span style="margin-left:18%;">(* 는 필수입력항목입니다.)</span>
+   	   	   <span style="margin-left:18%;">(* 는 필수입력항목입니다.)</span>	<%-- 필수 입력항목 사항 정정필요 --%>
    	   	     	   	   
 		   <table id="registerTable">
 		      <tbody>
 			      <tr>
 			      	 <td class="star">*</td>
-			      	 <td><input type="text" name="userid" id="userid" class="space" placeholder="아이디"/></td>
-			      	 <td><button type="button" class="check">아이디 중복확인</button></td> <%-- 정정해야할 사항 --%>
-			      	 <td><span id="useridCheck" class="confirm"></span></td>    
+			      	 <td>
+			      	 	<input type="text" name="userid" id="userid" class="space" placeholder="아이디"/>
+			      	 	<button type="button" class="check">아이디 중복확인</button>
+			      	 	<span id="useridCheck" class="confirm"></span>
+			      	 </td>
 			      </tr>
 			      <tr>
 			      	 <td class="star design">*</td>
-			      	 <td colspan="2" class="design"><input type="password" name="pwd" id="pwd" class="space" placeholder="비밀번호" /></td>   
-			      	 <td class="design"><span id="pwdCheck" class="confirm"></span></td> 
-			      </tr>
-			      <tr>
-			         <td></td>
-			      	 <td colspan="2"><span style="color:gray">※ 비밀번호는 8-15자리의 영문자, 숫자, 특수기호를 혼합해야 합니다.</span></td>  
+			      	 <td colspan="2" class="design">
+			      	 	<input type="password" name="pwd" id="pwd" class="space" placeholder="비밀번호" />
+			      	 	<span id="pwdCheck" class="confirm"></span>
+			      	 </td>    
 			      </tr>
 			      <tr>
 			         <td class="star">*</td>
-			      	 <td colspan="2"><input type="password" name="pwd2" id="pwd2" class="space" placeholder="비밀번호 확인" /></td>     
-			      	 <td><span id="pwdCheck2" class="confirm"></span></td> 
+			      	 <td colspan="2">
+			      	 	<input type="password" name="pwd2" id="pwd2" class="space" placeholder="비밀번호 확인" />     
+			      	 	<span id="pwdCheck2" class="confirm"></span>
+			      	</td> 
 			      </tr>
 	      		  <tr>
 	      		     <td class="star design">*</td>
-			      	 <td colspan="2" class="design"><input type="text" name="name" id="name" class="space" placeholder="이름" /></td>  
-			      	 <td class="design"><span id="nameCheck" class="confirm"></span></td>   
+			      	 <td colspan="2" class="design">
+			      	 	<input type="text" name="name" id="name" class="space" placeholder="이름" />
+  			      	 	<span id="nameCheck" class="confirm"></span>
+  			      	 </td>   
 			      </tr>
 			      <tr>
 			         <td class="star design">*</td>
-			      	 <td colspan="2" class="design"><input type="text" name="birthdate" id="birthdate" class="space" placeholder="생년월일(ex 201010)" /></td>    
-			      	 <td class="design"><span id="birthdateCheck" class="confirm"></span></td> 
+			      	 <td colspan="2" class="design">
+			      	 	<input type="text" name="birthdate" id="birthdate" class="space" placeholder="생년월일(ex 201010)" />    
+			      		<span id="birthdateCheck" class="confirm"></span>
+			      	</td> 
 			      </tr>
 			      <tr>
 			         <td class="star design">*</td>
 			      	 <td colspan="2" class="design">
 			      	 	<input type="text" name="emailID" id="emailID" style="width: 100px;" placeholder="이메일 아이디" />
-				      	<select id="emailAddress" style="width: 140px; height: 30px;">
+				      	<select id="emailAddress" class="space" style="width: 140px; height: 30px;">
 					      	<option value="1">gmail.com</option>
 							<option value="2">naver.com</option>
 							<option value="3">daum.net</option>
@@ -354,40 +386,45 @@
 						 	<option value="5">kakao.com</option>
 						 	<option value="6">기타</option>
 				      	</select> 
-			      	 <td><span id="emailIDCheck" class="confirm"></span></td>    
+			      	 	<span id="emailIDCheck" class="confirm"></span>
+			      	 </td>    
 			      </tr>
 			      <tr id="etc">
 			         <td class="star">*</td>
-			      	 <td><input type="text" name="etcEmailAddress" id="etcEmailAddress" class="space" placeholder="이메일 주소" /></td> 
-			      	 <td><span id="etcEmailAddressCheck" class="confirm"></span></td>    
+			      	 <td>
+			      	 	<input type="text" name="etcEmailAddress" id="etcEmailAddress" class="space" placeholder="이메일 주소" />
+			      	 	<span id="etcEmailAddressCheck" class="confirm"></span>
+			      	 </td>    
 			      </tr>
 			      <tr>
 			         <td class="star design">*</td>
 			      	 <td class="design">
 			      	 	<input type="text" name="ph1" id="ph1" placeholder="010" readonly />
-			      	    <input type="text" name="ph2" id="ph2" />
+			      	    <input type="text" name="ph2" id="ph2" class="space" style="width:190px;" />
+			      	 	<span id="ph2Check" class="confirm"></span>
 			      	 </td>
-			      	 <td class="design"><span id="ph2Check" class="confirm"></span></td>
 			      </tr>
 			      <tr>
 			         <td class="star">*</td>
-			      	 <td><button type="button" id="sendCode" style="width: 240px;">인증번호 발송</button></td>
-			      	 <td><span id="sendCode" class="confirm"></span></td>
+			      	 <td>
+			      	 	<button type="button" id="sendCode" class="space">인증번호 발송</button>
+			      	 	<span id="sendCode" class="confirm"></span>
+			      	 </td>
 			      <tr>
 			         <td class="star">*</td>
 			      	 <td>
 			      	 	<input type="text" name="certifyCode" id="certifyCode" style="width: 138px;" placeholder="인증번호" />
 			      	    <button type="button" class="check" style="width: 100px;">인증번호 확인</button>
-			      	 </td>
-			      	 <td><span id="codeCheck" class="confirm"></span></td> 
+			      	 	<span id="codeCheck" class="confirm"></span>
+			      	 </td> 
 			      </tr>
 			      <tr>
 			      	 <td class="star design">*</td>
 			         <td class="design">
 				         <input type="text" name="postcode" id="postcode"  style="width: 100px;" placeholder="우편번호" />
 				         <button type="button" class="check" id="zipcodeSearch" onclick="execDaumPostcode()" >우편번호 찾기</button>
+			        	 <span id="postcodeCheck" class="confirm"></span>
 			         </td>
-			         <td class="design"><span id="postcodeCheck" class="confirm"></span></td>
 			      </tr>
 			      <tr>
 			         <td class="star">*</td>
