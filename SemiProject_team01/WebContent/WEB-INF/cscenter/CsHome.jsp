@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <jsp:include page="../header.jsp" />
-<link rel="stylesheet" href="../yh_css/tabs.css">
-<link rel="stylesheet" href="../yh_css/accodian.css">
+<link rel="stylesheet" href="../css/yh_css/tabs.css">
+<link rel="stylesheet" href="../css/yh_css/accodian.css">
 <script src="http://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
-<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css"><link rel="stylesheet" href="../css/bootstrap-table-expandable.css">
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../css/yh_css/bootstrap-table-expandable.css">
 <script src="../yh_js/bootstrap-table-expandable.js"></script>
 <script type="text/javascript">
 
@@ -22,11 +23,17 @@
 </script>
 <!-- partial:index.partial.html -->
 <div class="container">
+
+<h1 align="center" style="font-weight:bold;">고객센터</h1><br><br>
+<h2 align="center">자주 묻는 질문</h2><br>
   
   <ul class="tabs">
-    <li data-tab-target="#home" class="active">Home</li>
-    <li data-tab-target="#about">About</li>
-    <li data-tab-target="#contact">Contact</li>
+    <li data-tab-target="#home" class="active">전체보기</li>
+    <li class="tabs_li" data-tab-target="#payment">입금결제</li>
+    <li class="tabs_li" data-tab-target="#shipping">배송관련</li>
+    <li class="tabs_li" data-tab-target="#exchange">반품/교환</li>
+    <li class="tabs_li" data-tab-target="#cancel">배송 전 변경/취소</li>
+    <li class="tabs_li" data-tab-target="#acc">기타문의</li>
   </ul>
 
   <div class="tab-content">
@@ -41,7 +48,7 @@
     </thead>
     <tbody>
       <tr>
-        <td>9</td>
+        <td>34</td>
         <td>기타문의</td>
         <td>전화상담이 안되는 데 어떻게 하나요?</td>
       </tr>
@@ -52,7 +59,7 @@
       </td>
       </tr>
      <tr>
-        <td>8</td>
+        <td>33</td>
         <td>배송관련</td>
         <td>택배를 받았는데 상품이 누락되거나 분실된 것 같아요.</td>
       </tr>
@@ -71,7 +78,7 @@
       </td>
       </tr>
      <tr>
-        <td>7</td>
+        <td>32</td>
         <td>반품/교환</td>
         <td>교환/반품시 배송비는 어떻게 되나요?</td>
       </tr>
@@ -94,7 +101,7 @@
       </td>
       </tr>
       <tr>
-        <td>6</td>
+        <td>31</td>
         <td>반품/교환</td>
         <td>반품 했는데 환불 처리가 되지 않았어요.</td>
       </tr>
@@ -108,7 +115,7 @@
       </td>
       </tr>
       <tr>
-        <td>5</td>
+        <td>30</td>
         <td>입금결제</td>
         <td>상품가격이 5만원 이상인데 배송비가 적용되었어요!</td>
       </tr>
@@ -123,7 +130,7 @@
       </td>
       </tr>
       <tr>
-        <td>4</td>
+        <td>29</td>
         <td>배송관련</td>
         <td>배송 메세지에 옵션, 주소 바꿔달라고 했는데 변경이 안됐어요.</td>
       </tr>
@@ -133,7 +140,7 @@
       </td>
       </tr>
       <tr>
-        <td>3</td>
+        <td>28</td>
         <td>배송전 변경/취소</td>
         <td>배송전 주문취소하고 싶어요</td>
       </tr>
@@ -144,7 +151,7 @@
       </td>
       </tr>
       <tr>
-        <td>2</td>
+        <td>27</td>
         <td>입금결제</td>
         <td>여러가지 상품을 따로 주문했는데 한번에 입금해도 되나요?</td>
       </tr>
@@ -156,7 +163,7 @@
       </td>
       </tr>
       <tr>
-        <td>1</td>
+        <td>26</td>
         <td>배송전 변경/취소</td>
         <td>주문 상품이 아직 배송전인데 다른 상품으로 교환하고 싶어요.</td>
       </tr>
@@ -172,17 +179,56 @@
     </tbody>
   </table>
     </div>
-    <div id="about" data-tab-content>
+    <div id="payment" data-tab-content>
       <h3>About</h3>
       <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </div>
-    <div id="contact" data-tab-content>
+    <div id="shipping" data-tab-content>
       <h3>Contact</h3>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
     </div>
+    <div id="exchange" data-tab-content>
+      <h3>Contact</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+    <div id="cancel" data-tab-content>
+      <h3>Contact</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+    <div id="acc" data-tab-content>
+      <h3>Contact</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+    <div>
+    
+    </div>
   </div>
-  
+  <ul class="pagination">
+	    <li class="page-item disabled"><a class="page-link" href="#"><<</a></li>
+	    <li class="page-item"><a class="page-link" href="#">1</a></li>
+	    <li class="page-item"><a class="page-link" href="#">2</a></li>
+	    <li class="page-item"><a class="page-link" href="#">3</a></li>
+	    <li class="page-item"><a class="page-link" href="#">>></a></li>
+  	</ul>
+  	<br><br><br>
+  	
+ 
 </div>
+
+<h2 align="center">문의 게시판</h2><br> 
+  	<div align="center">
+  	<table>
+  		<tr>
+  			<td class="mg_right"><h3><a href="#">전체보기</a></h3></td>
+  			<td class="mg_right"><h3><a href="#">상품문의</a></h3></td>
+  			<td class="mg_right"><h3><a href="#">배송전취소/변경</a></h3></td>
+  			<td class="mg_right"><h3><a href="#">배송/교환/반품</a></h3></td>
+  			<td><h3><a href="#">입금확인/입금자변경</a></h3></td>
+  		</tr>
+  	</table>
+	<br><br><br><br><br><br>
+  	</div>
+  	
 <!-- partial -->
 <script  src="../yh_js/script.js"></script>
 <jsp:include page="../footer.jsp" />
