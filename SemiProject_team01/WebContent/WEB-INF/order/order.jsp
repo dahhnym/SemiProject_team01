@@ -9,7 +9,7 @@
 <title>:::Order:::</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="<%=ctxPath%>/hanseoyeon.css"/>
+<link rel="stylesheet" href="<%=ctxPath%>/css/hanseoyeon.css"/>
 
 <!-- Google Font -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
