@@ -1,22 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<% String ctxPath = request.getContextPath(); %>
 
 <jsp:include page="../header.jsp" />
 
-<style type="text/css">
+<style type="text/css">	
 	table {
 		height: 500px;
 		margin-top: 50px;
 	}
 	td {
 		margin-top: 30px;	
-		/* border: solid 1px black; */	
+		border: solid 1px green;	
 	}
 	td.star {
 		width: 20px;
 		font-weight: bold;
 	}
-	input.space {	<%-- 정정해야할 사항 --%>
+	.space {	
 		margin-right: 20px;	
 		height: 30px;
 		width: 240px;
@@ -52,7 +55,8 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
     var bool = false;
-
+	var b_sendCode = false;
+	
 	$(function(){
 
 		$("span.confirm").hide();
@@ -68,8 +72,17 @@
 			}
 		});		
 		
+		// 전화번호 인증발송을 누른 경우
+		$("button#sendCode").click(function(){
+			ph2Check();
+			if($("input#pwd2").val().trim()!="") {
+				sendCode();
+			}
+		});
+		
 		// 회원가입 버튼을 누른 경우
 		$("button#submit").click(function(){
+			window.scrollTo(0,0);
 			goCheck();
 			
 			if(!bool) {
@@ -122,10 +135,24 @@
 		});
 		
 		// 기타 이메일 주소 입력여부
-		if($("select#emailAddress").val()=="6"){
-			
+		if($('tr#etc').is(':visible')){
+			etcEmailAddressCheck();
+			$("input#etcEmailAddress").blur(function(){
+				etcEmailAddressCheck();
+			});	
 		}
+
+		// 전화번호 체크
+		ph2Check();
+		$("input#ph2").blur(function(){
+			ph2Check();
+		});
 		
+		// 우편번호 체크
+		postcodeCheck();
+		$("input#postcode").blur(function(){
+			postcodeCheck();
+		});
 		
 	}// end of function goCheck() ------------------------------------------------------------------
 	
@@ -233,7 +260,6 @@
 			$(this).focus();
 			bool=true;
 		} else {
-			$("span#emailIDCheck").show();
 			$("span#emailIDCheck").hide();
 		}
 	}
@@ -243,6 +269,7 @@
 	function etcEmailAddressCheck(){
 		var etcEmailAddress = $("input#etcEmailAddress").val().trim();
 		if(etcEmailAddress==""){
+			$("span#etcEmailAddressCheck").show();
 			$("span#etcEmailAddressCheck").html("이메일 주소를 입력해주세요.");
 			$(this).focus();
 			bool=true;
@@ -250,6 +277,94 @@
 			$("span#etcEmailAddressCheck").hide();
 		}
 	}
+	
+	
+	// 전화번호 체크 함수
+	function ph2Check(){
+		var ph2 = $("input#ph2").val().trim();
+		if(ph2==""){
+			$("span#ph2Check").show();
+			$("span#ph2Check").html("전화번호를 입력해주세요.");
+			$(this).focus();
+			bool=true;
+		} else {
+			// 010 뒤 8자리 정규표현식
+			var regExp=/[0-9]{8}/;
+			var bool = regExp.test(ph2);
+			if(!bool){
+				$("span#ph2Check").show();
+				$("span#ph2Check").html("010 뒤 숫자 8자리를 입력해주세요.");
+			} else {
+				$("span#ph2Check").hide();
+			}
+		}
+	}
+	
+	
+	// 우편번호 체크 함수
+	function postcodeCheck(){
+		var postcode = $("input#postcode").val().trim();
+		if(postcode==""){
+			$("span#postcodeCheck").show();
+			$("span#postcodeCheck").html("우편번호 찾기를 해주세요.");
+			$(this).focus();
+			bool=true;
+		} else {
+			$("span#postcodeCheck").hide();
+		}
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	// 아이디 중복확인 함수	==> DB 확인 필요사항
+	function idDuplicateCheck() {
+
+		$.ajax({
+				url:"<%= ctxPath%>/member/idDuplicateCheck.to",
+				data:{"userid":$("input#userid").val().trim()},
+				dataType:"json",	
+				success:function(json){
+					if(json.idDuplicated) {
+	 					// 입력한 userid 가 이미 사용중이라면
+	 					$("span#useridCheck").show();
+	 					$("span#useridCheck").html($("input#userid").val()+" 은 중복된 ID 이므로 사용불가 합니다.").css("color","red");
+	 					$("input#userid").val("");
+	 				} else {
+	 					// 입력한 userid 가 DB 테이블에 존재하지 않는 경우라면
+	 					$("span#useridCheck").show();
+	 					$("span#useridCheck").html("사용가능한 ID 입니다.").css("color","green");
+	 				}            
+				},
+				error: function(request, status, error){
+                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }    				
+		}); // end of $.ajax ----------------------------------------------
+			
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	// 전화번호 인증번호 발송 함수
+	function sendCode() {
+		$.ajax({
+				url:"<%= ctxPath%>/member/sendCode.to",
+				data:{"ph2":$("input#ph2").val().trim()},
+				dataType:"json",	
+				success:function(json){
+					if(json!=null&&json!="") {
+	 					// 인증코드가 발송되었다면
+	 					$("span#sendCodeCheck").show();
+	 					$("span#sendCodeCheck").html("인증번호가 발송되었습니다.").css("color","green");
+	 					$("input#userid").val("");
+	 				} else {
+	 					// 인증코드가 발송되지 않았다면
+	 					$("span#sendCodeCheck").show();
+	 					$("span#sendCodeCheck").html("인증번호 발송에 실패했습니다.").css("color","red");
+	 				} 
+				},
+				error: function(request, status, error){
+                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }    				
+		}); // end of $.ajax ----------------------------------------------
+	}	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	// 카카오 우편번호 API
@@ -301,52 +416,59 @@
         }).open();
     }// end of function execDaumPostcode() --------------------------------------------------------
 	////////////////////////////////////////////////////////////////////////////////////////////////
+	
 </script> 
 
 
-<div style="padding-top: 200px;">	<%-- 정정해야할 사항 --%>
+<div id="registerContainer">
    <form name="registerFrm">
    	   <div style="margin-left:500px;" id="main">
    	   	   <h2 style="margin-left:20%;">회원가입</h2>
-   	   	   <span style="margin-left:18%;">(* 는 필수입력항목입니다.)</span>
+   	   	   <span style="margin-left:18%;">(* 는 필수입력항목입니다.)</span>	<%-- 필수 입력항목 사항 정정필요 --%>
    	   	     	   	   
 		   <table id="registerTable">
 		      <tbody>
 			      <tr>
 			      	 <td class="star">*</td>
-			      	 <td><input type="text" name="userid" id="userid" class="space" placeholder="아이디"/></td>
-			      	 <td><button type="button" class="check">아이디 중복확인</button></td> <%-- 정정해야할 사항 --%>
-			      	 <td><span id="useridCheck" class="confirm"></span></td>    
+			      	 <td>
+			      	 	<input type="text" name="userid" id="userid" class="space" placeholder="아이디"/>
+			      	 	<button type="button" class="btn btn-secondary check" onclick="idDuplicateCheck()">아이디 중복확인</button>
+			      	 	<span id="useridCheck" class="confirm"></span>
+			      	 </td>
 			      </tr>
 			      <tr>
 			      	 <td class="star design">*</td>
-			      	 <td colspan="2" class="design"><input type="password" name="pwd" id="pwd" class="space" placeholder="비밀번호" /></td>   
-			      	 <td class="design"><span id="pwdCheck" class="confirm"></span></td> 
-			      </tr>
-			      <tr>
-			         <td></td>
-			      	 <td colspan="2"><span style="color:gray">※ 비밀번호는 8-15자리의 영문자, 숫자, 특수기호를 혼합해야 합니다.</span></td>  
+			      	 <td colspan="2" class="design">
+			      	 	<input type="password" name="pwd" id="pwd" class="space" placeholder="비밀번호" />
+			      	 	<span id="pwdCheck" class="confirm"></span>
+			      	 </td>    
 			      </tr>
 			      <tr>
 			         <td class="star">*</td>
-			      	 <td colspan="2"><input type="password" name="pwd2" id="pwd2" class="space" placeholder="비밀번호 확인" /></td>     
-			      	 <td><span id="pwdCheck2" class="confirm"></span></td> 
+			      	 <td colspan="2">
+			      	 	<input type="password" name="pwd2" id="pwd2" class="space" placeholder="비밀번호 확인" />     
+			      	 	<span id="pwdCheck2" class="confirm"></span>
+			      	</td> 
 			      </tr>
 	      		  <tr>
 	      		     <td class="star design">*</td>
-			      	 <td colspan="2" class="design"><input type="text" name="name" id="name" class="space" placeholder="이름" /></td>  
-			      	 <td class="design"><span id="nameCheck" class="confirm"></span></td>   
+			      	 <td colspan="2" class="design">
+			      	 	<input type="text" name="name" id="name" class="space" placeholder="이름" />
+  			      	 	<span id="nameCheck" class="confirm"></span>
+  			      	 </td>   
 			      </tr>
 			      <tr>
 			         <td class="star design">*</td>
-			      	 <td colspan="2" class="design"><input type="text" name="birthdate" id="birthdate" class="space" placeholder="생년월일(ex 201010)" /></td>    
-			      	 <td class="design"><span id="birthdateCheck" class="confirm"></span></td> 
+			      	 <td colspan="2" class="design">
+			      	 	<input type="text" name="birthdate" id="birthdate" class="space" placeholder="생년월일(ex 201010)" />    
+			      		<span id="birthdateCheck" class="confirm"></span>
+			      	</td> 
 			      </tr>
 			      <tr>
 			         <td class="star design">*</td>
 			      	 <td colspan="2" class="design">
 			      	 	<input type="text" name="emailID" id="emailID" style="width: 100px;" placeholder="이메일 아이디" />
-				      	<select id="emailAddress" style="width: 140px; height: 30px;">
+				      	<select id="emailAddress" class="space" style="width: 135px; height: 30px;">
 					      	<option value="1">gmail.com</option>
 							<option value="2">naver.com</option>
 							<option value="3">daum.net</option>
@@ -354,40 +476,45 @@
 						 	<option value="5">kakao.com</option>
 						 	<option value="6">기타</option>
 				      	</select> 
-			      	 <td><span id="emailIDCheck" class="confirm"></span></td>    
+			      	 	<span id="emailIDCheck" class="confirm"></span>
+			      	 </td>    
 			      </tr>
 			      <tr id="etc">
 			         <td class="star">*</td>
-			      	 <td><input type="text" name="etcEmailAddress" id="etcEmailAddress" class="space" placeholder="이메일 주소" /></td> 
-			      	 <td><span id="etcEmailAddressCheck" class="confirm"></span></td>    
+			      	 <td>
+			      	 	<input type="text" name="etcEmailAddress" id="etcEmailAddress" class="space" placeholder="이메일 주소" />
+			      	 	<span id="etcEmailAddressCheck" class="confirm"></span>
+			      	 </td>    
 			      </tr>
 			      <tr>
 			         <td class="star design">*</td>
 			      	 <td class="design">
 			      	 	<input type="text" name="ph1" id="ph1" placeholder="010" readonly />
-			      	    <input type="text" name="ph2" id="ph2" />
+			      	    <input type="text" name="ph2" id="ph2" class="space" style="width:185px;" />
+			      	 	<span id="ph2Check" class="confirm"></span>
 			      	 </td>
-			      	 <td class="design"><span id="ph2Check" class="confirm"></span></td>
 			      </tr>
 			      <tr>
 			         <td class="star">*</td>
-			      	 <td><button type="button" id="sendCode" style="width: 240px;">인증번호 발송</button></td>
-			      	 <td><span id="sendCode" class="confirm"></span></td>
+			      	 <td>
+			      	 	<button type="button" id="sendCode" class="btn btn-secondary space" >인증번호 발송</button>
+			      	 	<span id="sendCodeCheck" class="confirm"></span>
+			      	 </td>
 			      <tr>
 			         <td class="star">*</td>
 			      	 <td>
 			      	 	<input type="text" name="certifyCode" id="certifyCode" style="width: 138px;" placeholder="인증번호" />
-			      	    <button type="button" class="check" style="width: 100px;">인증번호 확인</button>
-			      	 </td>
-			      	 <td><span id="codeCheck" class="confirm"></span></td> 
+			      	    <button type="button" class="btn btn-secondary check" style="width: 100px;">인증번호 확인</button>
+			      	 	<span id="codeCheck" class="confirm"></span>
+			      	 </td> 
 			      </tr>
 			      <tr>
 			      	 <td class="star design">*</td>
 			         <td class="design">
-				         <input type="text" name="postcode" id="postcode"  style="width: 100px;" placeholder="우편번호" />
-				         <button type="button" class="check" id="zipcodeSearch" onclick="execDaumPostcode()" >우편번호 찾기</button>
+				         <input type="text" name="postcode" id="postcode"  style="width: 138px;" placeholder="우편번호" />
+				         <button type="button" class="btn btn-secondary check" id="zipcodeSearch" style="width: 100px; margin-right:25px;" onclick="execDaumPostcode()" >우편번호 찾기</button>
+			        	 <span id="postcodeCheck" class="confirm"></span>
 			         </td>
-			         <td class="design"><span id="postcodeCheck" class="confirm"></span></td>
 			      </tr>
 			      <tr>
 			         <td class="star">*</td>
@@ -404,8 +531,7 @@
 			    </tbody>
 			</table>
 		</div>
-		<br><br>
-
+		<br>
 		<div id="Aggrements">
 			<h4>Aggrements</h4><br>
 			<input type="checkbox" id="Aggrements1" name="Aggrements1" value="1">
@@ -415,9 +541,11 @@
 		    <label for="Aggrements2">&nbsp;&nbsp;뉴스레터 및 프로모션정보를 받고 싶습니다! (선택)</label><br>
 		    <input type="checkbox" id="Aggrements3" name="Aggrements3" value="3">
 		    <label for="Aggrements3">&nbsp;&nbsp;모두 동의</label><br><br>		
+		    <span id="aggrementsCheck" class="confirm"></span>
 		</div>
 		<br>
-		<button type="button" id="submit" >회원가입하기</button>
+		<button type="button" id="submit" class="btn btn-primary">회원가입하기</button>
+		<br><br>
 	</form>
 </div>   
  
