@@ -1,0 +1,38 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+ul {
+  display: flex;
+  padding: 0;
+  list-style: none;
+}
+ul li {
+  display: inline-flex;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #999;
+  border-bottom: 2px solid transparent;
+}
+ul li:hover {
+  color: #555;
+  transition: 0.5s;
+}
+
+li.active {
+  color: slateblue;
+  border-bottom: 2px solid slateblue;
+}
+li.active:hover {
+  background: slateblue;
+  color: #fff;
+}
+
+[data-tab-content] {
+  display: none;
+}
+
+.active[data-tab-content] {
+  display: block;
+}
