@@ -28,7 +28,7 @@
 			</ul>
 			
 		</nav>
-		<a href="<%=ctxPath%>/home.to"><img id="logo" src="images/logo.jpg"/></a>
+		<a href="<%=ctxPath%>/home.to"><img id="logo" src="../images/logo.jpg"/></a>
 		<nav id="header-bottom-nav">
 			<ul>
 				<li>Best상품</li>

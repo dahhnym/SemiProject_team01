@@ -1,4 +1,4 @@
-package ilpyo;
+package member.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,7 +10,7 @@ public class MemberRegisterAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// super.setRedirect(false);
-		super.setViewPage("/WEB-INF/ilpyo/memberRegister.jsp");	
+		super.setViewPage("/WEB-INF/member/memberRegister.jsp");	
 	}
 
 }

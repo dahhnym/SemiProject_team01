@@ -6,6 +6,7 @@
 <style type="text/css">
 	table {
 		height: 500px;
+		margin-top: 50px;
 	}
 	td {
 		margin-top: 30px;	
@@ -19,6 +20,9 @@
 		margin-right: 20px;	
 		height: 30px;
 		width: 240px;
+	}
+	.design {
+		padding-top:15px;
 	}
 	div#Aggrements {
 		margin: 50px 0 0 30%;
@@ -50,9 +54,21 @@
     var bool = false;
 
 	$(function(){
-		$("input#userid").focus();	
+
+		$("span.confirm").hide();
+		$("tr#etc").hide();
+		$("input#userid").focus();
 		
+		// 이메일주소를 기타로 설정한 경우
+		$("select#emailAddress").change(function(){
+			if($("select#emailAddress").val()=="6"){
+				$("tr#etc").show();	
+			} else {
+				$("tr#etc").hide();		
+			}
+		});		
 		
+		// 회원가입 버튼을 누른 경우
 		$("button#submit").click(function(){
 			goCheck();
 			
@@ -81,7 +97,6 @@
 			pwdCheck();
 		});
 		
-		
 		// 비밀번호 확인 체크
 		pwdCheck2();
 		$("input#pwd2").blur(function(){
@@ -94,6 +109,24 @@
 			nameCheck();
 		});
 		
+		// 생년월일 체크
+		birthdateCheck();
+		$("input#birthdate").blur(function(){
+			birthdateCheck();
+		});
+		
+		// 이메일 아이디 체크
+		emailIDCheck();
+		$("input#emailID").blur(function(){
+			emailIDCheck();
+		});
+		
+		// 기타 이메일 주소 입력여부
+		if($("select#emailAddress").val()=="6"){
+			
+		}
+		
+		
 	}// end of function goCheck() ------------------------------------------------------------------
 	
 	
@@ -101,6 +134,7 @@
 	function useridCheck(){
 		var userid = $("input#userid").val().trim();
 		if(userid==""){
+			$("span#useridCheck").show();
 			$("span#useridCheck").html("아이디를 입력해주세요.");
 			$(this).val('');
 			$(this).focus();
@@ -117,15 +151,14 @@
 	function pwdCheck(){
 		var pwd = $("input#pwd").val().trim();
 		if(pwd==""){
+			$("span#pwdCheck").show();
 			$("span#pwdCheck").html("비밀번호를 입력해주세요.");
 			bool=true;
 		} else {
-			$("span#pwdCheck").html("비밀번호는 8-15자리의 영문자, 숫자, 특수기호를 혼합해야 합니다.");
 			// 비밀번호 8-15자리, 영문자,숫자,특수기호 혼합 정규표현식
-			var regExp= /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;		
-			var bool = regExp.test($(this).val());
+			var regExp= /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
+			var bool = regExp.test(pwd);
 			if(!bool){
-				console.log(bool);
 				$("span#pwdCheck").html("비밀번호는 8-15자리의 영문자, 숫자, 특수기호를 혼합해야 합니다.");
 				bool=true;
 			} else {
@@ -140,11 +173,13 @@
 	function pwdCheck2(){
 		var pwd2 = $("input#pwd2").val().trim();
 		if(pwd2==""){
+			$("span#pwdCheck2").show();
 			$("span#pwdCheck2").html("비밀번호 확인을 입력해주세요.");
 			bool=true;
 		} else {
 			// 비밀번호 8-15자리, 영문자,숫자,특수기호 혼합 정규표현식
-			if($("input#pwd2").val()!=pwd2){
+			if($("input#pwd").val().trim()!=pwd2){
+				$("span#pwdCheck2").show();
 				$("span#pwdCheck2").html("일치하지 않는 비밀번호입니다.");
 				bool=true;
 			} else 
@@ -156,7 +191,8 @@
 	// 이름 체크 함수
 	function nameCheck(){
 		var name = $("input#name").val().trim();
-		if(userid==""){
+		if(name==""){
+			$("span#nameCheck").show();
 			$("span#nameCheck").html("이름을 입력해주세요.");
 			$(this).focus();
 			bool=true;
@@ -165,6 +201,55 @@
 		}
 	}
 	
+	
+	// 생년월일 체크 함수
+	function birthdateCheck(){
+		var birthdate = $("input#birthdate").val().trim();
+		if(birthdate==""){
+			$("span#birthdateCheck").show();
+			$("span#birthdateCheck").html("생년월일을 입력해주세요.");
+			$(this).focus();
+			bool=true;
+		} else {
+			// 6자리 생년월일 정규표현식
+			var regExp=/([0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1,2][0-9]|3[0,1]))/;
+			var bool = regExp.test(birthdate);
+			if(!bool){
+				$("span#birthdateCheck").show();
+				$("span#birthdateCheck").html("생년월일 날짜형식이 올바르지 않습니다.");
+			} else {
+				$("span#birthdateCheck").hide();
+			}
+		}
+	}
+	
+	
+	// 이메일 아이디 체크 함수
+	function emailIDCheck(){
+		var emailID = $("input#emailID").val().trim();
+		if(emailID==""){
+			$("span#emailIDCheck").show();
+			$("span#emailIDCheck").html("이메일 아이디를 입력해주세요.");
+			$(this).focus();
+			bool=true;
+		} else {
+			$("span#emailIDCheck").show();
+			$("span#emailIDCheck").hide();
+		}
+	}
+	
+	
+	// 기타 이메일 주소 체크 함수
+	function etcEmailAddressCheck(){
+		var etcEmailAddress = $("input#etcEmailAddress").val().trim();
+		if(etcEmailAddress==""){
+			$("span#etcEmailAddressCheck").html("이메일 주소를 입력해주세요.");
+			$(this).focus();
+			bool=true;
+		} else {
+			$("span#etcEmailAddressCheck").hide();
+		}
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	// 카카오 우편번호 API
@@ -221,9 +306,10 @@
 
 <div style="padding-top: 200px;">	<%-- 정정해야할 사항 --%>
    <form name="registerFrm">
-   	   <div align="center" id="main">
-   	   	   <span><h2>회원가입</h2>(* 는 필수입력항목입니다.)</span>
-   	   	   <hr style="width:70%;">
+   	   <div style="margin-left:500px;" id="main">
+   	   	   <h2 style="margin-left:20%;">회원가입</h2>
+   	   	   <span style="margin-left:18%;">(* 는 필수입력항목입니다.)</span>
+   	   	     	   	   
 		   <table id="registerTable">
 		      <tbody>
 			      <tr>
@@ -233,9 +319,13 @@
 			      	 <td><span id="useridCheck" class="confirm"></span></td>    
 			      </tr>
 			      <tr>
-			      	 <td class="star">*</td>
-			      	 <td colspan="2"><input type="password" name="pwd" id="pwd" class="space" placeholder="비밀번호" /></td>   
-			      	 <td><span id="pwdCheck" class="confirm"></span></td> 
+			      	 <td class="star design">*</td>
+			      	 <td colspan="2" class="design"><input type="password" name="pwd" id="pwd" class="space" placeholder="비밀번호" /></td>   
+			      	 <td class="design"><span id="pwdCheck" class="confirm"></span></td> 
+			      </tr>
+			      <tr>
+			         <td></td>
+			      	 <td colspan="2"><span style="color:gray">※ 비밀번호는 8-15자리의 영문자, 숫자, 특수기호를 혼합해야 합니다.</span></td>  
 			      </tr>
 			      <tr>
 			         <td class="star">*</td>
@@ -243,20 +333,20 @@
 			      	 <td><span id="pwdCheck2" class="confirm"></span></td> 
 			      </tr>
 	      		  <tr>
-	      		     <td class="star">*</td>
-			      	 <td colspan="2"><input type="text" name="name" id="name" class="space" placeholder="이름" /></td>  
-			      	 <td><span id="nameCheck" class="confirm"></span></td>   
+	      		     <td class="star design">*</td>
+			      	 <td colspan="2" class="design"><input type="text" name="name" id="name" class="space" placeholder="이름" /></td>  
+			      	 <td class="design"><span id="nameCheck" class="confirm"></span></td>   
 			      </tr>
 			      <tr>
-			         <td class="star">*</td>
-			      	 <td colspan="2"><input type="text" name="birthdate" id="birthdate" class="space" placeholder="생년월일(ex 201010)" /></td>    
-			      	 <td><span id="birthdateCheck" class="confirm"></span></td> 
+			         <td class="star design">*</td>
+			      	 <td colspan="2" class="design"><input type="text" name="birthdate" id="birthdate" class="space" placeholder="생년월일(ex 201010)" /></td>    
+			      	 <td class="design"><span id="birthdateCheck" class="confirm"></span></td> 
 			      </tr>
 			      <tr>
-			         <td class="star">*</td>
-			      	 <td>
+			         <td class="star design">*</td>
+			      	 <td colspan="2" class="design">
 			      	 	<input type="text" name="emailID" id="emailID" style="width: 100px;" placeholder="이메일 아이디" />
-				      	<select id="emailAddress" style="width: 140px;">
+				      	<select id="emailAddress" style="width: 140px; height: 30px;">
 					      	<option value="1">gmail.com</option>
 							<option value="2">naver.com</option>
 							<option value="3">daum.net</option>
@@ -269,15 +359,15 @@
 			      <tr id="etc">
 			         <td class="star">*</td>
 			      	 <td><input type="text" name="etcEmailAddress" id="etcEmailAddress" class="space" placeholder="이메일 주소" /></td> 
-			      	 <td><span id="addtionalEmailAddressCheck" class="confirm"></span></td>    
+			      	 <td><span id="etcEmailAddressCheck" class="confirm"></span></td>    
 			      </tr>
 			      <tr>
-			         <td class="star">*</td>
-			      	 <td>
+			         <td class="star design">*</td>
+			      	 <td class="design">
 			      	 	<input type="text" name="ph1" id="ph1" placeholder="010" readonly />
 			      	    <input type="text" name="ph2" id="ph2" />
 			      	 </td>
-			      	 <td><span id="ph2Check" class="confirm"></span></td>
+			      	 <td class="design"><span id="ph2Check" class="confirm"></span></td>
 			      </tr>
 			      <tr>
 			         <td class="star">*</td>
@@ -292,12 +382,12 @@
 			      	 <td><span id="codeCheck" class="confirm"></span></td> 
 			      </tr>
 			      <tr>
-			      	 <td class="star">*</td>
-			         <td>
+			      	 <td class="star design">*</td>
+			         <td class="design">
 				         <input type="text" name="postcode" id="postcode"  style="width: 100px;" placeholder="우편번호" />
 				         <button type="button" class="check" id="zipcodeSearch" onclick="execDaumPostcode()" >우편번호 찾기</button>
 			         </td>
-			         <td><span id="postcodeCheck" class="confirm"></span></td>
+			         <td class="design"><span id="postcodeCheck" class="confirm"></span></td>
 			      </tr>
 			      <tr>
 			         <td class="star">*</td>
