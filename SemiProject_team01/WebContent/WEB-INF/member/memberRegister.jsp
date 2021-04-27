@@ -6,8 +6,7 @@
 
 <jsp:include page="../header.jsp" />
 
-<style type="text/css">
-	
+<style type="text/css">	
 	table {
 		height: 500px;
 		margin-top: 50px;
@@ -42,7 +41,7 @@
 		margin-right: 0;	
 	}
 	button#submit {
-		margin-left: 70%;
+		margin-left: 60%;
 		width: 200px;
 		height: 40px;	
 	}
@@ -75,7 +74,10 @@
 		
 		// 전화번호 인증발송을 누른 경우
 		$("button#sendCode").click(function(){
-			sendCode();
+			ph2Check();
+			if($("input#pwd2").val().trim()!="") {
+				sendCode();
+			}
 		});
 		
 		// 회원가입 버튼을 누른 경우
@@ -315,6 +317,7 @@
 	///////////////////////////////////////////////////////////////////////////////////////
 	// 아이디 중복확인 함수	==> DB 확인 필요사항
 	function idDuplicateCheck() {
+
 		$.ajax({
 				url:"<%= ctxPath%>/member/idDuplicateCheck.to",
 				data:{"userid":$("input#userid").val().trim()},
@@ -429,7 +432,7 @@
 			      	 <td class="star">*</td>
 			      	 <td>
 			      	 	<input type="text" name="userid" id="userid" class="space" placeholder="아이디"/>
-			      	 	<button type="button" class="check" onclick="idDuplicateCheck()">아이디 중복확인</button>
+			      	 	<button type="button" class="btn btn-secondary check" onclick="idDuplicateCheck()">아이디 중복확인</button>
 			      	 	<span id="useridCheck" class="confirm"></span>
 			      	 </td>
 			      </tr>
@@ -465,7 +468,7 @@
 			         <td class="star design">*</td>
 			      	 <td colspan="2" class="design">
 			      	 	<input type="text" name="emailID" id="emailID" style="width: 100px;" placeholder="이메일 아이디" />
-				      	<select id="emailAddress" class="space" style="width: 140px; height: 30px;">
+				      	<select id="emailAddress" class="space" style="width: 135px; height: 30px;">
 					      	<option value="1">gmail.com</option>
 							<option value="2">naver.com</option>
 							<option value="3">daum.net</option>
@@ -487,29 +490,29 @@
 			         <td class="star design">*</td>
 			      	 <td class="design">
 			      	 	<input type="text" name="ph1" id="ph1" placeholder="010" readonly />
-			      	    <input type="text" name="ph2" id="ph2" class="space" style="width:190px;" />
+			      	    <input type="text" name="ph2" id="ph2" class="space" style="width:185px;" />
 			      	 	<span id="ph2Check" class="confirm"></span>
 			      	 </td>
 			      </tr>
 			      <tr>
 			         <td class="star">*</td>
 			      	 <td>
-			      	 	<button type="button" id="sendCode" class="space" >인증번호 발송</button>
+			      	 	<button type="button" id="sendCode" class="btn btn-secondary space" >인증번호 발송</button>
 			      	 	<span id="sendCodeCheck" class="confirm"></span>
 			      	 </td>
 			      <tr>
 			         <td class="star">*</td>
 			      	 <td>
 			      	 	<input type="text" name="certifyCode" id="certifyCode" style="width: 138px;" placeholder="인증번호" />
-			      	    <button type="button" class="check" style="width: 100px;">인증번호 확인</button>
+			      	    <button type="button" class="btn btn-secondary check" style="width: 100px;">인증번호 확인</button>
 			      	 	<span id="codeCheck" class="confirm"></span>
 			      	 </td> 
 			      </tr>
 			      <tr>
 			      	 <td class="star design">*</td>
 			         <td class="design">
-				         <input type="text" name="postcode" id="postcode"  style="width: 100px;" placeholder="우편번호" />
-				         <button type="button" class="check" id="zipcodeSearch" style="margin-right:81px;" onclick="execDaumPostcode()" >우편번호 찾기</button>
+				         <input type="text" name="postcode" id="postcode"  style="width: 138px;" placeholder="우편번호" />
+				         <button type="button" class="btn btn-secondary check" id="zipcodeSearch" style="width: 100px; margin-right:25px;" onclick="execDaumPostcode()" >우편번호 찾기</button>
 			        	 <span id="postcodeCheck" class="confirm"></span>
 			         </td>
 			      </tr>
@@ -528,8 +531,7 @@
 			    </tbody>
 			</table>
 		</div>
-		<br><br>
-
+		<br>
 		<div id="Aggrements">
 			<h4>Aggrements</h4><br>
 			<input type="checkbox" id="Aggrements1" name="Aggrements1" value="1">
@@ -539,9 +541,11 @@
 		    <label for="Aggrements2">&nbsp;&nbsp;뉴스레터 및 프로모션정보를 받고 싶습니다! (선택)</label><br>
 		    <input type="checkbox" id="Aggrements3" name="Aggrements3" value="3">
 		    <label for="Aggrements3">&nbsp;&nbsp;모두 동의</label><br><br>		
+		    <span id="aggrementsCheck" class="confirm"></span>
 		</div>
 		<br>
-		<button type="button" id="submit" >회원가입하기</button>
+		<button type="button" id="submit" class="btn btn-primary">회원가입하기</button>
+		<br><br>
 	</form>
 </div>   
  
