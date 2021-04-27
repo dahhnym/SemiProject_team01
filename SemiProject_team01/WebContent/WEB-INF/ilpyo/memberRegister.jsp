@@ -15,7 +15,7 @@
 		width: 20px;
 		font-weight: bold;
 	}
-	input.space {
+	input.space {	<%-- 정정해야할 사항 --%>
 		margin-right: 20px;	
 		height: 30px;
 		width: 240px;
@@ -33,10 +33,15 @@
 		width: 50px;
 		margin-right: 0;	
 	}
-	input[type="submit"] {
+	button#submit {
 		margin-left: 60%;
 		width: 200px;
 		height: 40px;	
+	}
+	.confirm {
+		margin-left: 50px;
+		font-weight: bold;
+		color: red;
 	}
 </style>
 
@@ -45,23 +50,123 @@
     var bool = false;
 
 	$(function(){
-		$("input#userid").focus();
+		$("input#userid").focus();	
 		
-		$("input[type:submit]").click(function(){
+		
+		$("button#submit").click(function(){
 			goCheck();
 			
-			if(bool) {
-				
-			} else {
+			if(!bool) {
 				var frm = document.registerFrm;
 				frm.action="";
 				frm.method="POST";
 				frm.submit();
 			}
 		});
-	});	
+	});	// end of $(function() -----------------------------------------------------------
+	
+
+	// submit 버튼 클릭시, 유효성 검사
+	function goCheck(){
+		
+		// 아이디 체크
+		useridCheck();
+		$("input#userid").blur(function(){
+			useridCheck();
+		});		
+		
+		// 비밀번호 체크
+		pwdCheck();	
+		$("input#pwd").blur(function(){
+			pwdCheck();
+		});
+		
+		
+		// 비밀번호 확인 체크
+		pwdCheck2();
+		$("input#pwd2").blur(function(){
+			pwdCheck2();
+		});
+		
+		// 이름 체크
+		nameCheck();
+		$("input#name").blur(function(){
+			nameCheck();
+		});
+		
+	}// end of function goCheck() ------------------------------------------------------------------
 	
 	
+	// 아이디 체크 함수
+	function useridCheck(){
+		var userid = $("input#userid").val().trim();
+		if(userid==""){
+			$("span#useridCheck").html("아이디를 입력해주세요.");
+			$(this).val('');
+			$(this).focus();
+			bool=true;
+			return true;
+		} else {
+			$("span#useridCheck").hide();
+			bool=false;
+		}
+	}
+	
+	
+	// 비밀번호 체크 함수
+	function pwdCheck(){
+		var pwd = $("input#pwd").val().trim();
+		if(pwd==""){
+			$("span#pwdCheck").html("비밀번호를 입력해주세요.");
+			bool=true;
+		} else {
+			$("span#pwdCheck").html("비밀번호는 8-15자리의 영문자, 숫자, 특수기호를 혼합해야 합니다.");
+			// 비밀번호 8-15자리, 영문자,숫자,특수기호 혼합 정규표현식
+			var regExp= /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;		
+			var bool = regExp.test($(this).val());
+			if(!bool){
+				console.log(bool);
+				$("span#pwdCheck").html("비밀번호는 8-15자리의 영문자, 숫자, 특수기호를 혼합해야 합니다.");
+				bool=true;
+			} else {
+				$("span#pwdCheck").hide();
+				bool=false;
+			}
+		}
+	}
+	
+	
+	// 비밀번호 체크 함수
+	function pwdCheck2(){
+		var pwd2 = $("input#pwd2").val().trim();
+		if(pwd2==""){
+			$("span#pwdCheck2").html("비밀번호 확인을 입력해주세요.");
+			bool=true;
+		} else {
+			// 비밀번호 8-15자리, 영문자,숫자,특수기호 혼합 정규표현식
+			if($("input#pwd2").val()!=pwd2){
+				$("span#pwdCheck2").html("일치하지 않는 비밀번호입니다.");
+				bool=true;
+			} else 
+				$("span#pwdCheck2").hide();
+		}
+	}
+	
+	
+	// 이름 체크 함수
+	function nameCheck(){
+		var name = $("input#name").val().trim();
+		if(userid==""){
+			$("span#nameCheck").html("이름을 입력해주세요.");
+			$(this).focus();
+			bool=true;
+		} else {
+			$("span#nameCheck").hide();
+		}
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
 	// 카카오 우편번호 API
 	function execDaumPostcode() {
         new daum.Postcode({
@@ -109,18 +214,8 @@
                 document.getElementById("detailAddress").focus();
             }
         }).open();
-    }
-	
-	// input 사항 체크
-	function goCheck(){
-		
-		// 아이디 체크
-		if($("input#userid").val().trim()==""){
-			$("span#useridCheck").html("아이디를 입력해주세요.");
-			bool=true;
-		}
-	}
-	
+    }// end of function execDaumPostcode() --------------------------------------------------------
+	////////////////////////////////////////////////////////////////////////////////////////////////
 </script> 
 
 
@@ -144,7 +239,7 @@
 			      </tr>
 			      <tr>
 			         <td class="star">*</td>
-			      	 <td colspan="2"><input type="password" name="pwdCheck" id="pwdCheck" class="space" placeholder="비밀번호 확인" /></td>     
+			      	 <td colspan="2"><input type="password" name="pwd2" id="pwd2" class="space" placeholder="비밀번호 확인" /></td>     
 			      	 <td><span id="pwdCheck2" class="confirm"></span></td> 
 			      </tr>
 	      		  <tr>
@@ -232,7 +327,7 @@
 		    <label for="Aggrements3">&nbsp;&nbsp;모두 동의</label><br><br>		
 		</div>
 		<br>
-		<input type="submit" value="회원가입하기" >
+		<button type="button" id="submit" >회원가입하기</button>
 	</form>
 </div>   
  
