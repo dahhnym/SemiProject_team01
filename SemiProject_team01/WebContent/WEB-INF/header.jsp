@@ -7,7 +7,7 @@
 <title>::: ladies and gents:::</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="<%=ctxPath%>/css/style.css"/>
+<link rel="stylesheet" href="<%=ctxPath%>/css/common.css"/>
 
 <!-- Google Font -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -51,7 +51,8 @@
 	
 </header>
 
+<!-- header 뒤에 내용물 감춰지지 않게 하기 위함 -->
+<div id="block-container" style="height: 250px;"></div>
 
-<div id="content-container" class="content-width">
 
-<div id="block-container" style="height: 250px;"></div> <!-- header 뒤에 내용물 감춰지지 않기 위함 -->
+
