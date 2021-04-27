@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+
+
+
+
+/* === home.jsp CSS === */
+
+
+h3.itemtitle {
+	text-align: center;
+	margin-top: 50px;
+	font-weight: bold;
+}
