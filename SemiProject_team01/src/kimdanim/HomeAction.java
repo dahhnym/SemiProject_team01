@@ -11,7 +11,7 @@ public class HomeAction extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// super.setRedirect(false);
-		super.setViewPage("/WEB-INF/kimdanim/home.jsp");
+		super.setViewPage("/WEB-INF/home.jsp");
 		
 	}
 
