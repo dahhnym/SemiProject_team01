@@ -54,16 +54,16 @@ $(document).ready(function(){
 
 <div id="navbar-fixed">
   <div id="top-nav-container" class="content-width">
-	  <a href="javascript:void(0)">고객센터</a>
-	  <a href="javascript:void(0)">장바구니</a>
+	  <a href="<%=ctxPath%>/cscenter/csHome.to">고객센터</a>
+	  <a href="<%=ctxPath%>/cart/cart.to">장바구니</a>
 	  <a href="javascript:void(0)">마이페이지</a>
 	  <a href="javascript:void(0)">로그인</a>
-	  <a href="javascript:void(0)">회원가입</a>
+	  <a href="<%=ctxPath%>/member/memberRegister.to">회원가입</a>
   </div>
 </div>
 
 <div class="header">
-	<img style="margin-top: 5px;"src="<%=ctxPath%>/images/logo.jpg"/>
+	<a href="<%=ctxPath%>/home.to"><img style="margin-top: 5px;"src="<%=ctxPath%>/images/logo.jpg"/></a>
 </div>
 
 <div id="navbar">
