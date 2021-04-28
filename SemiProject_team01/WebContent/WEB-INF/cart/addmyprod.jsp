@@ -12,6 +12,7 @@
 		overflow: hidden;
 		margin: 0px;
 		padding: 0px;
+		border:0px;
 	}
 	div.choicecontent{
 	    overflow: auto;
@@ -45,7 +46,6 @@
     
     table.prodchoice{
     width: 100%;
-    border: solid 0px;
     border-spacing: 0;
     border-collapse: collapse;    
     color: #353535;
@@ -63,13 +63,13 @@
 		<div class="imgarea">
 			<img src=""/>
 		</div>
-		<table class="prodchoice">
+		<table class="prodchoice" style="border: 0px;">
 			<colgroup>
 				<col width="120px;">
 				<col width="auto;">
 			</colgroup>
 			
-			<tr>
+			<tr style="border: 0px;">
 				<th >color</th>
 				<td>
 					<select   id="product_option_id1" class="ProductOption0" name="${cart.cart_pro_detail_code}color">

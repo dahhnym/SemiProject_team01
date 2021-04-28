@@ -31,7 +31,7 @@ div.information .decription{
 div.displaynone{
 	margin: 40px 0px;
 }
-table{
+table.wishlist_table, table.cart_table, table.price_table{
 	width:100%;
 	border-top: solid 1px #CCD1D1;
 	border-bottom: solid 1px #CCD1D1;
@@ -220,23 +220,22 @@ div.title{
     color: #707070;
      margin: 0px;
     padding: 0px;
-    border-bottom: 1px dotted #b0b1b3;
+    border-bottom: 1px solid #b0b1b3;
     line-height: 1.5;
 }
     
 .ec-base-layer3 {
-    position: absolute;
+    position: fixed;
     z-index: 100;
-    border: 1px solid #757575;
+    border: 1px solid #757575; 
     background: #fff;
 }
 
 .base-bottom{
-		margin-top: 10px;
-		padding-top: 10px;
+		margin-top: 0px;
 		padding-bottom: 15px;
 		padding-left: 10px;
-		border-top:solid 1px #595959;
+		
 	}
 
 	a.btn_order{
@@ -264,3 +263,11 @@ div.title{
     background: #595959;
 	
 	}
+	
+	.ec-base-layer3 .close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 11px 20px;
+    cursor: pointer;
+}

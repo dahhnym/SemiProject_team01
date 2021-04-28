@@ -355,11 +355,11 @@ function moveOrderCart(){
 
 
 		<!-- 레이어 팝업 만들기  -->
-		<div id="wishlistlayer" class="addoption ec-base-layer2" > 
+		<div id="wishlistlayer" class="addoption ec-base-layer3" > 
 			<div class="header">
 	     		<h3  style="color: #fff !important; text-align: left;">옵션변경</h3>
 			</div>
-				<iframe style="border: solid 1px red; width: 100%; height: 365px;" src="<%= request.getContextPath()%>/cart/addmyprod.to"></iframe>    
+				<iframe style="width: 100%; height: 365px;" src="<%= request.getContextPath()%>/cart/addmyprod.to"></iframe>    
 			<a href="#none" class="close" onclick="$('#wishlistlayer').hide();"><img src="//img.echosting.cafe24.com/skin/base/common/btn_close.gif" alt="닫기"/></a>
 		
 		<div class="base-bottom">
