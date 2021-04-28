@@ -1,10 +1,10 @@
 @charset "UTF-8";
 
 div#cartcontainer{
-	margin: 70px auto;
+	margin: 0 auto;
 }
 div#contents{
-	position: relative; 
+	/* position: relative;  */
 	width:70%;
 	margin: 0 auto;
 }
@@ -31,40 +31,13 @@ div.information .decription{
 div.displaynone{
 	margin: 40px 0px;
 }
-table{
+table.wishlist_table, table.cart_table, table.price_table{
 	width:100%;
 	border-top: solid 1px #CCD1D1;
 	border-bottom: solid 1px #CCD1D1;
 	vertical-align: middle;
 }
 
-div.option_change{
-	padding: 0px;
-	background-color: #909497;
-	width:450px;
-}
-
-div.option_layer{
-	position: absolute;
-	z-index: 100;
-	border: solid 1px #909497;
-	background-color: white;
-	padding: 0px;
-	}
-div.option_header{
-	background-color: #909497;
-	padding: 0.3px 35px 0.3px 19px;
-	margin-top:0px;
-	color: white;
-	height: 36px;
-}
-div.close{
-	position: absolute;
-	right:0;
-	top:0;
-	cursor: pointer;
-	padding: 5px 20px;
-}
 
 h3{
 margin:9px 3px;
@@ -177,7 +150,7 @@ div.title{
     padding: 20px;
     font-size: 12px;
 }
-.ec-base-layer2 .header {
+.ec-base-layer2 .header, .ec-base-layer3 .header {
     padding: 7px 35px 7px 19px;
     color: #fff;
     background: #595959;
@@ -230,8 +203,71 @@ div.title{
     font-size: 14px;
     line-height: 1.5;
 }
-    .header > h1, .ec-base-layer2 .header > h3 {
+    .ec-base-layer2 .header > h3 {
     font-size: 14px;
     line-height: 1.5;
+    text-align: left;
 }
-   
+  
+  
+ /* 레이어 팝업 */ 
+ 
+.addoption{
+    position: fixed;
+    left: 35%;
+    top:35%;
+    width: 600px;
+    color: #707070;
+     margin: 0px;
+    padding: 0px;
+    border-bottom: 1px solid #b0b1b3;
+    line-height: 1.5;
+}
+    
+.ec-base-layer3 {
+    position: fixed;
+    z-index: 100;
+    border: 1px solid #757575; 
+    background: #fff;
+}
+
+.base-bottom{
+		margin-top: 0px;
+		padding-bottom: 15px;
+		padding-left: 10px;
+		
+	}
+
+	a.btn_order{
+		
+		background-color: #000;
+		color:#fff;
+		border: solid 1px #000;
+		padding: 3px 3px;
+		margin-left: 30%;
+		margin-right: 5px;
+		margin-top: 10px;
+	}
+	
+	a.btn_movecart{
+		background-color: #fff;
+		color:#000;
+		border: solid 1px #CCD1D1;
+		padding: 3px 3px;
+		margin-top: 10px;
+	}
+	
+	.addoption .header{
+	padding: 7px 35px 7px 19px;
+    color: #fff;
+    background: #595959;
+	
+	}
+	
+	.ec-base-layer3 .close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 11px 20px;
+    cursor: pointer;
+}
