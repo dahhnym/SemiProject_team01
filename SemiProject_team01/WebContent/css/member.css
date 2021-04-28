@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+*{
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* memberRegister.jsp 적용 */
+
+div#main {	
+	padding-top: 300px;	/* 조절필요 */
+	margin: 0 auto;	
+	width: 50%;
+}
+table {
+	height: 500px;
+	margin: 50px 0 0 18%;
+}
+td {
+	margin-top: 30px;	
+	/* border: solid 1px green; */	
+}
+.space {	
+	margin-right: 20px;	
+	height: 30px;
+	width: 240px;
+}
+.design {
+	padding-top:15px;
+}
+div#Aggrements {
+	margin-top: 50px;
+}
+input[type="checkbox"] {
+	margin-top: 5px;	
+}
+button.check {
+	font-size: 8pt;
+}
+input#ph1 {
+	width: 50px;
+	margin-right: 0;	
+}
+button#submit {
+	margin-left: 60%;
+	width: 200px;
+	height: 40px;	
+}
+.confirm {
+	margin-left: 50px;
+	font-weight: bold;
+	color: red;
+}

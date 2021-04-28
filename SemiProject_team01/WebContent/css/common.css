@@ -65,15 +65,17 @@ body {
   
 }
 
-#bottom-nav-first a{
-	float: left;
-  padding: 12px 4em;
-}
 
-#bottom-nav-second a{
-	float: right;
+#bottom-nav-container a {
+  float: left;
+  display: inline-block;
   padding: 12px 5em;
 }
+
+#bottom-nav-container a:first-child{
+	margin-left: 5em;
+}
+
 
 #navbar a:hover, #navbar-fixed a:hover {
   font-weight: bold;
@@ -116,6 +118,7 @@ div#content-container{
 #header.header-scrolled {
   box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
 }
+
 
 
 /* ==== footer CSS ==== */
@@ -193,3 +196,24 @@ div.col-container{
 p.colname {
 	font-weight: bolder;
 }
+
+
+
+/* 1600px 이하 화면 출력용 미디어쿼리 */
+
+@media screen and (max-width: 1600px) {
+
+	
+	#bottom-nav-container a{
+		float: left;
+	  display: inline-block;
+	  padding: 12px 4em;
+	}
+	
+	#bottom-nav-container a:first-child{
+		margin-left: 3em;
+	}
+	
+	
+}
+

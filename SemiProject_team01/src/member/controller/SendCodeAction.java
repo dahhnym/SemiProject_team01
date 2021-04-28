@@ -42,7 +42,7 @@ public class SendCodeAction extends AbstractController {
 		
 		String mobile = "010"+request.getParameter("ph2");
 		String smsContent = "[ladies and gents] "+certificationCode+" (이)가  회원가입을 위한 모바일 인증번호입니다.";
-		
+		 
 		// == 4개 파라미터(to, from, type, text)는 필수사항이다. == 
 	    HashMap<String, String> paraMap = new HashMap<String, String>();
 	    paraMap.put("to", mobile); // 수신번호
