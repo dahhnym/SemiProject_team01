@@ -68,12 +68,12 @@ $(document).ready(function(){
 
 <div id="navbar">
 	<div id="bottom-nav-container" class="content-width">
-			  <a href="javascript:void(0)">Best상품</a>
-			  <a href="javascript:void(0)">Sale상품</a>
-			  <a href="javascript:void(0)">토트백</a>
-			  <a href="javascript:void(0)">숄더백</a>
-			  <a href="javascript:void(0)">백백</a>
-			  <a href="javascript:void(0)">클러치백</a>
-			  <a href="javascript:void(0)">악세사리</a>
+			  <a href="<%=ctxPath%>/List.to">Best상품</a>
+			  <a href="<%=ctxPath%>/List.to">Sale상품</a>
+			  <a href="<%=ctxPath%>/List.to">토트백</a>
+			  <a href="<%=ctxPath%>/List.to">숄더백</a>
+			  <a href="<%=ctxPath%>/List.to">백백</a>
+			  <a href="<%=ctxPath%>/List.to">클러치백</a>
+			  <a href="<%=ctxPath%>/List.to">악세사리</a>
 	</div>
 </div>
