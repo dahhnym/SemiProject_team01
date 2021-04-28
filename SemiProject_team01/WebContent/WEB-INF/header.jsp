@@ -5,9 +5,10 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<title>::: ladies and gents :::</title>
 <!-- common.css -->
-<link rel="stylesheet" href="../css/common.css"/>
+<link rel="stylesheet" href="<%=ctxPath%>/css/common.css"/>
+
 
 <!-- Google Font -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -18,6 +19,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
 
 <script type="text/javascript">
 
@@ -63,16 +68,12 @@ $(document).ready(function(){
 
 <div id="navbar">
 	<div id="bottom-nav-container" class="content-width">
-		<div id="bottom-nav-first" >
-		  <a href="javascript:void(0)">Best상품</a>
-		  <a href="javascript:void(0)">Sale상품</a>
-		</div>  
-		<div id="bottom-nav-second">
-		  <a href="javascript:void(0)">토트백</a>
-		  <a href="javascript:void(0)">숄더백</a>
-		  <a href="javascript:void(0)">백백</a>
-		  <a href="javascript:void(0)">클러치백</a>
-		  <a href="javascript:void(0)">악세사리</a>
-		</div>
+			  <a href="javascript:void(0)">Best상품</a>
+			  <a href="javascript:void(0)">Sale상품</a>
+			  <a href="javascript:void(0)">토트백</a>
+			  <a href="javascript:void(0)">숄더백</a>
+			  <a href="javascript:void(0)">백백</a>
+			  <a href="javascript:void(0)">클러치백</a>
+			  <a href="javascript:void(0)">악세사리</a>
 	</div>
 </div>
