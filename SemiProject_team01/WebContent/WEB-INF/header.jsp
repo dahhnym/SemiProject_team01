@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- common.css -->
-<link rel="stylesheet" href="css/common.css"/>
+<link rel="stylesheet" href="../css/common.css"/>
 
 <!-- Google Font -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
