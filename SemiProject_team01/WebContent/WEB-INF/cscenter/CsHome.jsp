@@ -39,8 +39,8 @@
     <div id="home" data-tab-content class="active">
       <jsp:include page="../cscenter/faq/faq_all.jsp"/>
       <div align="center">
-	      <a href="#">1&nbsp;&nbsp;</a>
-	      <a href="#">2</a>
+	      <a href="<%= request.getContextPath()%>/cscenter/csHome.to">1&nbsp;&nbsp;</a>
+	      <a href="<%= request.getContextPath()%>/cscenter/csHome.to?page=2">2</a>
       </div>
     </div>
     <div id="payment" data-tab-content>
@@ -69,11 +69,11 @@
   	<div align="center">
   	<table>
   		<tr>
-  			<td class="pd_right"><h3><a class="menu_cs" href="<%= request.getContextPath()%>/cscenter/csBoard.to">전체보기</a></h3></td>
-  			<td class="pd_right"><h3><a class="menu_cs" href="#">상품문의</a></h3></td>
-  			<td class="pd_right"><h3><a class="menu_cs" href="#">배송전취소/변경</a></h3></td>
-  			<td class="pd_right"><h3><a class="menu_cs" href="#">배송/교환/반품</a></h3></td>
-  			<td><h3><a class="menu_cs" href="#">입금확인/입금자변경</a></h3></td>
+  			<td class="pd_right"><h3><a class="menu_cs" href="<%= request.getContextPath()%>/cscenter/csBoard.to?cateno=0">전체보기</a></h3></td>
+  			<td class="pd_right"><h3><a class="menu_cs" href="<%= request.getContextPath()%>/cscenter/csBoard.to?cateno=1">상품문의</a></h3></td>
+  			<td class="pd_right"><h3><a class="menu_cs" href="<%= request.getContextPath()%>/cscenter/csBoard.to?cateno=2">배송전취소/변경</a></h3></td>
+  			<td class="pd_right"><h3><a class="menu_cs" href="<%= request.getContextPath()%>/cscenter/csBoard.to?cateno=3">배송/교환/반품</a></h3></td>
+  			<td><h3><a class="menu_cs" href="<%= request.getContextPath()%>/cscenter/csBoard.to?cateno=4">입금확인/입금자변경</a></h3></td>
   		</tr>
   	</table>
 	<br><br><br><br><br><br>
