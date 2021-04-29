@@ -25,7 +25,7 @@ $('.btn_gotop').click(function(){
 
 
 <footer id="footer">
-<hr style="margin-bottom: 15px;">
+<hr style="margin-top : 200px; margin-bottom: 15px;">
 <div class="div-footer content-width">
 	<nav id="footer-nav">
 		<ul>
