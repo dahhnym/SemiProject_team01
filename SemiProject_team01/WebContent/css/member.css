@@ -48,5 +48,6 @@ button#submit {
 .confirm {
 	margin-left: 50px;
 	font-weight: bold;
+	font-size: 11pt;
 	color: red;
 }

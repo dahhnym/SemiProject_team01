@@ -2,9 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<% 
-	String ctxPath = request.getContextPath(); 
-%>
+<% String ctxPath = request.getContextPath(); %>
 
 <jsp:include page="../header.jsp" />
 <link rel="stylesheet" href="../css/member.css"/>
@@ -14,7 +12,7 @@
     var bool = false;
 	
 	$(function(){
-
+		
 		$("span.confirm").hide();
 		$("tr#etc").hide();
 		$("input#userid").focus();
@@ -262,6 +260,7 @@
 		}
 	}
 	
+	
 	///////////////////////////////////////////////////////////////////////////////////////
 	// 아이디 중복확인 함수	
 	function idDuplicateCheck() {
@@ -281,7 +280,7 @@
 	 					// 입력한 userid 가 DB 테이블에 존재하지 않는 경우라면
 	 					$("span#useridCheck").show();
 	 					$("span#useridCheck").html("사용가능한 ID 입니다.").css("color","green");
-	 				}            
+	 				} 
 				},
 					error: function(request, status, error){
 	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -292,7 +291,6 @@
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	var b_sendCode = false;	// 인증번호 발송여부 확인용
-	var sent_certificationCode = "";	// 실제 보내진 인증번호
 	
 	// 전화번호 인증번호 발송 함수
 	function func_sendCode() {
@@ -310,24 +308,26 @@
 			if(!bool){
 				$("span#ph2Check").show();
 				$("span#ph2Check").html("010 뒤 숫자 8자리를 입력해주세요.");
-				
+				$("input#ph2").html("");
+				$("input#ph2").focus();
+				bool=true;
 			} else {
 				$("span#ph2Check").hide();
 				$.ajax({
 					url:"<%= ctxPath%>/member/sendCode.to",
-					data:{"ph2":$("input#ph2").val().trim()},
-					dataType:"json",	
+					dataType:"json",
+					data: {"ph2":$("input#ph2").val().trim()},
 					success:function(json){
 						if(json!=null&&json!="") {
 		 					// 인증코드가 발송되었다면
 		 					$("span#sendCodeCheck").show();
 		 					$("span#sendCodeCheck").html("인증번호가 발송되었습니다.").css("color","green");
-		 					$("input#userid").val("");
 		 					b_sendCode=true;
 		 				} else {
 		 					// 인증코드가 발송되지 않았다면
 		 					$("span#sendCodeCheck").show();
 		 					$("span#sendCodeCheck").html("인증번호 발송에 실패했습니다.").css("color","red");
+		 					bool=true;
 		 				} 
 					},
 						error: function(request, status, error){
@@ -341,21 +341,20 @@
 	///////////////////////////////////////////////////////////////////////////////////////
 	// 인증번호 일치여부 확인 함수
 	function func_codeCheck() {
-		var certificationCode = $("input#certificationCode").val().trim();	// 사용자가 입력한 인증번호
 		
 		if(b_sendCode&&certificationCode==""){	// 발송되었는데 인증번호 입력이 안된 경우
 			$("span#codeCheck").show();
 			$("span#codeCheck").html("인증번호를 입력해주세요.");	
+			bool=true;
 			
 		} else if(b_sendCode&&certificationCode!="") {	// 발송되었고 인증번호 입력된 경우
-			console.log(sent_certificationCode);
-			
-			if(sent_certificationCode==certificationCode) {
+			if(certificationCode) {
 				$("span#codeCheck").show();
 				$("span#codeCheck").html("인증번호 되었습니다.");	
 			} else {
 				$("span#codeCheck").show();
 				$("span#codeCheck").html("인증번호가 틀립니다. 다시 입력해주세요.");	
+				bool=true;
 			}
 		}
 	}
