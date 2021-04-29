@@ -11,11 +11,10 @@
 
   
 <script type="text/javascript">
-
 $(document).ready(function(){
 	
 	$('.optionModify').hide();
-	
+	$("#wishlistlayer").hide();
 	$("a#option_change").click(function(){
 		var $target = $(event.target);
 		$target.next().show();
@@ -31,7 +30,6 @@ $(document).ready(function(){
 	// 장바구니 비우기 
 	$("a#deleteCart").click(function(){
 		var deleteOk = confirm("장바구니를 비우시겠습니까?");
-
 		if(deleteOk==true){
 			// 확인버튼을 누른다면 
 			location.href="";
@@ -51,19 +49,20 @@ $(document).ready(function(){
 	
 	
 });
-
-
 function option_change(pro_code,pro_name,pro_detail_code,pro_imagefilename,pro_price,pro_quantity){
 	var option_layer = $('#option_modify_layer_0'+pro_detail_code);
 	
 	$('.optionModify').hide();
 	option_layer.show();
-
+	
+}
+function update_qty(){
+	
 	
 }
 
-function update_qty(){
-	
+function moveOrderCart(){
+	$("#wishlistlayer").show();
 	
 }
 
@@ -125,8 +124,8 @@ function update_qty(){
 									<td scope="col"><input type="checkbox" id="basket_chk_id_0"
 										name="product_check" value="${cart.cart_pro_detail_code}" onclick="ChangeTotalPrice()" /></td>
 									<td scope="col" class="thumb">
-									<a href="/product/detail.html?product_no=28871&cate_no=82">
-										<img src="${contextPath}/thumbnails.do?pro_code=${cart.cart_pro_code}&fileName=${cart.pro_imagefilename}"/>
+									<a href="">
+										<img src=""/>
 									</a></td>
 									<td scope="col" class="product" style="text-align: left;">
 									<ul class="xans-element- xans-order xans-order-optionall option" style="margin-top: 15px;">
@@ -135,7 +134,7 @@ function update_qty(){
 												<strong class="name">${cart.pro_name}토트백</strong>	
 											</a>
 										</li>
-										<li class="xans-record-">[옵션: ${cart.cart_pro_color }]<br />
+										<li class="xans-record-" value="">[옵션: ${cart.cart_pro_color }]<br />
 										
 										<a onclick="option_change(${cart.cart_pro_code},'${cart.pro_name}',${cart.cart_pro_detail_code},
 												'${cart.pro_imagefilename}',${cart.cart_pro_price},${cart.cart_pro_quantity})"
@@ -273,8 +272,8 @@ function update_qty(){
 				<tbody>
 					<tr>
 						<td scope="col" class="thumb">
-									<a href="/product/detail.html?product_no=28871&cate_no=82">
-										<img src="${contextPath}/thumbnails.do?pro_code=${cart.cart_pro_code}&fileName=${cart.pro_imagefilename}"/>
+									<a href="">
+										<img src=""/>
 									</a></td>
 									<td scope="col" class="product" style="text-align: left;">
 									<ul class="xans-element- xans-order xans-order-optionall option"  style="margin-top: 15px;">
@@ -292,7 +291,7 @@ function update_qty(){
 													
 					<!-- 옵션변경 레이어 -->
 				 			<div class="optionModify ec-base-layer2" id="option_modify_layer_0${cart.cart_pro_detail_code}" style="position: absolute !important;">
-                                    <div class="header">
+                                    <div class="header" >
                                         <h3  style="color: white !important;">옵션변경</h3>
                                     </div>
                                     <div class="content">
@@ -340,8 +339,8 @@ function update_qty(){
 										<strong><fmt:formatNumber value="${cart.cart_pro_price * cart.cart_pro_quantity}" type="number" /> 원</strong>
 									</td>
 				    	<td scope="col" class="button">
-							<a id="prod_order" class="btn_option" >주문하기</a><br>
-					    	<a id="prodtowish" class="btn_option">장바구니담기</a><br>
+							<a id="prod_order" class="btn_option" onclick="moveOrderCart()" >주문하기</a><br>
+					    	<a id="prodtowish" class="btn_option" onclick="moveOrderCart()" >장바구니담기</a><br>
 					    	<a id="proddelete" class="btn_option" >삭제</a>
 								
 					    </td>
@@ -352,12 +351,34 @@ function update_qty(){
 				
 			</table>
 
+	</div>
+
+
+		<!-- 레이어 팝업 만들기  -->
+		<div id="wishlistlayer" class="addoption ec-base-layer3" > 
+			<div class="header">
+	     		<h3  style="color: #fff !important; text-align: left;">옵션변경</h3>
+			</div>
+				<iframe style="width: 100%; height: 365px;" src="<%= request.getContextPath()%>/cart/addmyprod.to"></iframe>    
+			<a href="#none" class="close" onclick="$('#wishlistlayer').hide();"><img src="//img.echosting.cafe24.com/skin/base/common/btn_close.gif" alt="닫기"/></a>
 		
-		
+		<div class="base-bottom">
+		<span class="totalprice" style="font-size: 12pt;">총상품금액(수량):</span>&nbsp;<span style="font-size: 18pt;">원</span>
+		<div class="bottom_base" style="margin-top:10px;">
+	    <a href="#none" class=" btn_order" onclick="optionsChange('바로구매하기',${cart.cart_pro_code},${cart.cart_pro_detail_code},${cart.cart_pro_price},${cart.cart_pro_quantity})">
+		바로구매하기</a>
+		<a href="#none" class="btn_movecart" onclick="optionsChange('변경',${cart.cart_pro_code},${cart.cart_pro_detail_code},${cart.cart_pro_price},${cart.cart_pro_quantity})">
+	    	장바구니담기</a>
+	    	</div>
+    	</div>
 		</div>
 
-</div>	
 
+</div>
+
+	
+
+		
 
 
 
