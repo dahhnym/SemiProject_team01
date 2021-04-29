@@ -20,15 +20,16 @@ public class MemberVO {
 	private int status;                // 회원탈퇴유무   1: 사용가능(가입중) / 0:사용불능(탈퇴) 
 	private int idle;                  // 휴면유무         0: 활동중  /  1 : 휴면중 
 	                                   // 마지막으로 로그인 한 날짜시간이 현재시각으로 부터 1년이 지났으면 휴면으로 지정 
+	private String adagreements;	   // 마케팅 동의여부   동의:1  / 비동의:0
 	
 	
-	
+
 	/////////////////////////////////////////////////////////////////////////////////////
 	public MemberVO() {}
 	
 	
 	public MemberVO(String userid, String pwd, String name, String email, String mobile, String postcode,
-			String address, String detailaddress, String extraaddress, String gender, String birthday) {
+			String address, String detailaddress, String extraaddress, String gender, String birthday, String adagreements) {
 		
 		this.userid = userid;
 		this.pwd = pwd;
@@ -41,6 +42,7 @@ public class MemberVO {
 		this.extraaddress = extraaddress;
 		this.gender = gender;
 		this.birthday = birthday;
+		this.adagreements = adagreements;
 	}
 	
 	
@@ -147,6 +149,12 @@ public class MemberVO {
 	}
 	public void setIdle(int idle) {
 		this.idle = idle;
+	}
+	public String getAdagreements() {
+		return adagreements;
+	}
+	public void setAdagreements(String adagreements) {
+		this.adagreements = adagreements;
 	}
 
 	
