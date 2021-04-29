@@ -1,6 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+  
+<script>
+$(window).scroll(function(){
+	if ($(this).scrollTop() > 300){
+		$('.btn_gotop').show();
+	} else{
+		$('.btn_gotop').hide();
+	}
+});
+$('.btn_gotop').click(function(){
+	$('html, body').animate({scrollTop:0},400);
+	
+	
+	return false;
+});
+</script>
+  
     
+<a href="#" class="btn_gotop">
+ <i class="fas fa-angle-up"></i>
+</a>
+
 
 
 <footer id="footer">

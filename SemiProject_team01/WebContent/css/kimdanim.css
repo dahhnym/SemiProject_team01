@@ -1,9 +1,5 @@
 @charset "UTF-8";
 
-
-
-
-
 /* === home.jsp CSS === */
 
 
@@ -11,4 +7,53 @@ h3.itemtitle {
 	text-align: center;
 	margin-top: 50px;
 	font-weight: bold;
+	border: solid 1px gray;
+}
+
+#content-container {
+	border: solid 1px gray;
+}
+
+
+/* 부트스트랩 그리드  이미지 클릭*/
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial;
+}
+
+/* The grid: Four equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 20%;
+  height: 300px;
+  padding: 10px;
+  border: solid 1px gray;
+}
+
+/* Style the images inside the grid */
+.column img {
+  opacity: 1; 
+  cursor: pointer; 
+}
+
+.text{
+	position: static;
+	float: left;
+}
+
+.column:hover {
+  background-color: white;
+  opacity: 0.5;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
 }
