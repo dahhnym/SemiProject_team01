@@ -22,6 +22,28 @@ public class MemberVO {
 	                                   // 마지막으로 로그인 한 날짜시간이 현재시각으로 부터 1년이 지났으면 휴면으로 지정 
 	
 	
+	
+	/////////////////////////////////////////////////////////////////////////////////////
+	public MemberVO() {}
+	
+	
+	public MemberVO(String userid, String pwd, String name, String email, String mobile, String postcode,
+			String address, String detailaddress, String extraaddress, String gender, String birthday) {
+		
+		this.userid = userid;
+		this.pwd = pwd;
+		this.name = name;
+		this.email = email;
+		this.mobile = mobile;
+		this.postcode = postcode;
+		this.address = address;
+		this.detailaddress = detailaddress;
+		this.extraaddress = extraaddress;
+		this.gender = gender;
+		this.birthday = birthday;
+	}
+	
+	
 	/////////////////////////////////////////////////////////////////////////////////////
 	
 	public String getUserid() {

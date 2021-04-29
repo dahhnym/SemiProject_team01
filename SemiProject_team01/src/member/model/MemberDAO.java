@@ -1,6 +1,7 @@
 package member.model;
 
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.*;
 
 import javax.naming.Context;
@@ -10,6 +11,7 @@ import javax.sql.DataSource;
 
 import util.security.AES256;
 import util.security.SecretMyKey;
+import util.security.Sha256;
 
 public class MemberDAO implements InterMemberDAO {
 
@@ -69,7 +71,45 @@ public class MemberDAO implements InterMemberDAO {
 		}
 		
 		return b;
-	}// end of public boolean idDuplicateCheck(String userid) --------------------------------------
+	}// end of public boolean idDuplicateCheck(String userid) throws SQLException --------------------------------------
+
+	
+	// 회원가입 정보 insert 하기
+	@Override
+	public int registerMember(MemberVO member) throws SQLException {
+		int n=0;
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = " insert into tbl_member(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday) "  + 
+					     " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, member.getUserid());
+			pstmt.setString(2, Sha256.encrypt(member.getPwd())); // 암호를 SHA256 알고리즘으로 단방향(한번 암호화시키면 해독(복호화) 불가) 암호화 시킨다. 
+			pstmt.setString(3, member.getName());
+			pstmt.setString(4, aes.encrypt(member.getEmail())); // 이메일을 AES256 알고리즘으로 양방향 암호화 시킨다. 물건 구매를 하게되면 관련메일을 보내야 하기 때문에 양방향 암호화를 시켜야 한다.
+			pstmt.setString(5, aes.encrypt(member.getMobile())); // 휴대폰 번호를 AES256 알고리즘으로 양방향 암호화 시킨다. 물건 구매를 하게되면 관련메일을 보내야 하기 때문에 양방향 암호화를 시켜야 한다.
+			pstmt.setString(6, member.getPostcode());
+	        pstmt.setString(7, member.getAddress());
+	        pstmt.setString(8, member.getDetailaddress());
+	        pstmt.setString(9, member.getExtraaddress());
+	        pstmt.setString(10, member.getGender());
+	        pstmt.setString(11, member.getBirthday());
+			
+	        n = pstmt.executeUpdate();
+		
+		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
+			// aes 에서 발생하는 예외처리로 또는(|)으로 처리해준다.
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return n;
+	}// end of public int registerMember(MemberVO member) throws SQLException ---------------------------------------------
 
 		
 }
