@@ -1,6 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% String ctxPath = request.getContextPath(); %>   
+<%@ page import="java.util.Date , java.text.SimpleDateFormat" %>
+<%
+	// *** 현재시각을 알아오기 *** //
+	Date now = new Date(); // 현재시각 
+		
+		SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd"); 
+		String today=sdformat.format(now);		
+		//또는
+		String currentTime = String.format("%tF",now);
+%>
 <jsp:include page="../header.jsp"/>
 <!DOCTYPE html>
 <html>
@@ -122,17 +132,17 @@
 	 
 			<button id="search">조회</button>
 		</div> 
-		<div id="left">
+		<div class="left">
 		- 기본적으로 최근 3개월 간의 자료가 조회되며, 기간 검색 시 지난 주문 내역을 조회하실 수 있습니다.<br>- 주문번호를 클릭하시면 해당 주문에 대한 상세내역을 확인하실 수 있습니다.
 		</div>
 	<br>
 	<br>
-	<h4 id="left">주문 상품 정보</h4>
+	<h4 class="left">주문 상품 정보</h4>
 	<br>
 	
 	<table id="prodInfo">
 		<thead align="center">
-			<tr>
+			<tr id="prodInfo">
 				<th>주문일자<br>[주문번호]</th>
 				<th>이미지</th>
 				<th width="30%">상품정보</th>
@@ -144,10 +154,10 @@
 		</thead>
 		
 		<tbody align="center">
-			<tr>
-				<td>2021-04-17<br><a=href="">[주문번호링크]</a></td>
-				<td>이미지 연결</td>
-				<td align="left">[상품정보]링크걸기<br>[옵션:컬러]</td>
+			<tr id="prodInfo">
+				<td>2021-04-17<br><a href="">[주문번호링크]</a></td>
+				<td><a href="">이미지 연결</a></td>
+				<td align="left"><a href="">[상품정보]링크걸기</a><br>[옵션:컬러]</td>
 				<td>1</td>
 				<td>30,000원</td>
 				<td>입금전</td>
@@ -163,7 +173,7 @@
 	<div id="tab-2" class="tab-content">
 		<div class="tab">
 			<div class="tab2"> 
-					<select class="orderStatus" id="orderStatus2">
+				<select class="orderStatus" id="orderStatus2">
 					<option value="all" selected>전체 주문처리상태</option>
 					<option value="proceeding">진행중</option>
 					<option value="completed">완료</option>
@@ -187,17 +197,17 @@
 	 		
 			<button id="search">조회</button>
 		</div> 
-		<div id="left">
+		<div class="left">
 		- 기본적으로 최근 3개월 간의 자료가 조회되며, 기간 검색 시 지난 주문 내역을 조회하실 수 있습니다.<br>- 주문번호를 클릭하시면 해당 주문에 대한 상세내역을 확인하실 수 있습니다.
 		</div>
 	<br>
 	<br>
-	<h4 id="left">주문 상품 정보</h4>
+	<h4 class="left">주문 상품 정보</h4>
 	<br>
 	
 	<table id="prodInfo">
 		<thead align="center">
-			<tr>
+			<tr id="prodInfo">
 				<th>주문일자<br>[주문번호]</th>
 				<th>이미지</th>
 				<th width="30%">상품정보</th>
@@ -209,13 +219,13 @@
 		</thead>
 		
 		<tbody align="center">
-			<tr>
-				<td>2021-04-17<br><a=href="">[주문번호링크]</a></td>
-				<td>이미지 연결</td>
-				<td align="left">[상품정보]링크걸기<br>[옵션:컬러]</td>
+			<tr id="prodInfo">
+				<td>2021-04-17<br><a href="">[주문번호링크]</a></td>
+				<td><a href="">이미지 연결</a></td>
+				<td align="left"><a href="">[상품정보]링크걸기</a><br>[옵션:컬러]</td>
 				<td>1</td>
 				<td>30,000원</td>
-				<td>입금전</td>
+				<td>진행중</td>
 				<td>교환</td>
 			</tr>
 		</tbody>
