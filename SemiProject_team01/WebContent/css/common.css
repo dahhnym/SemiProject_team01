@@ -65,15 +65,17 @@ body {
   
 }
 
-#bottom-nav-first a{
-	float: left;
-  padding: 12px 4em;
-}
 
-#bottom-nav-second a{
-	float: right;
+#bottom-nav-container a {
+  float: left;
+  display: inline-block;
   padding: 12px 5em;
 }
+
+#bottom-nav-container a:first-child{
+	margin-left: 5em;
+}
+
 
 #navbar a:hover, #navbar-fixed a:hover {
   font-weight: bold;
@@ -118,7 +120,34 @@ div#content-container{
 }
 
 
+
 /* ==== footer CSS ==== */
+
+.btn_gotop {
+	display:none;
+	position:fixed;
+	bottom:30px;
+	right:30px;
+	z-index:999;
+	border:1px solid #ccc;
+	outline:none;
+	background-color:white;
+	color:#333;
+	cursor:pointer;
+	padding:5px 12px;
+	border-radius:100%;
+}
+
+.fa-angle-up{
+	color: #1a1a1a;
+}
+
+.btn_gotop:hover{
+	transition: 0.2s;
+	border: 1px solid #737373;
+}
+
+
 #footer{
 	font-size: 13px;
 }
@@ -193,3 +222,24 @@ div.col-container{
 p.colname {
 	font-weight: bolder;
 }
+
+
+
+/* 1600px 이하 화면 출력용 미디어쿼리 */
+
+@media screen and (max-width: 1600px) {
+
+	
+	#bottom-nav-container a{
+		float: left;
+	  display: inline-block;
+	  padding: 12px 4em;
+	}
+	
+	#bottom-nav-container a:first-child{
+		margin-left: 3em;
+	}
+	
+	
+}
+
