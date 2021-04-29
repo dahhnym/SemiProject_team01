@@ -5,14 +5,75 @@
 
 h3.itemtitle {
 	text-align: center;
-	margin-top: 50px;
+	margin-top: 100px;
+	margin-bottom: 50px;
 	font-weight: bold;
-	border: solid 1px gray;
+	/* border: solid 1px gray; */
 }
 
-#content-container {
-	border: solid 1px gray;
+.content-width {
+	width: 70%;
 }
+
+
+#content-container {
+	padding: 50px 100px 0 100px;
+	/* border: solid 1px gray; */
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+
+/* 신상품 제품 목록 스크롤 페이징 처리 */
+div.moreProdInfo {
+   display: inline-block; 
+   margin: 1em;
+   /* border: solid 1px blue; */
+   width: 21%;
+   position: relative;
+}
+
+
+#displayHIT{
+	width: 100%;
+	margin: 0;
+	
+}
+
+.overlay {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 25%;	
+	/* border: solid 1px purple; */
+	opacity: 0;
+  	transition: .3s ease;
+  	background-color: #c0c0c0;
+}
+
+.overlay > span {
+	opacity: 0;
+}
+
+
+div.moreProdInfo:hover .overlay {
+  background-color: white;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+div.moreProdInfo:hover, .overlay > span {
+	opacity: 1; !important
+	
+	
+}
+
+
+
 
 
 /* 부트스트랩 그리드  이미지 클릭*/
@@ -56,4 +117,15 @@ body {
   content: "";
   display: table;
   clear: both;
+}
+
+.span {
+	position: static;
+	float: left;
+	opacity: 0;
+}
+
+.span:hover {
+	transition: 0.1s;
+	opacity: 1;
 }
