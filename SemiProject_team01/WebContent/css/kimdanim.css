@@ -3,7 +3,8 @@
 /* === home.jsp CSS === */
 
 
-h3.itemtitle {
+.itemtitle {
+	font-size: 25px;
 	text-align: center;
 	margin-top: 100px;
 	margin-bottom: 50px;
@@ -27,6 +28,24 @@ h3.itemtitle {
 	cursor: pointer;
 }
 
+ .hr-sect {
+    display: flex;
+    flex-basis: 50%;
+    align-items: center;
+    /* font-size: 12px; */
+    margin: 80px 0px;
+}
+.hr-sect::before,
+.hr-sect::after {
+  content: "";
+  flex-grow: 1;
+  background: rgba(0, 0, 0, 0.35);
+  height: 1px;
+  font-size: 0px;
+  line-height: 0px;
+  margin: 0px 100px 0px 100px;
+}
+
 
 /* 신상품 제품 목록 스크롤 페이징 처리 */
 div.moreProdInfo {
@@ -37,11 +56,9 @@ div.moreProdInfo {
    position: relative;
 }
 
-
-#displayHIT{
+#displayNEW{
 	width: 100%;
 	margin: 0;
-	
 }
 
 .overlay {
@@ -68,64 +85,6 @@ div.moreProdInfo:hover .overlay {
 
 div.moreProdInfo:hover, .overlay > span {
 	opacity: 1; !important
-	
-	
 }
 
 
-
-
-
-/* 부트스트랩 그리드  이미지 클릭*/
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial;
-}
-
-/* The grid: Four equal columns that floats next to each other */
-.column {
-  float: left;
-  width: 20%;
-  height: 300px;
-  padding: 10px;
-  border: solid 1px gray;
-}
-
-/* Style the images inside the grid */
-.column img {
-  opacity: 1; 
-  cursor: pointer; 
-}
-
-.text{
-	position: static;
-	float: left;
-}
-
-.column:hover {
-  background-color: white;
-  opacity: 0.5;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.span {
-	position: static;
-	float: left;
-	opacity: 0;
-}
-
-.span:hover {
-	transition: 0.1s;
-	opacity: 1;
-}
