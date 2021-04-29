@@ -10,7 +10,6 @@ public class CsHomeAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		//super.setRedirect(true);
 		super.setViewPage("/WEB-INF/cscenter/CsHome.jsp");
 		
 	}
