@@ -513,7 +513,7 @@
   	<div align="center">
   	<table>
   		<tr>
-  			<td class="pd_right"><h3><a class="menu_cs" href="#">전체보기</a></h3></td>
+  			<td class="pd_right"><h3><a class="menu_cs" href="../cscenter/csBoard.to">전체보기</a></h3></td>
   			<td class="pd_right"><h3><a class="menu_cs" href="#">상품문의</a></h3></td>
   			<td class="pd_right"><h3><a class="menu_cs" href="#">배송전취소/변경</a></h3></td>
   			<td class="pd_right"><h3><a class="menu_cs" href="#">배송/교환/반품</a></h3></td>
