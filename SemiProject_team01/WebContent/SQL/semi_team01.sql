@@ -176,53 +176,9 @@ nocycle
 nocache;
 
 
-
----- *** q&a 테이블 *** -----
-
---drop table tbl_faq purge;
-create table tbl_faq
-(faqNo    number(5) not null
-,faqtitle   varchar2(15) not null
-,faqcontent varchar2(2000) not null
-,fk_fcNo  number(2) not null
-,constraint  PK_tbl_faq primary key(faqNo)
-,constraint FK_tbl_faqcategory_fk_fcNo foreign key(fk_fcNo) references tbl_faqcategory (fcNo)
-);
-
---drop table tbl_faqcategory purge;
-create table tbl_faqcategory 
-(fcNo    number(2) not null
-,fcname varchar2(30) not null
-,constraint  PK_tbl_faqcategory primary key(fcNo)
-,constraint UQ_tbl_faqcategory_fcname unique(fcname)
-);
-
-create sequence seq_faqcategory_fcNo
-start with 1
-increment by 1
-nomaxvalue
-nominvalue
-nocycle
-nocache;
-
-DROP SEQUENCE seq_faqcategory_fcNo;
-
-insert into tbl_faqcategory(fcNo, fcname) values(seq_faqcategory_fcNo.nextval, '입금결제');
-insert into tbl_faqcategory(fcNo, fcname) values(seq_faqcategory_fcNo.nextval, '배송관련');
-insert into tbl_faqcategory(fcNo, fcname) values(seq_faqcategory_fcNo.nextval, '반품/교환');
-insert into tbl_faqcategory(fcNo, fcname) values(seq_faqcategory_fcNo.nextval, '배송 전 변경/취소');
-insert into tbl_faqcategory(fcNo, fcname) values(seq_faqcategory_fcNo.nextval, '기타문의');
 commit;
 
 
-
----------------------------------------------------------------------------------------------------------------------
-----------------------------------------테이블/시퀀스 생성 끝-----------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------
-
-
-select *
-from tbl_faqcategory;
 
 select *
 from tbl_member;
@@ -238,4 +194,4 @@ from tbl_faq;
 
 
 
-commit;
+
