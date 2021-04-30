@@ -153,9 +153,9 @@ nocache;
 
 ---- *** 제품 상세 테이블 : tbl_productdetail *** ----
 create table tbl_proddetail
-(pdetailnum     number(8) not null      --  제품상세번호
+(pdetailnum     number     --  제품상세번호
 ,fk_pnum        number(8) not null      -- 제품번호
-,optionname         varchar2(10) not null   --옵션명
+,optionname     varchar2(10) not null   --옵션명
 ,pqty           number(8) default 0      -- 제품 재고량
 ,saleqty        number(8) default 0      -- 누적판매량
 ,pinputdate     date default sysdate     -- 제품입고일자
@@ -164,17 +164,75 @@ create table tbl_proddetail
 );
 
 
+create sequence seq_tbl_proddetail_pdetailnum
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+
+---- *** q&a 테이블 *** -----
+
+--drop table tbl_faq purge;
+create table tbl_faq
+(faqNo    number(5) not null
+,faqtitle   varchar2(15) not null
+,faqcontent varchar2(2000) not null
+,fk_fcNo  number(2) not null
+,constraint  PK_tbl_faq primary key(faqNo)
+,constraint FK_tbl_faqcategory_fk_fcNo foreign key(fk_fcNo) references tbl_faqcategory (fcNo)
+);
+
+--drop table tbl_faqcategory purge;
+create table tbl_faqcategory 
+(fcNo    number(2) not null
+,fcname varchar2(30) not null
+,constraint  PK_tbl_faqcategory primary key(fcNo)
+,constraint UQ_tbl_faqcategory_fcname unique(fcname)
+);
+
+create sequence seq_faqcategory_fcNo
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+DROP SEQUENCE seq_faqcategory_fcNo;
+
+insert into tbl_faqcategory(fcNo, fcname) values(seq_faqcategory_fcNo.nextval, '입금결제');
+insert into tbl_faqcategory(fcNo, fcname) values(seq_faqcategory_fcNo.nextval, '배송관련');
+insert into tbl_faqcategory(fcNo, fcname) values(seq_faqcategory_fcNo.nextval, '반품/교환');
+insert into tbl_faqcategory(fcNo, fcname) values(seq_faqcategory_fcNo.nextval, '배송 전 변경/취소');
+insert into tbl_faqcategory(fcNo, fcname) values(seq_faqcategory_fcNo.nextval, '기타문의');
+commit;
+
+
+
+---------------------------------------------------------------------------------------------------------------------
+----------------------------------------테이블/시퀀스 생성 끝-----------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------
+
+
+select *
+from tbl_faqcategory;
+
 select *
 from tbl_member;
 
 select *
 from tbl_proddetail;
 
-
 select *
 from tbl_product;
 
+select *
+from tbl_faq;
 
 
 
-
+commit;

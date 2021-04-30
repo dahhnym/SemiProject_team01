@@ -249,7 +249,7 @@ $(function(){
 				<td align="left"><a href="">[상품정보]링크걸기</a><br>[옵션:컬러]</td>
 				<td>1</td>
 				<td>30,000원</td>
-				<td align="center"><div id="pointbox">5% 적립</div>150원</td>
+				<td align="center"><div id="pointbox">5% 적립</div>150p</td>
 				<td>[무료]</td>
 				<td>30,000원</td>
 			</tr>
