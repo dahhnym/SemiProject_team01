@@ -1,0 +1,6 @@
+@charset "UTF-8";
+.container_b {
+	border:solid 1px gray;
+	max-width: 800px;
+	margin: 0 auto;
+}

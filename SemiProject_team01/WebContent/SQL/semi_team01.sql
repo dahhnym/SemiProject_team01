@@ -12,7 +12,7 @@ create table tbl_member
 ,gender             varchar2(1)              -- 성별   남자:1  / 여자:2
 ,birthday           varchar2(10)             -- 생년월일   
 ,point              number default 0         -- 포인트
-,fk_memberlevel     varchar(20)  -- 등급
+,fk_memberlevel     varchar(20)  default 'sliver'   -- 등급
 ,registerday        date default sysdate     -- 가입일자 
 ,lastpwdchangedate  date default sysdate     -- 마지막으로 암호를 변경한 날짜  
 ,status             number(1) default 1 not null     -- 회원탈퇴유무   1: 사용가능(가입중) / 0:사용불능(탈퇴) 
@@ -42,10 +42,11 @@ create table tbl_memberlevel
 select *
 from tbl_member;
 
+delete tbl_member where userid='test';
+commit;
 
-
-
-
+alter table tbl_member add adagreements varchar2(1) default 0 not null; -- 마케팅동의여부      1 : 동의  /  0 : 비동의 
+commit;
 
 drop table tbl_member purge;
 drop table tbl_loginhistory purge;
@@ -161,6 +162,10 @@ create table tbl_proddetail
 ,constraint  PK_tbl_proddetail_pdetailnum primary key(pdetailnum)
 ,constraint FK_tbl_proddetail_fk_pnum foreign key(fk_pnum) references tbl_product(pnum)
 );
+
+
+select *
+from tbl_member;
 
 select *
 from tbl_proddetail;

@@ -7,7 +7,6 @@
 /* memberRegister.jsp 적용 */
 
 div#main {	
-	padding-top: 300px;	/* 조절필요 */
 	margin: 0 auto;	
 	width: 50%;
 }
@@ -40,7 +39,7 @@ input#ph1 {
 	width: 50px;
 	margin-right: 0;	
 }
-button#submit {
+button#register {
 	margin-left: 60%;
 	width: 200px;
 	height: 40px;	
@@ -48,5 +47,11 @@ button#submit {
 .confirm {
 	margin-left: 50px;
 	font-weight: bold;
+	font-size: 11pt;
 	color: red;
+}
+.gender {
+	color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
 }
