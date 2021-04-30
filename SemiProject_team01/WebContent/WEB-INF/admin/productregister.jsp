@@ -134,7 +134,7 @@
 				  	</td>
 				   	<td> 
 				   	
-				   		<label for="spinnerImgQty">파일수 : </label>
+				   		<label for="spinnerImgQty">옵션수 : </label>
 			          		<input id="spinnerImgQty" value="0" style="width: 30px; height: 20px;">
 			             <div id="divfileattach"></div>
 			              
