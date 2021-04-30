@@ -135,6 +135,6 @@ table#modal-body{
 
 
 
-table.orderInfo {
+table.orderInfo > td{
 	width:90%; margin:0 auto; text-align:right
 }

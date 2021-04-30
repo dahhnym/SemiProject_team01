@@ -175,7 +175,9 @@ nominvalue
 nocycle
 nocache;
 
+
 commit;
+
 
 
 select *
@@ -184,14 +186,11 @@ from tbl_member;
 select *
 from tbl_proddetail;
 
-
 select *
 from tbl_product;
 
-
-
-
-
+select *
+from tbl_faq;
 
 
 
