@@ -17,9 +17,10 @@ public class MemberRegisterAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		HttpSession session = request.getSession();
-		session.setAttribute("userid", request.getParameter("userid"));	// 세션 아이디 저장
-		
+		/*
+		 * HttpSession session = request.getSession(); session.setAttribute("userid",
+		 * request.getParameter("userid")); // 세션 아이디 저장
+		 */
 				
 		String method = request.getMethod();
 					
