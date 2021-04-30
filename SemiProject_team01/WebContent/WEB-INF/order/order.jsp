@@ -423,17 +423,6 @@ $(function(){
 				<input type="text" style="width:100%;border:1px solid gray; text-align:right;" value="원" />
 			</td>
 		</tr>
-		<tr>	         	
-			<th style="text-align:left; width:40%; ">할인 쿠폰</th>
-         	<td>
-         		<select class="orderStatus" id="coupon" style=" margin-right:0px;">
-					<option value="" selected>&nbsp;쿠폰을 사용하시겠습니까?&nbsp;</option>
-					<c:forEach var="" items="">
-						<option value=""></option>
-					</c:forEach>
-				</select>				
-         	</td>
-		</tr>
 	</table>
 	<hr>
 	<br><br>
