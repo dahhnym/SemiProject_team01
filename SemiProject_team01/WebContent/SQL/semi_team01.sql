@@ -51,8 +51,8 @@ commit;
 drop table tbl_member purge;
 drop table tbl_loginhistory purge;
 
-
-
+ALTER TABLE tbl_member MODIFY fk_memberlevel varchar(20) default 'sliver';
+COMMIT;
 
 
 
