@@ -5,6 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="<%=ctxPath%>/css/Ohdayoon.css"/>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 
 <style type="text/css">
 
@@ -55,6 +56,20 @@
     }
 </style>
  
+ <script type="text/javascript">
+	
+	 $(document).ready(function(){
+		
+		 
+		 $("select[name=chicecolor]").change(function(){
+			  console.log($(this).val()); //value값 가져오기
+			  console.log($("select[chicecolor] option:selected").text()); //text값 가져오기
+			  
+			  
+			});
+		 
+	 });
+</script>
 
 <div class="choicecontent">
      <h2 class="name">상품명</h2>
@@ -72,14 +87,23 @@
 			<tr style="border: 0px;">
 				<th >color</th>
 				<td>
-					<select   id="product_option_id1" class="ProductOption0" name="${cart.cart_pro_detail_code}color">
+					<span class="btn_small"></span>
+					<select id="choiceoption" name="chicecolor">
+						<option value=""></option>
+						<option value="1">블랙</option>
+						<option value="2">브라운</option>
+						<option value="3">브라운</option>
+					</select>
+					<p id="requireOption"></p>
+					<%-- select   id="product_option_id1" class="ProductOption0" name="${cart.cart_pro_detail_code}color">
  						<option value="null">- [필수] 옵션을 선택해 주세요 -</option>
  						<c:if test="${cart.color_list != null}">
  						<c:forEach items="${cart.color_list}" var="color">
  						<option value="${color}">${color}</option>
  						</c:forEach>
  						</c:if>
-						</select>
+					</select>
+					--%>
 				</td>
 			</tr>
 		</table>

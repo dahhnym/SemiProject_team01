@@ -1,12 +1,15 @@
 @charset "UTF-8";
 
-div#cartcontainer{
+div.container{
+	/* border:solid 1px red; */
 	margin: 0 auto;
+	max-width: 1100px;
+	
 }
-div#contents{
+div.contents{
 	/* position: relative;  */
-	width:70%;
-	margin: 0 auto;
+	width:100%;
+	margin-top: 80px;
 }
 
 div.information{
@@ -89,7 +92,7 @@ a#allorder{
 	background-color: black;
 	color:white;
 	border: solid 1px black;
-	margin: 0px 10px 0px 520px;
+	margin: 0px 10px 0px 400px;
 }
 
 a#seperateorder{
@@ -120,7 +123,7 @@ a.btn_small{
 	height: 35px;
 	text-decoration: none;
 }
- a { color: black;}
+ a { color: black; }
  a:link { color: black; text-decoration: none;}
  a:visited { color: black; text-decoration: none;}
  a:hover { color: black; text-decoration: none; cursor: pointer;}
@@ -129,6 +132,29 @@ div.title{
 	margin: 35px 0px;
 }
 
+ol {
+    display: block;
+    list-style-type: decimal;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+}
+
+div.useInfo{
+	margin-top: 70px;
+	border: solid 1px #CCD1D1 ;
+	font-size: 10pt;
+	
+}
+div.useInfo > h3{
+    padding: 9px 0 6px 10px;
+    border-bottom: 1px solid #f1f1f1;
+    color: #353535;
+    font-size: 12pt;
+    background: #fff;
+}
 <!-- 옵션 변경 레이어  -->
 
     *{
@@ -215,10 +241,10 @@ div.title{
 .addoption{
     position: fixed;
     left: 35%;
-    top:35%;
+    top:900px;
     width: 600px;
     color: #707070;
-     margin: 0px;
+    margin: 0px;
     padding: 0px;
     border-bottom: 1px solid #b0b1b3;
     line-height: 1.5;
@@ -227,7 +253,7 @@ div.title{
 .ec-base-layer3 {
     position: fixed;
     z-index: 100;
-    border: 1px solid #757575; 
+    border: 1px solid #b0b1b3; 
     background: #fff;
 }
 
@@ -235,6 +261,7 @@ div.title{
 		margin-top: 0px;
 		padding-bottom: 15px;
 		padding-left: 10px;
+		border-top: solid 1px #b0b1b3; 
 		
 	}
 
