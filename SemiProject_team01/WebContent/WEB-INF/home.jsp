@@ -69,7 +69,7 @@ function displayHIT(start) {
            $.each(json, function(index, item){
               
                  html += "<div class='moreProdInfo'>"+
-                 			"<div class='overlay' style='height:75px' onClick=\"location.href='/Info.to'\">"+
+                 			"<div class='overlay' style='height:75px' onClick='location.href=\"<%=ctxPath%>/Info.to\"'>"+
              					"<span>제품명 : "+item.pname+"</span><br>"+
 			             		"<span style='text-decoration: line-through'>정가 : "+(item.price).toLocaleString('en')+"원</span><br>"+
 			             		"<span>할인가 : "+(item.saleprice).toLocaleString('en')+"원</span>"+
