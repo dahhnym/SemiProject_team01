@@ -1,0 +1,48 @@
+@charset "UTF-8";
+
+*{
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* login.jsp 적용 ////////////////////////////////////////////// */
+
+body{
+	/* text-align: center; */
+}
+div#loginContainer {
+	padding-top:100px;
+	width: 60%;
+	margin-left: 25%;
+}
+div#loginSide {
+	display:inline-block;
+	width: 40%;
+}
+form#registerFrm {;
+	margin: 0;
+}
+h2#loginh2{
+	text-align: left;
+	font-weight: bold;
+}
+.loginWidth {
+	margin-bottom: 15px;
+	width:240px;
+}
+.addedMenu {
+	color: black;
+	font-size: 9pt;
+}
+a.addedMenu {
+	text-decoration: underline; 
+}
+div#loginBanner {
+	display:inline-block;
+}
+img {
+ 	vertical-align: baseline;
+}
+img#loginBanner {
+	width: 400px;
+ 	height: 250px;
+}
