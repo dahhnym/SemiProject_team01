@@ -175,6 +175,47 @@ select *
 from tbl_product;
 
 
+commit;
 
+--drop table tbl_faq purge;
+create table tbl_faq
+(faqNo    number(5) not null
+,faqtitle   varchar2(15) not null
+,faqcontent varchar2(2000) not null
+,fk_fcNo  number(2) not null
+,constraint  PK_tbl_faq primary key(faqNo)
+,constraint FK_tbl_faqcategory_fk_fcNo foreign key(fk_fcNo) references tbl_faqcategory (fcNo)
+);
+
+--drop table tbl_faqcategory purge;
+create table tbl_faqcategory 
+(fcNo    number(2) not null
+,fcname varchar2(30) not null
+,fccode  varchar2(10) not null
+,constraint  PK_tbl_faqcategory primary key(fcNo)
+,constraint UQ_tbl_faqcategory_fcname unique(fcname)
+,constraint UQ_tbl_faqcategory_fccode unique(fccode)
+);
+
+create sequence seq_faqcategory_fcNo
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+DROP SEQUENCE seq_faqcategory_fcNo;
+
+insert into tbl_faqcategory(fcNo, fcname, fccode) values(seq_faqcategory_fcNo.nextval, '입금결제', 'payment');
+insert into tbl_faqcategory(fcNo, fcname, fccode) values(seq_faqcategory_fcNo.nextval, '배송관련', 'shipping');
+insert into tbl_faqcategory(fcNo, fcname, fccode) values(seq_faqcategory_fcNo.nextval, '반품/교환', 'exchange');
+insert into tbl_faqcategory(fcNo, fcname, fccode) values(seq_faqcategory_fcNo.nextval, '배송 전 변경/취소', 'cancel');
+insert into tbl_faqcategory(fcNo, fcname, fccode) values(seq_faqcategory_fcNo.nextval, '기타문의', 'acc');
+commit;
+
+select fcNo, fcname, fccode
+from tbl_faqcategory
+order by fcNo asc ;
 
 

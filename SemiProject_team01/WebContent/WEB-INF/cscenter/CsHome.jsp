@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <jsp:include page="../header.jsp"/>
 <link rel="stylesheet" href="../css/yh_css/tabs.css">
-<script src="http://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
 <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="../css/yh_css/bootstrap-table-expandable.css">
+<script src="http://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
 <script src="../js/yh_js/bootstrap-table-expandable.js"></script>
 <script type="text/javascript">
 
@@ -28,11 +29,9 @@
   
   <ul class="tabs">
     <li data-tab-target="#home">전체보기</li>
-    <li class="tabs_li " data-tab-target="#payment">입금결제</li>
-    <li class="tabs_li " data-tab-target="#shipping">배송관련</li>
-    <li class="tabs_li " data-tab-target="#exchange">반품/교환</li>
-    <li class="tabs_li " data-tab-target="#cancel">배송 전 변경/취소</li>
-    <li class="tabs_li " data-tab-target="#acc">기타문의</li>
+    <c:forEach var="map" items="${requestScope.faqcategoryList}">
+         <li class="tabs_li " data-tab-target="#${map.sccode}">${map.fcname}</li>&nbsp;
+      </c:forEach>
   </ul>
 
   <div class="tab-content">
