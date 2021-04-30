@@ -69,7 +69,7 @@ function displayHIT(start) {
            $.each(json, function(index, item){
               
                  html += "<div class='moreProdInfo'>"+
-                 			"<div class='overlay' style='height:75px' onClick=\"location.href='/Info.to'\">"+
+                 			"<div class='overlay' style='height:75px' onClick='location.href=\"<%=ctxPath%>/Info.to\"'>"+
              					"<span>제품명 : "+item.pname+"</span><br>"+
 			             		"<span style='text-decoration: line-through'>정가 : "+(item.price).toLocaleString('en')+"원</span><br>"+
 			             		"<span>할인가 : "+(item.saleprice).toLocaleString('en')+"원</span>"+
@@ -153,7 +153,7 @@ function myFunction(imgs) {
 	
 	
 <!-- 인기상품 이미지 슬라이드 -->	
-<h3 class="itemtitle">Best Seller</h3>
+<div class="hr-sect itemtitle">Best Seller</div>
 
 <div style="height: 300px; border: solid 1px navy; margin-bottom: 100px;">신상품 multi item carousel 삽입</div>
 
@@ -196,25 +196,16 @@ function myFunction(imgs) {
  
 <!-- 신상품 제품 목록(스크롤 페이징 처리) --> 
  
-<h3 class="itemtitle">New Arrival</h3>
+<div class="hr-sect itemtitle">New Arrival</div>
 
    <div>
-      <div id="displayNEW"></div>
+      <div id="displayHIT"></div>
    
       <div style="margin: 20px 0;">
         <span id="totalHITCount">${requestScope.totalHITCount}</span>
          <span id="countHIT">0</span>
       </div>
    </div> 
- 
- 
- 
- 
- 
- 
- 
- 
- 
  
  
 
