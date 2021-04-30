@@ -249,7 +249,7 @@ $(function(){
 				<td align="left"><a href="">[상품정보]링크걸기</a><br>[옵션:컬러]</td>
 				<td>1</td>
 				<td>30,000원</td>
-				<td align="center"><div id="pointbox">5% 적립</div>150원</td>
+				<td align="center"><div id="pointbox">5% 적립</div>150p</td>
 				<td>[무료]</td>
 				<td>30,000원</td>
 			</tr>
@@ -422,17 +422,6 @@ $(function(){
 			<td style="text-align:right; width:60%;"">
 				<input type="text" style="width:100%;border:1px solid gray; text-align:right;" value="원" />
 			</td>
-		</tr>
-		<tr>	         	
-			<th style="text-align:left; width:40%; ">할인 쿠폰</th>
-         	<td>
-         		<select class="orderStatus" id="coupon" style=" margin-right:0px;">
-					<option value="" selected>&nbsp;쿠폰을 사용하시겠습니까?&nbsp;</option>
-					<c:forEach var="" items="">
-						<option value=""></option>
-					</c:forEach>
-				</select>				
-         	</td>
 		</tr>
 	</table>
 	<hr>
