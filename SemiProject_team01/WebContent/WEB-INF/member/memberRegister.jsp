@@ -556,7 +556,7 @@
 
 <div id="registerContainer">
    <form name="registerFrm">
-   	   <div id="main">
+   	   <div id="registerContainer">
    	   	   <h2 style="text-align:center;">회원가입</h2>
    	   	   <hr>
 		   <table id="registerTable">
