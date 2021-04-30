@@ -156,15 +156,26 @@ nocache;
 
 ---- *** 제품 상세 테이블 : tbl_productdetail *** ----
 create table tbl_proddetail
-(pdetailnum     number(8) not null      --  제품상세번호
+(pdetailnum     number     --  제품상세번호
 ,fk_pnum        number(8) not null      -- 제품번호
-,optionname         varchar2(10) not null   --옵션명
+,optionname     varchar2(10) not null   --옵션명
 ,pqty           number(8) default 0      -- 제품 재고량
 ,saleqty        number(8) default 0      -- 누적판매량
 ,pinputdate     date default sysdate     -- 제품입고일자
 ,constraint  PK_tbl_proddetail_pdetailnum primary key(pdetailnum)
 ,constraint FK_tbl_proddetail_fk_pnum foreign key(fk_pnum) references tbl_product(pnum)
 );
+
+
+create sequence seq_tbl_proddetail_pdetailnum
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+commit;
 
 
 select *
@@ -176,6 +187,10 @@ from tbl_proddetail;
 
 select *
 from tbl_product;
+
+
+
+
 
 
 
