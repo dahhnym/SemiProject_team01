@@ -18,8 +18,8 @@ public class SendCodeAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 				
-		String api_key = "NCSAYISLZZ3JVZZD";	// 박예현
-		String api_secret = "8A1EMQVFVTRNKC4KSWKFSKCEC3NXKBU9";	  // 박예현
+		String api_key = "NCSQQMN335PG2H0S";	// 오다윤
+		String api_secret = "JW2ABIXCHSC2RJENROP6BH4N3IBDGEFF";	  // 오다윤
 		
 		Message sms = new Message(api_key, api_secret);
 		
@@ -55,7 +55,7 @@ public class SendCodeAction extends AbstractController {
 		// == 4개 파라미터(to, from, type, text)는 필수사항이다. == 
 	    HashMap<String, String> paraMap = new HashMap<String, String>();
 	    paraMap.put("to", mobile); // 수신번호
-	    paraMap.put("from", "01048782415"); // 발신번호 박예현
+	    paraMap.put("from", "01099453169"); // 발신번호 오다윤
 	    paraMap.put("type", "SMS"); // Message type ( SMS(단문), LMS(장문), MMS, ATA )
 	    paraMap.put("text", smsContent); // 문자내용    
 	    paraMap.put("app_version", "JAVA SDK v2.2"); // application name and version
