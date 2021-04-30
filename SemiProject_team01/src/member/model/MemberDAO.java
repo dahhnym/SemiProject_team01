@@ -74,7 +74,7 @@ public class MemberDAO implements InterMemberDAO {
 	}// end of public boolean idDuplicateCheck(String userid) throws SQLException --------------------------------------
 
 	
-	// 회원가입 정보 insert 하기
+	// 회원가입하기
 	@Override
 	public int registerMember(MemberVO member) throws SQLException {
 		int n=0;
@@ -102,6 +102,8 @@ public class MemberDAO implements InterMemberDAO {
 	        pstmt.setString(12, member.getAdagreements());
 	        
 	        n = pstmt.executeUpdate();
+	        
+	        // 로그인 히스토리
 		
 		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
 			e.printStackTrace();

@@ -42,6 +42,9 @@ create table tbl_memberlevel
 select *
 from tbl_member;
 
+select *
+from tbl_loginhistory;
+
 delete tbl_member where userid='test';
 commit;
 
