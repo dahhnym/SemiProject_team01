@@ -71,4 +71,48 @@ public class FaqboardDAO implements InterFaqboardDAO {
 	      return faqcategoryList;
 	}
 
+	@Override
+	public List<FaqboardVO> selectbyfaq(Map<String, String> paraMap) throws SQLException {
+		
+		List<FaqboardVO> faqList = new ArrayList<>();
+	      
+	      try {
+	           conn = ds.getConnection();
+	           
+	           String sql = " select fcname,  faqNo, faqtitle, faqcontent, fk_fcNo " + 
+	                        	  " from tbl_faq JOIN tbl_faqcategory "
+	                           + " ON fk_fcNo = fcNo"
+	                           + " where fk_fcNo = ? ";
+	           
+	           pstmt = conn.prepareStatement(sql);
+	           
+	           pstmt.setString(1, paraMap.get("fk_fcNo"));
+	           
+	           rs = pstmt.executeQuery();
+	           
+	           System.out.println("sfdsf");
+	           
+	           while(rs.next()) {
+	        	   FaqboardVO faqvo = new FaqboardVO();
+	        	   faqCategoryVO fcvo = new faqCategoryVO();
+	        	   
+	        	   fcvo.setFcname(rs.getString(1));
+	        	   
+	        	   System.out.println("sfsf" + rs.getString(1));
+	        	   
+	        	   faqvo.setFaqNo(rs.getInt(2));
+	        	   faqvo.setFaqtitle(rs.getString(3));
+	        	   faqvo.setFaqcontent(rs.getString(4));
+	        	   faqvo.setFk_fcNo(rs.getInt(5));
+	        	   
+	               faqList.add(faqvo);
+	           }// end of while----------------
+	           
+	      } finally {
+	         close();
+	      }
+	      
+	      return faqList;
+	}
+
 }

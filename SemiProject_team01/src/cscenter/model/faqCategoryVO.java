@@ -8,7 +8,7 @@ public class faqCategoryVO {
 
 	public faqCategoryVO() { }
 	
-	public faqCategoryVO(int fcNo, String fcname) {
+	public faqCategoryVO(int fcNo, String fcname, String fccode) {
 		this.fcNo = fcNo;
 		this.fcname = fcname;
 		this.fccode = fccode;
