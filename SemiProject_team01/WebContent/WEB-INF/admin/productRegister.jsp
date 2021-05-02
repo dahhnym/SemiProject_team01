@@ -285,10 +285,10 @@ $(document).ready(function(){
 		</div>
 	
 		<form name="registerFrm">
-		
+		<div style="text-align: right;"><span style="color: red;">*</span>은 필수 항목입니다.</div>
 			<table	id="prodtable">
 				<tr>
-					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>카테고리</td>
+					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>카테고리</td>
 					<td>
 						<select name="fk_cnum" class="infoData">
 							<option value="">선택하세요</option>
@@ -300,23 +300,23 @@ $(document).ready(function(){
 				</tr>
 				
 				<tr>
-					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품명</td>
+					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제품명</td>
 					<td><input type="text" class="infoData" name="pname"><span class="error">제품명을 입력하세요.</span></td>
 				</tr>
 				<tr> 
-					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제조사</td>
+					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제조사</td>
 					<td><input type="text" class="infoData" name="pcompany"><span class="error">제조사를 입력하세요.</span></td>
 				</tr>
 				<tr>
-					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품정가</td>
+					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제품정가</td>
 					<td><input type="text" class="infoData" name="price"><span class="error">제품 정가를 숫자로 입력하세요.</span></td>
 				</tr>
 				<tr>
-					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품판매가</td>
+					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제품판매가</td>
 					<td><input type="text" class="infoData" name="saleprice"><span class="error">제품 판매가를 숫자로 입력하세요.</span></td>
 				</tr>
 				<tr>
-					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품스펙</td>
+					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제품스펙</td>
 					<td>
 						<select name="fk_snum" class="infoData">
 							<option value="">선택하세요</option>
@@ -328,14 +328,14 @@ $(document).ready(function(){
 					</td>
 				</tr>
 				 <tr>
-				      <td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품이미지</td>
+				      <td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제품이미지</td>
 				      <td align="left">
 				         <input type="file" name="pimage1" class="infoData files" style="margin-bottom: 7px;"/><span class="error">대표이미지를 선택하세요.</span><br>
 				         <input type="file" name="pimage2" class="infoData files" /><span class="error">상세이미지를 선택하세요.</span>
 				      </td>
 			    </tr>
 			 	<tr>
-				      <td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품옵션</td>
+				      <td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제품옵션</td>
 				      <td align="left" >
 				      		<div class="multi-field-wrapper">
 						      <div class="multi-fields">
@@ -353,14 +353,14 @@ $(document).ready(function(){
 				      </td>
 			    </tr>
 				<tr>
-				      <td width="23%" style="text-align: center; font-weight: bold;">제품설명</td>
+				      <td width="23%" style="text-align: left; font-weight: bold;">제품설명</td>
 				      <td align="left">
 				         <textarea name="pcontent" rows="8" cols="80"></textarea>
 				      </td>
 			    </tr>
 			<%-- ==== 첨부파일 타입 추가하기 ==== --%>
 			    <tr>
-			          <td width="23%" style="text-align: center; font-weight: bold;">추가이미지파일(선택)</td>
+			          <td width="23%" style="text-align: left; font-weight: bold;">추가이미지파일(선택)</td>
 			          <td>
 			             <label for="spinnerImgQty">파일수 : </label>
 			          <input id="spinnerImgQty" value="0" style="width: 30px; height: 20px;">
