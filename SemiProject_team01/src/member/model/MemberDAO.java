@@ -3,10 +3,17 @@ package member.model;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.sql.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
 import javax.sql.DataSource;
 
 import util.security.AES256;
@@ -71,8 +78,8 @@ public class MemberDAO implements InterMemberDAO {
 		}
 		
 		return b;
-	}// end of public boolean idDuplicateCheck(String userid) throws SQLException --------------------------------------
-
+	}// end of public boolean idDuplicateCheck(String userid) throws SQLException --------------------------------------------
+	
 	
 	// 회원가입하기
 	@Override
@@ -103,7 +110,7 @@ public class MemberDAO implements InterMemberDAO {
 	        
 	        n = pstmt.executeUpdate();
 	        
-	        // 로그인 히스토리
+	        // 로그인 히스토리  <== 정정하기
 		
 		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -113,6 +120,58 @@ public class MemberDAO implements InterMemberDAO {
 		
 		return n;
 	}// end of public int registerMember(MemberVO member) throws SQLException ---------------------------------------------
+
+	
+	// 로그인하기
+	@Override
+	public MemberVO loginConfirm(Map<String, String> paraMap) throws SQLException {
+
+		MemberVO loginuser = new MemberVO();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select userid, name, point, fk_memberlevel, trunc((sysdate-lastpwdchangedate)/60), idle, email, mobile, address, detailaddress, extraaddress, postcode "
+					   + " from tbl_member where userid=? and pwd=? ";
+			
+			pstmt = conn.prepareStatement(sql);			
+			pstmt.setString(1, paraMap.get("userid"));
+			pstmt.setString(2, Sha256.encrypt(paraMap.get("pwd"))); // 암호 단방향 암호화
+			
+	        rs = pstmt.executeQuery();
+	        
+	        if(rs.next()) {	// 아이디와 비밀번호가 있다면,
+	    		
+	        	loginuser.setUserid(rs.getString(1));
+	        	loginuser.setName(rs.getString(2));
+	        	loginuser.setPoint(rs.getInt(3));
+	        	loginuser.setLevel(rs.getString(4));
+	        	loginuser.setPwdCycleMonth(rs.getInt(5));
+	        	loginuser.setIdle(rs.getString(6));
+	        	loginuser.setEmail(rs.getString(7));
+	        	loginuser.setMobile(rs.getString(8));
+	        	loginuser.setAddress(rs.getString(9));
+	        	loginuser.setDetailaddress(rs.getString(10));
+	        	loginuser.setExtraaddress(rs.getString(11));
+	        	loginuser.setPostcode(rs.getString(12));
+	    		
+	        	sql = " insert into tbl_loginhistory(fk_userid, clientip) "	// 로그인 기록 남기기
+	        	    + " values(?,?) ";
+	        	
+	        	pstmt = conn.prepareStatement(sql);			
+				pstmt.setString(1, paraMap.get("userid"));
+				pstmt.setString(2, paraMap.get("clientip")); 
+				pstmt.executeUpdate();
+	        } 		
+	        
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return loginuser;
+	}// public MemberVO registerMember(String userid, String pwd) ------------------------------------------------------------
 
 		
 }
