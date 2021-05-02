@@ -84,6 +84,8 @@ where userid='test';
 update tbl_member set lastpwdchangedate='19/12/12'
 where userid='test';
 
+update tbl_member set idle='1'
+where userid='test2';
 
 
 --- *** 제품 테이블 생성 *** ---

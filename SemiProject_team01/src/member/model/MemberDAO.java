@@ -89,7 +89,8 @@ public class MemberDAO implements InterMemberDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = " insert into tbl_member(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday, adagreements) "  + 
+			String sql = " insert into tbl_member(userid, pwd, name, email, mobile, postcode, address, "
+					   + " detailaddress, extraaddress, gender, birthday, adagreements) "  + 
 					     " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 			
 
