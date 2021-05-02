@@ -135,7 +135,7 @@ $("div#wishlistlayer").show();
 			<div class="information">
 				<div class="decription">
 					<div class="member">
-						<p>오다윤님은 [] 등급입니다.</p>
+						<p>${loginuser.name}님은 [${loginuser.level}] 등급입니다.</p>
 						<a href="">적립금:</a>
 					</div>
 				</div>

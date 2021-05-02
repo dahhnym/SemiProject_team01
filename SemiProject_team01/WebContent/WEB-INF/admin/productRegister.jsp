@@ -6,6 +6,7 @@
 
 
 <link rel="stylesheet" href="<%=ctxPath%>/css/Ohdayoon.css"/>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -30,23 +31,24 @@
 	  
 	 input#btnRegister{
 	 	display : inline-block; 
- 		width: 100px;
+ 		width: 110px;
 	 	heiht: 50px;
 	 	background-color: #000;
 	 	color: #fff;
 	 	border: 0px;
-	 	font-size: 18pt;
+	 	font-size: 15pt;
+	 	padding: 5px 0px;
 	 
 	 }
 	 input#reset{
 	 	display : inline-block; 
- 		width: 100px;
+ 		width: 110px;
 	 	heiht: 50px;
 	 	background-color: #fff;
 	 	color: #000;
 	 	border: solid 1px #000;
-	 	font-size: 18pt;
-	 
+	 	font-size: 15pt;
+		padding: 5px 0px;
 	 }
 	 
 
@@ -250,6 +252,8 @@ $(document).ready(function(){
 		
 		});
 	
+		checkForDuplicates();
+		
 		if(cnt>0){
 			return false;
 		}				
@@ -265,6 +269,26 @@ $(document).ready(function(){
 		}
 	});
 }); // end of $(document).ready(function(){}------------
+
+		
+		
+		
+function checkForDuplicates() {
+    var hasDuplicates = false;
+        $('.optionname').each(function () {
+            var optionValue = $(this).val();
+            hasDuplicates = $('.optionname').not(this).filter(function () {
+                    return $(this).val() === optionValue;
+            }).length > 0;
+            if (hasDuplicates){
+            alert("옵션명이 중복되었습니다.");
+            $(this).val("");
+            hasDuplicates=1;
+            return false;
+        }
+        });
+
+}
 
 
 
@@ -290,7 +314,7 @@ $(document).ready(function(){
 				<tr>
 					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>카테고리</td>
 					<td>
-						<select name="fk_cnum" class="infoData">
+						<select name="fk_cnum" class="infoData w3-select w3-border">
 							<option value="">선택하세요</option>
 							<c:forEach var="map" items="${categoryList}">
 								<option value="${map.cnum}">${map.cname}</option>
@@ -301,24 +325,24 @@ $(document).ready(function(){
 				
 				<tr>
 					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제품명</td>
-					<td><input type="text" class="infoData" name="pname"><span class="error">제품명을 입력하세요.</span></td>
+					<td><input type="text" class="infoData form-control" name="pname"><span class="error">제품명을 입력하세요.</span></td>
 				</tr>
 				<tr> 
 					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제조사</td>
-					<td><input type="text" class="infoData" name="pcompany"><span class="error">제조사를 입력하세요.</span></td>
+					<td><input type="text" class="infoData form-control" name="pcompany"><span class="error">제조사를 입력하세요.</span></td>
 				</tr>
 				<tr>
 					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제품정가</td>
-					<td><input type="text" class="infoData" name="price"><span class="error">제품 정가를 숫자로 입력하세요.</span></td>
+					<td><input type="text" class="infoData form-control" name="price"><span class="error">제품 정가를 숫자로 입력하세요.</span></td>
 				</tr>
 				<tr>
 					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제품판매가</td>
-					<td><input type="text" class="infoData" name="saleprice"><span class="error">제품 판매가를 숫자로 입력하세요.</span></td>
+					<td><input type="text" class="infoData form-control" name="saleprice"><span class="error">제품 판매가를 숫자로 입력하세요.</span></td>
 				</tr>
 				<tr>
 					<td width="23%" style="text-align: left; font-weight: bold;"><span style="color: red;">*</span>제품스펙</td>
 					<td>
-						<select name="fk_snum" class="infoData">
+						<select name="fk_snum" class="infoData w3-select w3-border">
 							<option value="">선택하세요</option>
 							<c:forEach var="spvo" items="${specList}">
 								<option value="${spvo.snum}">${spvo.sname}</option>
@@ -340,8 +364,8 @@ $(document).ready(function(){
 				      		<div class="multi-field-wrapper">
 						      <div class="multi-fields">
 						        <div class="multi-field" style="margin-bottom: 10px; ">
-						          <span style="margin-right: 15px;">옵션</span><input type="text" name="optionname" class="optionname infoData check" style=" width:120px;"><span class="error">옵션을 입력하세요.</span>
-						          &nbsp;&nbsp;<span style="margin-right: 15px;">수량</span><input type="text" name="pqty" class="pqty infoData check" style="width:120px;">
+						          <span style="margin-right: 15px;">옵션</span><input type="text" name="optionname" class="optionname infoData form-control" style=" width:120px; display: inline;"><span class="error">옵션을 입력하세요.</span>
+						          &nbsp;&nbsp;<span style="margin-right: 15px;">수량</span><input type="text" name="pqty" class="pqty infoData form-control" style="width:120px; display: inline;">
 						          <span class="error">숫자로 입력하세요.</span>
 						          <button type="button" class="add-field" style="background-color: #fff; border: 0px;" ><i style='font-size:24px' class='fas'>&#xf055;</i></button>
 						          <button type="button" class="remove-field" style=" background-color: #fff; border: 0px; "><i class='fas fa-minus-circle' style='font-size:24px'></i></button>
@@ -375,7 +399,7 @@ $(document).ready(function(){
 				      <td colspan="2" align="center" style="border-left: hidden; border-bottom: hidden; border-right: hidden;">
 				          <input type="button" value="제품등록" id="btnRegister"  /> 
 				          &nbsp;
-				          <input type="reset" value="취소" id="reset" style="width: 80px;" />   
+				          <input type="reset" value="취소" id="reset" />   
 				      </td>
 			   </tr>
 			
