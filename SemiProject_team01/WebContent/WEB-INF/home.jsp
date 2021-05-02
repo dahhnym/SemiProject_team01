@@ -132,13 +132,13 @@ function myFunction(imgs) {
   <!-- The slideshow -->
   <div class="carousel-inner">
     	<div class="carousel-item active clickable">
-	      <img class="clickable" src="<%=ctxPath%>/images/pic01.jpg" alt="Los Angeles" width="100%" height="500" onclick="myFunction(this)">
+	      <img class="clickable" src="<%=ctxPath%>/images/ad1.jpg" alt="ad1" width="100%" height="500" onclick="myFunction(this)">
 	    </div>
 	    <div class="carousel-item clickable">
-	      <img class="clickable" src="<%=ctxPath%>/images/pic02.jpg" alt="Chicago" width="100%" height="500" onclick="myFunction(this)">
+	      <img class="clickable" src="<%=ctxPath%>/images/ad2.jpg" alt="ad2" width="100%" height="500" onclick="myFunction(this)">
 	    </div>
 	    <div class="carousel-item clickable">
-	      <img src="<%=ctxPath%>/images/pic03.jpg" alt="New York" width="100%" height="500" onclick="myFunction(this)">
+	      <img class="clickable" src="<%=ctxPath%>/images/ad3.jpg" alt="ad3" width="100%" height="500" onclick="myFunction(this)">
     </div>
   </div>
   
