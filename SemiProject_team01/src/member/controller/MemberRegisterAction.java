@@ -20,6 +20,8 @@ public class MemberRegisterAction extends AbstractController {
 		String method = request.getMethod();
 					
 		if("post".equalsIgnoreCase(method)) {	// 회원가입 폼 DB 에 넣기
+			String clientip = request.getRemoteAddr();
+			
 			String userid = request.getParameter("userid");
 			String pwd = request.getParameter("pwd"); 
 			String name = request.getParameter("name");
@@ -42,7 +44,7 @@ public class MemberRegisterAction extends AbstractController {
 			InterMemberDAO dao = new MemberDAO();
 			
 			try {
-				int n = dao.registerMember(member);
+				int n = dao.registerMember(member, clientip);
 			
 				if(n==1) {	// 회원가입 성공
 					request.setAttribute("userid", userid);

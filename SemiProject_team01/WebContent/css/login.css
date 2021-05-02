@@ -9,13 +9,15 @@
 body{
 	/* text-align: center; */
 }
-div#loginContainer {
-	padding-top:100px;
-	width: 60%;
-	margin-left: 25%;
-}
 div#loginSide {
+	padding-top:100px;
+	margin: 0 30px 0 27%;
+	float:left;
+	width: 20%;
+}
+div#loginBanner {			/* 정정사항 */
 	display:inline-block;
+	padding-top:120px;	
 	width: 40%;
 }
 form#registerFrm {;
@@ -36,12 +38,6 @@ h2#loginh2{
 a.addedMenu {
 	text-decoration: underline; 
 }
-div#loginBanner {
-	display:inline-block;
-}
-img {
- 	vertical-align: baseline;
-}
 img#loginBanner {
 	width: 400px;
  	height: 250px;
@@ -60,15 +56,16 @@ span#loginConfirm {
 
 div#changePwdContainer {
 	padding-top:100px;
-	width: 50%;
+	width: 70%;
 	margin: 0 auto;
+}
+div#alert {
+	font-weight: bold;
+	margin: 0 0 50px 10%;
+	font-size: 18pt;
 }
 div#changePwd {
-	margin: 0 auto;
-}
-h4#alert {
-	font-weight: bold;
-	margin-bottom: 70px;
+	margin-left: 20%;
 }
 .loginWidth {
 	width:240px;
@@ -77,20 +74,18 @@ label#letter {
 	width: 150px;
 	font-weight: bold;
 }
-button#changePwd {
-	margin-top: 30px;
-}
 button.changePwd {
-	margin-left: 150px;
+	margin: 10px 0 0 150px;
+
 }
+
 input.loginWidth {
 	margin-right: 30px;
-	margin-bottom: 0;
+	margin-bottom: 10px;
 }
 .confirm {
 	display: inline-block;
-	margin-left: 150px;
-	padding-bottom: 30px;
+	margin-left: 15px;
 	font-weight: bold;
 	font-size: 11pt;
 	color: red;

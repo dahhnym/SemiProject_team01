@@ -83,7 +83,7 @@ public class MemberDAO implements InterMemberDAO {
 	
 	// 회원가입하기
 	@Override
-	public int registerMember(MemberVO member) throws SQLException {
+	public int registerMember(MemberVO member, String clientip) throws SQLException {
 		int n=0;
 		
 		try {
@@ -111,7 +111,15 @@ public class MemberDAO implements InterMemberDAO {
 	        
 	        n = pstmt.executeUpdate();
 	        
-	        // 로그인 히스토리  <== 정정하기
+	        if(n!=0) {
+	        	sql = " insert into tbl_loginhistory(fk_userid, clientip) "	
+	        	    + " values(?,?) ";
+	        	
+	        	pstmt = conn.prepareStatement(sql);			
+				pstmt.setString(1, member.getUserid());
+				pstmt.setString(2, clientip); 
+				pstmt.executeUpdate();
+	        }
 		
 		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -156,7 +164,8 @@ public class MemberDAO implements InterMemberDAO {
 					
 					loginuser = new MemberVO();
 					
-		        	loginuser.setUserid(rs.getString(1));
+		        	loginuser.setUserid(paraMap.get("userid"));
+		        	loginuser.setPwd(paraMap.get("pwd"));
 		        	loginuser.setName(rs.getString(2));
 		        	loginuser.setPoint(rs.getInt(3));
 		        	loginuser.setLevel(rs.getString(4));
@@ -180,6 +189,31 @@ public class MemberDAO implements InterMemberDAO {
 		
 		return loginuser;
 	}// public MemberVO registerMember(String userid, String pwd) ------------------------------------------------------------
+
+	
+	// 비밀번호 변경하기
+	@Override
+	public int changePwd(String userid, String newPwd) throws SQLException {
+		int n=0;
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = " update table tbl_member set pwd=? and lastpwdchangedate=sysdate "
+					   + " where userid=? ";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, Sha256.encrypt(newPwd)); 
+			pstmt.setString(2, userid);
+			
+	        n = pstmt.executeUpdate();
+	        
+		} finally {
+			close();
+		}
+		
+		return n;
+	}// end of public int changePwd(String newPwd) throws SQLException ------------------------------------------------------
 
 		
 }

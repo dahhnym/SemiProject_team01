@@ -90,7 +90,7 @@
 <div id="loginContainer">
    <div id="loginSide">
    		<form name="registerFrm" id="registerFrm">
-   		   <h2 id="loginh2">로그인</h2>
+   		   <h2>로그인</h2>
 		   <br>
    	   	   <input type="text" name="login_userid" id="login_userid" class="login" placeholder="아이디"/><br>
 		   <input type="password" name="login_pwd" id="login_pwd" class="login" placeholder="비밀번호"/><br>	

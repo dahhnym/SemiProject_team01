@@ -14,7 +14,7 @@ public class LoginAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession();
-//		session.removeAttribute("loginuser"); ==> 정정사항
+//		session.removeAttribute("loginuser"); ==> *정정사항
 		
 		String method = request.getMethod();
 		request.setAttribute("failed", "");		// login 페이지 에러문구를 위한 설정
@@ -37,10 +37,9 @@ public class LoginAction extends AbstractController {
 			
 			try {
 				MemberVO loginuser = dao.loginConfirm(paraMap);
-
-				session.setAttribute("loginuser", loginuser);
 			
 				if(loginuser!=null) {	// 로그인 성공	
+					session.setAttribute("loginuser", loginuser);
 					
 					if("1".equals(loginuser.getIdle())) {	// 휴면상태의 회원이라면
 					//	super.setRedirect(false);
@@ -51,7 +50,7 @@ public class LoginAction extends AbstractController {
 						super.setViewPage("/WEB-INF/login/changePwd1.jsp");
 					} else {						
 						String message = "로그인 성공";
-						String loc = "javascript:history.back(-2)";  // 로그인 페이지 전으로 다시 이동
+						String loc = "javascript:history.back(-2)";  // 로그인 페이지 전으로 다시 이동              ==> *정정사항
 						
 						request.setAttribute("message", message);
 						request.setAttribute("loc", loc);
