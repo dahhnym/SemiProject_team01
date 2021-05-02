@@ -9,13 +9,26 @@
 
 <script type="text/javascript">
  	var bool = false;
-    
+ 	var saveid = localStorage.getItem('saveid');
+ 	var loginuser = "${sessionScope.loginuser}"
+ 	
 	$(function(){
-		var saveid = localStorage.getItem('saveid');
+		$("div#confirm").html("");
 		
 		if(saveid != null) {
 			$("input#login_userid").val(saveid);
 			$("input:checkbox[id=saveid]").prop("checked", true);
+		}
+		
+		if(loginuser == null) {
+			$("input#login_userid").val(saveid);
+			$("input:checkbox[id=saveid]").prop("checked", true);
+		}
+		
+		if("${failed}" == "failed") {
+			$("div#confirm").show();
+			$("div#confirm").addClass("eventspace");
+			$("div#confirm").html("<span id='loginConfirm' class='loginConfirm'>아이디와 비밀번호가 일치하지 않습니다.</span><br>");
 		}
 		
 		$("button#goLogin").click(function(){
@@ -40,6 +53,7 @@
 	
 			
 	function goCheck(){
+		$("div#confirm").html("");
 		
 		// 아이디 공백 체크
 		var userid = $("input#login_userid").val();
@@ -48,6 +62,7 @@
 			$("div#confirm").addClass("eventspace");
 			$("div#confirm").html("<span id='loginConfirm' class='loginConfirm'>아이디를 입력해주세요.</span><br>");
 			bool=false;
+			return;
 		} else {
 			$("div#confirm").hide();
 			$("div#confirm").removeClass("eventspace");
@@ -59,7 +74,7 @@
 		if(pwd==""){
 			$("div#confirm").show();
 			$("div#confirm").addClass("eventspace");
-			$("div#confirm").html("<span id='loginConfirm' class='loginConfirm'>비밀번호를 입력해주세요.</span><br>");
+			$("div#confirm").append("<span id='loginConfirm' class='loginConfirm'>비밀번호를 입력해주세요.</span><br>");
 			bool=false;
 		} else {
 			$("div#confirm").hide();
@@ -77,8 +92,8 @@
    		<form name="registerFrm" id="registerFrm">
    		   <h2 id="loginh2">로그인</h2>
 		   <br>
-   	   	   <input type="text" name="userid" id="login_userid" class="login" placeholder="아이디"/><br>
-		   <input type="password" name="pwd" id="login_pwd" class="login" placeholder="비밀번호"/><br>	
+   	   	   <input type="text" name="login_userid" id="login_userid" class="login" placeholder="아이디"/><br>
+		   <input type="password" name="login_pwd" id="login_pwd" class="login" placeholder="비밀번호"/><br>	
 		   <input type="checkbox" name="saveid" id="saveid"/>
 		   <label for="saveid" class="login" id="saveid">&nbsp;아이디 저장하기</label><br>
 		   <div id="confirm"></div>	   

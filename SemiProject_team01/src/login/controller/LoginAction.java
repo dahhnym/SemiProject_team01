@@ -13,15 +13,19 @@ public class LoginAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String method = request.getMethod();
+		HttpSession session = request.getSession();
+//		session.removeAttribute("loginuser"); ==> 정정사항
 		
-		if("get".equalsIgnoreCase(method)) {	// 로그인 하고자 하는 경우
+		String method = request.getMethod();
+		request.setAttribute("failed", "");		// login 페이지 에러문구를 위한 설정
+		
+		if("get".equalsIgnoreCase(method)) {	// 로그인 하고자 하는 경우		
 		 // super.setRedirect(false);
 			super.setViewPage("/WEB-INF/login/login.jsp");
 			
 		} else {	// 로그인하기 버튼을 누른 경우, post 방식
-			String userid = request.getParameter("userid");
-			String pwd = request.getParameter("pwd"); 
+			String userid = request.getParameter("login_userid");
+			String pwd = request.getParameter("login_pwd"); 
 			String clientip = request.getRemoteAddr();
 			
 			Map<String, String> paraMap = new HashMap<>();
@@ -33,8 +37,7 @@ public class LoginAction extends AbstractController {
 			
 			try {
 				MemberVO loginuser = dao.loginConfirm(paraMap);
-				
-				HttpSession session = request.getSession();
+
 				session.setAttribute("loginuser", loginuser);
 			
 				if(loginuser!=null) {	// 로그인 성공	
@@ -59,14 +62,10 @@ public class LoginAction extends AbstractController {
 				}
 				
 				else {	// 로그인 실패
-					String message = "로그인 실패";
-					String loc = "javascript:history.back()";  // 로그인 페이지로 다시 이동
-					
-					request.setAttribute("message", message);
-					request.setAttribute("loc", loc);
+					request.setAttribute("failed", "failed");
 					
 				//	super.setRedirect(false);
-					super.setViewPage("/WEB-INF/msg.jsp");
+					super.setViewPage("/WEB-INF/login/login.jsp");
 				}
 				
 			} catch(SQLException e) {

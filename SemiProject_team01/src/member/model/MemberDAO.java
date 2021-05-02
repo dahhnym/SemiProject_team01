@@ -127,7 +127,8 @@ public class MemberDAO implements InterMemberDAO {
 	@Override
 	public MemberVO loginConfirm(Map<String, String> paraMap) throws SQLException {
 
-		MemberVO loginuser = new MemberVO();
+		MemberVO loginuser = null;
+		int n = 0;
 		
 		try {
 			conn = ds.getConnection();
@@ -142,28 +143,34 @@ public class MemberDAO implements InterMemberDAO {
 	        rs = pstmt.executeQuery();
 	        
 	        if(rs.next()) {	// 아이디와 비밀번호가 있다면,
-	    		
-	        	loginuser.setUserid(rs.getString(1));
-	        	loginuser.setName(rs.getString(2));
-	        	loginuser.setPoint(rs.getInt(3));
-	        	loginuser.setLevel(rs.getString(4));
-	        	loginuser.setPwdCycleMonth(rs.getInt(5));
-	        	loginuser.setIdle(rs.getString(6));
-	        	loginuser.setEmail(rs.getString(7));
-	        	loginuser.setMobile(rs.getString(8));
-	        	loginuser.setAddress(rs.getString(9));
-	        	loginuser.setDetailaddress(rs.getString(10));
-	        	loginuser.setExtraaddress(rs.getString(11));
-	        	loginuser.setPostcode(rs.getString(12));
-	    		
-	        	sql = " insert into tbl_loginhistory(fk_userid, clientip) "	// 로그인 기록 남기기
+	        	
+	        	sql = " insert into tbl_loginhistory(fk_userid, clientip) "	
 	        	    + " values(?,?) ";
 	        	
 	        	pstmt = conn.prepareStatement(sql);			
 				pstmt.setString(1, paraMap.get("userid"));
 				pstmt.setString(2, paraMap.get("clientip")); 
-				pstmt.executeUpdate();
-	        } 		
+				n = pstmt.executeUpdate();
+				
+				if(n!=0) { // 그리고 로그인 기록 남겼다면,
+					
+					loginuser = new MemberVO();
+					
+		        	loginuser.setUserid(rs.getString(1));
+		        	loginuser.setName(rs.getString(2));
+		        	loginuser.setPoint(rs.getInt(3));
+		        	loginuser.setLevel(rs.getString(4));
+		        	loginuser.setPwdCycleMonth(rs.getInt(5));
+		        	loginuser.setIdle(rs.getString(6));
+		        	loginuser.setEmail(rs.getString(7));
+		        	loginuser.setMobile(rs.getString(8));
+		        	loginuser.setAddress(rs.getString(9));
+		        	loginuser.setDetailaddress(rs.getString(10));
+		        	loginuser.setExtraaddress(rs.getString(11));
+		        	loginuser.setPostcode(rs.getString(12));
+		    		
+				}
+	        } 
 	        
 		} catch(SQLException e) {
 			e.printStackTrace();
