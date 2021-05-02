@@ -46,6 +46,14 @@ img#loginBanner {
 	width: 400px;
  	height: 250px;
 }
+span#loginConfirm {
+	font-weight: bold;
+	font-size: 11pt;
+	color: red;
+}
+.eventspace {
+	margin-bottom: 15px;
+}
 
 
 /* changPwd1.jsp 적용 ////////////////////////////////////////////// */

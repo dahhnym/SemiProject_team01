@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="../css/login.css"/>
 
 <script type="text/javascript">
-//  var bannerImg;
+ 	var bool = false;
     
 	$(function(){
 		var saveid = localStorage.getItem('saveid');
@@ -19,20 +19,55 @@
 		}
 		
 		$("button#goLogin").click(function(){
-			if( $("input:checkbox[id=saveid]").prop("checked") ) {
-				localStorage.setItem('saveid', $("input#login_userid").val());
-			}
-			else {
-				localStorage.removeItem('saveid');
-			}
+			goCheck();
 			
-			var frm = document.registerFrm;
-			frm.action="login.to";
-			frm.method="POST";
-			frm.submit();
+			if(bool){
+				if( $("input:checkbox[id=saveid]").prop("checked") ) {
+					localStorage.setItem('saveid', $("input#login_userid").val());
+				}
+				else {
+					localStorage.removeItem('saveid');
+				}
+				
+				var frm = document.registerFrm;
+				frm.action="login.to";
+				frm.method="POST";
+				frm.submit();
+			}			
 		});
 		
 	});// end of $(function() ------------------------------------------------------------
+	
+			
+	function goCheck(){
+		
+		// 아이디 공백 체크
+		var userid = $("input#login_userid").val();
+		if(userid==""){
+			$("div#confirm").show();
+			$("div#confirm").addClass("eventspace");
+			$("div#confirm").html("<span id='loginConfirm' class='loginConfirm'>아이디를 입력해주세요.</span><br>");
+			bool=false;
+		} else {
+			$("div#confirm").hide();
+			$("div#confirm").removeClass("eventspace");
+			bool=true;
+		}
+		
+		// 비밀번호 공백 체크
+		var pwd = $("input#login_pwd").val();
+		if(pwd==""){
+			$("div#confirm").show();
+			$("div#confirm").addClass("eventspace");
+			$("div#confirm").html("<span id='loginConfirm' class='loginConfirm'>비밀번호를 입력해주세요.</span><br>");
+			bool=false;
+		} else {
+			$("div#confirm").hide();
+			$("div#confirm").removeClass("eventspace");
+			bool=true;
+		}
+		
+	}// end of function goCheck() --------------------------------------------------------
 	
 </script> 
 
@@ -45,7 +80,9 @@
    	   	   <input type="text" name="userid" id="login_userid" class="login" placeholder="아이디"/><br>
 		   <input type="password" name="pwd" id="login_pwd" class="login" placeholder="비밀번호"/><br>	
 		   <input type="checkbox" name="saveid" id="saveid"/>
-		   <label for="saveid" class="login" id="saveid">&nbsp;아이디 저장하기</label><br>		      	 	      	 	
+		   <label for="saveid" class="login" id="saveid">&nbsp;아이디 저장하기</label><br>
+		   <div id="confirm"></div>	   
+		      	 	      	 	
    	       <button type="button" id="goLogin" class="btn btn-secondary loginWidth login" >로그인</button><br>
 		   <a href="<%=ctxPath%>/member/memberRegister.to" class="addedMenu" style="margin-right:25px;">회원가입하기</a>   	   
 		   <a href="<%=ctxPath%>/login/idFind.to" class="addedMenu">아이디 찾기</a>
