@@ -23,9 +23,6 @@
 <!-- Bootstrap 4 icon-->
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-
-
-
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -70,12 +67,12 @@ $(document).ready(function(){
 
 <div id="navbar">
 	<div id="bottom-nav-container" class="content-width">
-			  <a href="<%=ctxPath%>/List.to">Best상품</a>
-			  <a href="<%=ctxPath%>/List.to">Sale상품</a>
-			  <a href="<%=ctxPath%>/List.to">토트백</a>
-			  <a href="<%=ctxPath%>/List.to">숄더백</a>
-			  <a href="<%=ctxPath%>/List.to">백백</a>
-			  <a href="<%=ctxPath%>/List.to">클러치백</a>
-			  <a href="<%=ctxPath%>/List.to">악세사리</a>
+	  <a href="<%=ctxPath%>/List.to">Best상품</a>
+	  <a href="<%=ctxPath%>/List.to">Sale상품</a>
+	  <a href="<%=ctxPath%>/List.to">토트백</a>
+	  <a href="<%=ctxPath%>/List.to">숄더백</a>
+	  <a href="<%=ctxPath%>/List.to">백팩</a>
+	  <a href="<%=ctxPath%>/List.to">클러치백</a>
+	  <a href="<%=ctxPath%>/List.to">악세사리</a>
 	</div>
 </div>
