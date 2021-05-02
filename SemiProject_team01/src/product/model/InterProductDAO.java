@@ -3,6 +3,7 @@ package product.model;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface InterProductDAO {
 
@@ -23,5 +24,6 @@ public interface InterProductDAO {
 
 	// 추가 제품 이미지만큼 이미지 테이블에 insert 하기
 	int product_imagefile_Insert(int pnum, String attachFileName) throws SQLException;
+
 
 }
