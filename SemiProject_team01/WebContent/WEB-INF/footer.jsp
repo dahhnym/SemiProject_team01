@@ -120,7 +120,7 @@ $(document).ready(function(){
 <hr style="margin: 0;">
 <div class="bottom-footer" style="background-color: #f2f2f2; padding: 20px 0;">
 	<div class="div-footer bottom-footer-content content-width">
-		<p>COMPANY : Ladies and gents&nbsp;&nbsp;&nbsp;OWNER: 김OO&nbsp;&nbsp;BUSINESS LICENSE : 000-00-00000 &nbsp;&nbsp;<span><button type="button" style="display: inline-block;">사업자정보조회</button></span></p>
+		<p>COMPANY : Ladies and gents&nbsp;&nbsp;&nbsp;OWNER: 김OO&nbsp;&nbsp;BUSINESS LICENSE : 000-00-00000 &nbsp;&nbsp;<span><button type="button" id="companyInfoCheck" style="display: inline-block;" onclick="window.open('https://www.ftc.go.kr/www/bizCommList.do?key=232')">사업자정보조회</button></span></p>
 		<p>ADDRESS: 12345 서울특별시 강남구 oo대로 ooo oo빌딩 7층 ooo호&nbsp;&nbsp;&nbsp;TEL : 000-0000-0000&nbsp;&nbsp;FAX: 0000-000-0000</p>
 		<p>CPO: 최OO&nbsp;&nbsp;&nbsp;&nbsp;CONTACT US: abcd@gmail.com</p>
 		<p>COPYRIGHT ⓒ Ladies and gents ALL RIGHTS RESERVED.</p>
