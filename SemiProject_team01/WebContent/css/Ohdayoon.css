@@ -34,12 +34,7 @@ div.information .decription{
 div.displaynone{
 	margin: 40px 0px;
 }
-table.wishlist_table, table.cart_table, table.price_table{
-	width:100%;
-	border-top: solid 1px #CCD1D1;
-	border-bottom: solid 1px #CCD1D1;
-	vertical-align: middle;
-}
+
 
 
 h3{
@@ -57,22 +52,7 @@ a.btn_option{
 	width: 107px;
 	text-align: center;
 }
-th{
-	text-align: center;
-	height: 40px;
-}
-tr{
-	border-bottom: solid 1px #CCD1D1;
-	vertical-align: middle;
-	text-align: center;
-}
 
-
-tr.cartprice{
-	text-align: center;
-	vertical-align: middle;
-	height: 70px;
-}
 
 a.btnLarge{
 	display: inline-block;

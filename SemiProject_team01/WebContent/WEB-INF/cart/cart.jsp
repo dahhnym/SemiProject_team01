@@ -10,6 +10,31 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+<style type="text/css">
+	table.wishlist_table, table.cart_table, table.price_table{
+		width:100%;
+		border-top: solid 1px #CCD1D1;
+		border-bottom: solid 1px #CCD1D1;
+		vertical-align: middle;
+	}
+
+	th{
+		text-align: center;
+		height: 40px;
+	}
+	tr{
+		border-bottom: solid 1px #CCD1D1;
+		vertical-align: middle;
+		text-align: center;
+	}
+	
+	
+	tr.cartprice{
+		text-align: center;
+		vertical-align: middle;
+		height: 70px;
+	}
+</style>
   
 <script type="text/javascript">
 $(document).ready(function(){
@@ -69,7 +94,12 @@ $(document).ready(function(){
 		
 	});
 
-
+	$("input#submit").click(function(){
+		var frm = document.myFrm;
+		frm.action="cart.to";
+		frm.method="POST";
+		frm.submit();
+	});
 	
 }); // end of $(document).ready(function(){})-------
 
