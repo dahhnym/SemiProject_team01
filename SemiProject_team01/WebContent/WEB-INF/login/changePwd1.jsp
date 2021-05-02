@@ -10,6 +10,7 @@
 	var bool = false;
     
 	$(function(){
+		$("span.confirm").hide();
 		
 		$("button#changePwd").click(function(){
 			goConfirm();
@@ -19,14 +20,17 @@
 			
 			if(bool) {
 				var frm = document.registerFrm;
-				frm.action="memberRegister.to";
+				frm.action="changePwd.to";
 				frm.method="POST";
 				frm.submit();
 			}	
 		});
 		
 		$("button#laterChangePwd").click(function(){
-			location.href="<%=ctxPath%>/home.to";
+			var frm = document.registerFrm;
+			frm.action="home.to";
+			frm.method="POST";
+			frm.submit();
 		});
 
 	});// end of $(function() ------------------------------------------------------------
@@ -100,13 +104,13 @@
 		</div>
 		<div id="changePwd">
 			<label for="currentPwd" id="letter" >현재 비밀번호</label>	
-	  	   	<input type="password" name="currentPwd" id="currentPwd" class="loginWidth" placeholder="현재 비밀번호"/>
+	  	   	<input type="password" name="currentPwd" id="currentPwd" class="loginWidth" placeholder="현재 비밀번호"/><br>
 	  	   	<span id="currentPwd" class="confirm"></span><br>
 	  	   	<label for="newPwd" id="letter">변경 비밀번호</label>
-		    <input type="password" name="newPwd" id="newPwd1" class="loginWidth" placeholder="변경 비밀번호"/>
+		    <input type="password" name="newPwd" id="newPwd1" class="loginWidth" placeholder="변경 비밀번호"/><br>
 		    <span id="newPwd1" class="confirm"></span><br>
 		    <label for="newPwd" id="letter">변경 비밀번호 확인</label>
-		    <input type="password" name="newPwd2" id="newPwd2" class="loginWidth" placeholder="변경 비밀번호 확인"/> 
+		    <input type="password" name="newPwd2" id="newPwd2" class="loginWidth" placeholder="변경 비밀번호 확인"/> <br>
 		    <span id="newPwd2" class="confirm"></span><br>   	 	      	 	
 	  	    <button type="button" name="changePwd" id="changePwd" class="btn btn-primary loginWidth changePwd" >비밀번호 변경하기</button><br>
 	  	    <button type="button" name="changePwd" class="btn btn-outline-secondary loginWidth changePwd" >다음에 변경하기</button> 

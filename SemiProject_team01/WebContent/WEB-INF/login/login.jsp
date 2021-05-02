@@ -11,15 +11,29 @@
 //  var bannerImg;
     
 	$(function(){
+		var saveid = localStorage.getItem('saveid');
+		
+		if(saveid != null) {
+			$("input#login_userid").val(saveid);
+			$("input:checkbox[id=saveid]").prop("checked", true);
+		}
+		
+		$("button#goLogin").click(function(){
+			if( $("input:checkbox[id=saveid]").prop("checked") ) {
+				localStorage.setItem('saveid', $("input#login_userid").val());
+			}
+			else {
+				localStorage.removeItem('saveid');
+			}
+			
+			var frm = document.registerFrm;
+			frm.action="login.to";
+			frm.method="POST";
+			frm.submit();
+		});
 		
 	});// end of $(function() ------------------------------------------------------------
 	
-	function func_login(){
-		var frm = document.registerFrm;
-		frm.action="login.to";
-		frm.method="POST";
-		frm.submit();
-	}
 </script> 
 
 
@@ -28,11 +42,11 @@
    		<form name="registerFrm" id="registerFrm">
    		   <h2 id="loginh2">로그인</h2>
 		   <br>
-   	   	   <input type="text" name="userid" id="login_userid" class="loginWidth" placeholder="아이디"/><br>
-		   <input type="password" name="pwd" id="login_pwd" class="loginWidth" placeholder="비밀번호"/><br>	
-		   <input type="checkbox" name="rememberid" id="rememberid"/>
-		   <label for="rememberid">&nbsp;아이디 저장하기</label><br>		      	 	      	 	
-   	       <button type="button" id="sendCode" class="btn btn-secondary loginWidth" onclick="func_login()" >로그인</button><br>
+   	   	   <input type="text" name="userid" id="login_userid" class="login" placeholder="아이디"/><br>
+		   <input type="password" name="pwd" id="login_pwd" class="login" placeholder="비밀번호"/><br>	
+		   <input type="checkbox" name="saveid" id="saveid"/>
+		   <label for="saveid" class="login" id="saveid">&nbsp;아이디 저장하기</label><br>		      	 	      	 	
+   	       <button type="button" id="goLogin" class="btn btn-secondary loginWidth login" >로그인</button><br>
 		   <a href="<%=ctxPath%>/member/memberRegister.to" class="addedMenu" style="margin-right:25px;">회원가입하기</a>   	   
 		   <a href="<%=ctxPath%>/login/idFind.to" class="addedMenu">아이디 찾기</a>
 		   <span class="addedMenu" >/</span>

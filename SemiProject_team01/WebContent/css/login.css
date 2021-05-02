@@ -25,7 +25,7 @@ h2#loginh2{
 	text-align: left;
 	font-weight: bold;
 }
-.loginWidth {
+.login {
 	margin-bottom: 15px;
 	width:240px;
 }
@@ -55,9 +55,15 @@ div#changePwdContainer {
 	width: 50%;
 	margin: 0 auto;
 }
+div#changePwd {
+	margin: 0 auto;
+}
 h4#alert {
 	font-weight: bold;
 	margin-bottom: 70px;
+}
+.loginWidth {
+	width:240px;
 }
 label#letter {
 	width: 150px;
@@ -71,8 +77,12 @@ button.changePwd {
 }
 input.loginWidth {
 	margin-right: 30px;
+	margin-bottom: 0;
 }
 .confirm {
+	display: inline-block;
+	margin-left: 150px;
+	padding-bottom: 30px;
 	font-weight: bold;
 	font-size: 11pt;
 	color: red;
