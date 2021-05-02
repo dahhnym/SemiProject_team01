@@ -14,7 +14,7 @@
 <style>
 
 	table#prodtable {
-		border: solid 1px gray;
+		/* border: solid 1px gray; */
 		border-collapse: collapse;	
 		width: 80%;
 		margin-left: 120px;
@@ -26,7 +26,7 @@
 		padding-bottom: 20pt;
 	}
 	
-	   .error {color: red; font-weight: bold; font-size: 10pt; display: inline-block; margin-left: 10px;}
+	   .error {color: red; font-weight: bold; font-size: 9pt; display: inline-block; margin-left: 8px;}
 	  
 	 input#btnRegister{
 	 	display : inline-block; 
@@ -48,6 +48,8 @@
 	 	font-size: 18pt;
 	 
 	 }
+	 
+
 </style>
 
 
@@ -57,6 +59,40 @@ $(document).ready(function(){
 	
 	$("span.error").hide();
 	
+	////      이미지 스피너 시작                                     //// 
+	$("input#spinnerImgQty").spinner({
+		
+		spin:function(event,ui){
+			if(ui.value>10){
+				$(this).spinner("value",10);
+				return false;
+			}
+			else if(ui.value<0){
+				$(this).spinner("value",0);
+				return false;
+			}
+		}
+	
+	}); // end of  $("input#spinnerImgQty").spinner({});
+	
+	
+	
+	$("input#spinnerImgQty").bind("spinstop",function(){
+		
+		var html="";
+		var cnt=$(this).val();
+		
+		for(var i=0;i<parseInt(cnt);i++){ 
+			html+="<br>";
+			html+="<input type='file' id='attach"+i+"' name='attach"+i+"' class='files' />";
+		} // end of for----------
+	
+		$("div#divfileattach").html(html);
+	
+		$("input#attachCount").val(cnt); 
+	});
+	
+	////이미지 스피너 끝                                     //// 
 	
 	// 카테고리 선택 유효성 검사
 		$("select[name=fk_cnum]").change(function(){
@@ -159,29 +195,45 @@ $(document).ready(function(){
 	
 		
 		// 옵션추가
-		$('.multi-field-wrapper').each(function() {
-		    var $wrapper = $('.multi-fields', this);
-		    $(".add-field", $(this)).click(function(e) {
-		        $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find('input').val('').focus();
+		$('div.multi-field-wrapper').each(function() {
+		    var $wrapper = $('div.multi-fields', this);
+		    $("button.add-field", $(this)).click(function(e) {
+				 $('div.multi-field:last-child', $wrapper).clone(true).appendTo($wrapper).find('input').val('').focus();
+		    	
 		    });
+		    // 옵션 삭제
 		    $('.multi-field .remove-field', $wrapper).click(function() {
 		        if ($('.multi-field', $wrapper).length > 1)
-		            $(this).parent('.multi-field').remove();
+		            $(this).parent('.multi-field:last-child').remove();
 		    });
 		});
        
-		// 이미지 추가
-		$('.btnAdd').click (function () {                                        
-            $('.buttons').append (                        
-                '<input type="file" name="attach"> <input type="button" class="btnRemove" value="Remove"><br>'                    
-            ); // end append                            
-            $('.btnRemove').on('click', function () { 
-                $(this).prev().remove (); // remove the textbox
-                $(this).next ().remove (); // remove the <br>
-                $(this).remove (); // remove the button
-            });
-        }); // end click   
-        
+		// 옵션명 유효성검사
+		$("input.optionname").blur(function(){
+			if($(this).val()==""){
+				$(this).next().show();
+			}
+		
+			else{
+				$(this).next().hide();
+			}
+		});
+		
+		// 옵션 수량 유효성검사
+		$("input.pqty").blur(function(){
+			var pqty = $(this).val().trim();
+			if(pqty="" || pqty=="0" || isNaN(pqty)){
+				$(this).next().show();
+				$(this).val("");
+			}
+			else{
+				$(this).next().hide();
+			}
+		});
+		
+		
+
+    // 제품 등록하기 버튼     
 	$("input#btnRegister").click(function(){
 		
 		var cnt=0;
@@ -216,7 +268,6 @@ $(document).ready(function(){
 
 
 
-
 </script>
 
 
@@ -237,7 +288,7 @@ $(document).ready(function(){
 		
 			<table	id="prodtable">
 				<tr>
-					<td width="25%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>카테고리</td>
+					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>카테고리</td>
 					<td>
 						<select name="fk_cnum" class="infoData">
 							<option value="">선택하세요</option>
@@ -249,23 +300,23 @@ $(document).ready(function(){
 				</tr>
 				
 				<tr>
-					<td width="25%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품명</td>
+					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품명</td>
 					<td><input type="text" class="infoData" name="pname"><span class="error">제품명을 입력하세요.</span></td>
 				</tr>
 				<tr> 
-					<td width="25%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제조사</td>
+					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제조사</td>
 					<td><input type="text" class="infoData" name="pcompany"><span class="error">제조사를 입력하세요.</span></td>
 				</tr>
 				<tr>
-					<td width="25%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품정가</td>
+					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품정가</td>
 					<td><input type="text" class="infoData" name="price"><span class="error">제품 정가를 숫자로 입력하세요.</span></td>
 				</tr>
 				<tr>
-					<td width="25%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품판매가</td>
+					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품판매가</td>
 					<td><input type="text" class="infoData" name="saleprice"><span class="error">제품 판매가를 숫자로 입력하세요.</span></td>
 				</tr>
 				<tr>
-					<td width="25%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품스펙</td>
+					<td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품스펙</td>
 					<td>
 						<select name="fk_snum" class="infoData">
 							<option value="">선택하세요</option>
@@ -277,42 +328,46 @@ $(document).ready(function(){
 					</td>
 				</tr>
 				 <tr>
-				      <td width="25%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품이미지</td>
-				      <td width="75%" align="left">
-				         <input type="file" name="pimage1" class="infoData" /><span class="error">대표이미지를 선택하세요.</span><br>
-				         <input type="file" name="pimage2" class="infoData" /><span class="error">상세이미지를 선택하세요.</span>
+				      <td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품이미지</td>
+				      <td align="left">
+				         <input type="file" name="pimage1" class="infoData files" style="margin-bottom: 7px;"/><span class="error">대표이미지를 선택하세요.</span><br>
+				         <input type="file" name="pimage2" class="infoData files" /><span class="error">상세이미지를 선택하세요.</span>
 				      </td>
 			    </tr>
 			 	<tr>
-				      <td width="25%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품옵션</td>
-				      <td width="75%" align="left" >
+				      <td width="23%" style="text-align: center; font-weight: bold;"><span style="color: red;">*</span>제품옵션</td>
+				      <td align="left" >
 				      		<div class="multi-field-wrapper">
 						      <div class="multi-fields">
-						        <div class="multi-field">
-						          <span>옵션</span><input type="text" name="optionname" class="optionname"><span class="error">옵션을 입력하세요.</span>
-						          <span>수량</span><input type="text" name="pqty" class="pqty">
-						          <span class="error">수량을 숫자로 입력하세요.</span>
-						          <button type="button" class="remove-field">삭제</button>
-						        </div>
+						        <div class="multi-field" style="margin-bottom: 10px; ">
+						          <span style="margin-right: 15px;">옵션</span><input type="text" name="optionname" class="optionname infoData check" style=" width:120px;"><span class="error">옵션을 입력하세요.</span>
+						          &nbsp;&nbsp;<span style="margin-right: 15px;">수량</span><input type="text" name="pqty" class="pqty infoData check" style="width:120px;">
+						          <span class="error">숫자로 입력하세요.</span>
+						          <button type="button" class="add-field" style="background-color: #fff; border: 0px;" ><i style='font-size:24px' class='fas'>&#xf055;</i></button>
+						          <button type="button" class="remove-field" style=" background-color: #fff; border: 0px; "><i class='fas fa-minus-circle' style='font-size:24px'></i></button>
+						          </div>
 						      </div>
-						    <button type="button" class="add-field">추가</button>
+						    
 						  </div>
 				     
 				      </td>
 			    </tr>
 				<tr>
-				      <td width="25%" style="text-align: center; font-weight: bold;">제품설명</td>
-				      <td width="75%" align="left">
-				         <textarea name="pcontent" rows="5" cols="60"></textarea>
+				      <td width="23%" style="text-align: center; font-weight: bold;">제품설명</td>
+				      <td align="left">
+				         <textarea name="pcontent" rows="8" cols="80"></textarea>
 				      </td>
 			    </tr>
 			<%-- ==== 첨부파일 타입 추가하기 ==== --%>
 			    <tr>
-			          <td width="25%" style="text-align: center; font-weight: bold;" >추가이미지파일(선택)</td>
+			          <td width="23%" style="text-align: center; font-weight: bold;">추가이미지파일(선택)</td>
 			          <td>
-			              <div class="buttons">            
-						        <input type="file" name="attach"> <input type="button" class="btnAdd" value="추가"><br>        
-				        	</div>  
+			             <label for="spinnerImgQty">파일수 : </label>
+			          <input id="spinnerImgQty" value="0" style="width: 30px; height: 20px;">
+			             <div id="divfileattach"></div>
+			              
+			             <input type="hidden" name="attachCount" id="attachCount" />
+			              
 			          </td>
 			    </tr>
 
