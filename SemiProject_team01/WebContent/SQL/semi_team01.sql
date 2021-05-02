@@ -10,18 +10,21 @@ create table tbl_member
 ,detailaddress      varchar2(200)            -- 상세주소
 ,extraaddress       varchar2(200)            -- 참고항목
 ,gender             varchar2(1)              -- 성별   남자:1  / 여자:2
-,birthday           varchar2(10)             -- 생년월일   
+,birthday           varchar2(10)             -- 생년월일 
+,totalpurchase      number default 0         -- 누적구매금액
 ,point              number default 0         -- 포인트
-,fk_memberlevel     varchar(20)  default 'sliver'   -- 등급
+,fk_memberlevel     varchar2(1)  default '1' not null    -- 등급
 ,registerday        date default sysdate     -- 가입일자 
 ,lastpwdchangedate  date default sysdate     -- 마지막으로 암호를 변경한 날짜  
-,status             number(1) default 1 not null     -- 회원탈퇴유무   1: 사용가능(가입중) / 0:사용불능(탈퇴) 
-,idle               number(1) default 0 not null     -- 휴면유무      0 : 활동중  /  1 : 휴면중 
+,status             varchar2(1) default '1' not null     -- 회원탈퇴유무   1: 사용가능(가입중) / 0:사용불능(탈퇴) 
+,idle               varchar2(1) default '0' not null     -- 휴면유무      0 : 활동중  /  1 : 휴면중
+,adagreements       varchar2(1) default '0' not null     -- 마케팅동의여부      1 : 동의  /  0 : 비동의
 ,constraint PK_tbl_member_userid primary key(userid)
 ,constraint UQ_tbl_member_email  unique(email)
 ,constraint CK_tbl_member_gender check( gender in('1','2') )
-,constraint CK_tbl_member_status check( status in(0,1) )
-,constraint CK_tbl_member_idle check( idle in(0,1) )
+,constraint CK_tbl_member_status check( status in('0','1') )
+,constraint CK_tbl_member_idle check( idle in('0','1') )
+,constraint CK_tbl_member_adagreements check( idle in('0','1') )
 );
 
 ---- *** 로그인 기록을 위한 테이블 생성 *** ----
@@ -34,8 +37,9 @@ create table tbl_loginhistory
 
 --- *** 회원 등급 테이블 *** ---
 create table tbl_memberlevel
-(memberlevel    varchar2(20) default 'silver'
-,pointpct       number(10)  not null
+(memberlevel    number(1)  -- 1이면 sliver, 2이면 gold, 3이면 platinum
+,levelname      varchar2(20) not null
+,pointpct       number(1,2)  not null  -- 0.01, 0.02, 0.03
 ,constraint PK_tbl_memberlevel primary key(memberlevel)
 );
 
@@ -45,22 +49,40 @@ from tbl_member;
 select *
 from tbl_loginhistory;
 
+select *
+from tbl_memberlevel;
+
+
+insert into tbl_memberlevel(memberlevel,levelname,pointpct)
+values(1,'sliver','0.01');
+insert into tbl_memberlevel(memberlevel,levelname,pointpct)
+values(2,'gold','0.03');
+insert into tbl_memberlevel(memberlevel,levelname,pointpct)
+values(3,'platinum','0.05');
+
+commit;
+
 delete tbl_member where userid='test';
 commit;
 
-alter table tbl_member add adagreements varchar2(1) default 0 not null; -- 마케팅동의여부      1 : 동의  /  0 : 비동의 
+alter table tbl_member add  
 commit;
 
 drop table tbl_member purge;
 drop table tbl_loginhistory purge;
+drop table tbl_memberlevel purge;
+
 
 ALTER TABLE tbl_member MODIFY fk_memberlevel varchar(20) default 'sliver';
 COMMIT;
 
 
+select trunc((sysdate-lastpwdchangedate)/60)
+from tbl_member
+where userid='test';
 
-
-
+update tbl_member set lastpwdchangedate='19/12/12'
+where userid='test';
 
 
 
