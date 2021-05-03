@@ -19,3 +19,4 @@ public class SpecVO {
 		this.sname = sname;
 	}
 }
+
