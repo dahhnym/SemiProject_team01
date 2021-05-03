@@ -277,7 +277,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -294,11 +294,32 @@
         .addClass( "overflow" );
  
     $( "#salutation" ).selectmenu();
+    
+    
   } );
+  
+  	
+ </script>
+ 
+ <script type="text/javascript">
+ $( function() {
+	 $("button#btn-basket").click(function(){
+	  		alert("장바구니에 등록되었습니다.");
+	  	});
+	  	
+	  	$("button#btn-wishlist").click(function(){
+	  		alert("위시리스트에 등록되었습니다.");
+	  	});
+	  	
+	  	$("button#btn-buynow").click(function(){
+	  		alert("구매페이지로 이동하게 할것");
+	  	});
+ });
  </script>
 
 
 	<div id="info">
+	<br>
 		<nav id="info-list">
 			<ul>
 				<li>반복문 추가해서 들어온 순서대로 쓰일수 있도록함</li>	
@@ -386,17 +407,17 @@
 			<br><br><br>
 			<div id="button-container" >
 				<div class="container" id="basket">      
-				  <button type="button" class="btn btn-primary"><span id="texttest">장바구니</span></button>
+				  <button type="button" class="btn btn-primary" id="btn-basket"><span id="texttest">장바구니</span></button>
 				</div>
 				
-				<div class="container" id="wish" >      
-				  <button type="button" class="btn btn-primary"><span id="texttest">위시리스트</span></button>
+				<div class="container" id="wish">      
+				  <button type="button" class="btn btn-primary" id="btn-wishlist"><span id="texttest">위시리스트</span></button>
 				</div>
 			</div>
 			<br><br><br><br><br>
 			<div>
-				<div class="container" id="buynow" >     
-				  <button type="button" class="btn btn-success"><span id="texttest">바로구매</span></button>
+				<div class="container" id="buynow">     
+				  <button type="button" class="btn btn-success" id="btn-buynow"><span id="texttest">바로구매</span></button>
 				</div>
 			</div>
 			
@@ -441,8 +462,8 @@
 		  </ul>
 		
 		  <div class="tab-content">
-		    <div id="home" class="tab-pane fade in active">
-		     <img src="<%=ctxPath%>/images/pic01.jpg" style="width:100%; height:100%">
+		    <div id="home" class="tab-pane fade in active" style="padding-top: 20px; padding-left: 90px;">
+		     <img src="<%=ctxPath%>/images/pic01.jpg" style="width:90%; height:90%">
 		    </div>
 		    <div id="menu1" class="tab-pane fade">
 		      <h2>상품리뷰</h2>
@@ -498,6 +519,7 @@
 		      	
 		      
 		      </table>
+		      
 		    </div>
 		    <div id="menu3" class="tab-pane fade">
 		      <div class="well" style="font-size: 15pt;">
