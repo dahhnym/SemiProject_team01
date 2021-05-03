@@ -188,7 +188,7 @@ public class MemberDAO implements InterMemberDAO {
 	@Override
 	public int changePwd(String userid, String newPwd) throws SQLException {
 		int n=0;
-		System.out.println(userid+newPwd);
+
 		try {
 			conn = ds.getConnection();
 
@@ -207,6 +207,29 @@ public class MemberDAO implements InterMemberDAO {
 		
 		return n;
 	}// end of public int changePwd(String newPwd) throws SQLException ------------------------------------------------------
+
+	
+	// 휴면상태 변경하기
+	@Override
+	public int changeIdle(String userid) throws SQLException {
+		int n=0;
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = " update tbl_member set idle=0 where userid=?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			
+	        n = pstmt.executeUpdate();
+
+		} finally {
+			close();
+		}
+		
+		return n;
+	}// end of public int changeIdle(String userid) throws SQLException ----------------------------------------------------
 
 		
 }
