@@ -93,47 +93,11 @@ function oneAgree(a){
 
 
 
-
-
-// !!!!!!!!!!! ==== 결제하기 눌렀을 때 ==== !!!!!!!!!!!
-function goCheckOut(){
-	 //// 최종적으로 필수입력사항에 모두 입력이 되었는지 검사한다. ////
-    var bFlagRequiredInfo = false;
-    
-    $(".requiredInfo").each(function(index, item){
-    	var val=$(item).val().trim();
-       if(val == "") {
-          bFlagRequiredInfo = true;
-          alert("*표시된 필수입력사항은 모두 입력하셔야 합니다.");
-          return false; // break 라는 뜻이다.
-       }
-    });
-	
-    /// 이용약관 체크했는지 검사
-    var checkboxCheckedLength = $("input:checkbox[name=agree]:checked").length;
-    
-    if(checkboxCheckedLength == 0) {
-       alert("이용약관에 동의하셔야 합니다.");
-       return; // 종료
-    }
-  
-    if(!bFlagRequiredInfo && checkboxCheckedLength==2) {
-    	alert("주문이 완료되었습니다");
-       var frm = document.orderFrm;
-       frm.action = "orderInfo.to";
-       frm.method = "post";
-       frm.submit();
-    }
-}
-
-
-
-
 // 첫번째 우편번호 함수
 function openZipSearch() {
 	new daum.Postcode({
 		oncomplete: function(data) {
-			$('[name=zip]').val(data.zonecode); // 우편번호 (5자리)
+			$('#postcode1').val(data.zonecode); // 우편번호 (5자리)
 			$('[name=addr1]').val(data.address);
 			$('[name=addr2]').val(data.buildingName);
 		}
@@ -144,7 +108,7 @@ function openZipSearch() {
 function openZipSearch2() {
 	new daum.Postcode({
 		oncomplete: function(data) {
-			$('[name=zip2]').val(data.zonecode); // 우편번호 (5자리)
+			$('#postcode2').val(data.zonecode); // 우편번호 (5자리)
 			$('[name=addr3]').val(data.address);
 			$('[name=addr4]').val(data.buildingName);
 		}
@@ -154,9 +118,48 @@ function openZipSearch2() {
 
 
 
+
+//!!!!!!!!!!! ==== 결제하기 눌렀을 때 ==== !!!!!!!!!!!**********아직 미완성********
+function goCheckOut(){
+	 //// 최종적으로 필수입력사항에 모두 입력이 되었는지 검사한다. ////
+ var bFlagRequiredInfo = false;
+ 
+ $(".requiredInfo").each(function(index, item){
+ 	var val=$(item).val().trim();
+    if(val == "") {
+       bFlagRequiredInfo = true;
+       alert("*표시된 필수입력사항은 모두 입력하셔야 합니다.");
+       return false; // break 라는 뜻이다.
+    }
+ });
+	
+ /// 이용약관 체크했는지 검사
+ var checkboxCheckedLength = $("input:checkbox[name=agree]:checked").length;
+ 
+ if(checkboxCheckedLength == 0) {
+    alert("이용약관에 동의하셔야 합니다.");
+    return; // 종료
+ }
+
+ if(!bFlagRequiredInfo && checkboxCheckedLength==2) {
+ 	alert("주문이 완료되었습니다");
+    var frm = document.orderFrm;
+    frm.action = "orderInfo.to";
+    frm.method = "post";
+    frm.submit();
+ }
+}
+
+
+
+
+
 //////////////////////////////////////////////////////////////////////////////////
 
 $(function(){
+	
+	
+	///// ===== ***** 상품 목록 보여주기 ***** ===== /////
 
 	
 	$("[name=checkAll]").click(function(){
@@ -196,21 +199,131 @@ $(function(){
     
     
     
-    // 주문상품 삭제하기 클릭하면 다시 새로고침되면서 체크한 상품 삭제하고 보여주기
+    // 주문상품 삭제하기 클릭하면 다시 새로고침되면서 체크한 상품 삭제하고 보여주기 *******따오기만 한것 재정비하기*********
+    // *** 삭제하기 버튼 눌렀을 때 ***//
+	$("#deleteBtn").click(function(){
+		  var confirm_val = confirm("정말 삭제하시겠습니까?");
+		  
+		  if(confirm_val) {
+			   var checkArr = new Array();
+			   
+			   $("input[name=product]:checked").each(function(){
+			    	checkArr.push($(this).attr("data-cartNum"));
+			   });
+			    
+			   $.ajax({
+				    url : "<%=ctxPath%>/order.to",
+				    type : "post",
+				    data : { chbox : checkArr },
+				    success : function(){
+				     location.href = "<%=ctxPath%>/order.to";
+				    }
+			   });
+		  } 
+	 });
+    
+    
+    
     
     
     // 주문자 정보와 동일 클릭하면 자동으로 채워넣기
+    $("input#sameLoginusesr").click(function(){
+    	
+    	var name = $("input#orderName").val();
+    	var hp2 = $("[name=ordererHp2]").val();
+    	var hp3 = $("[name=ordererHp3]").val();
+    	var zip = $('[name=orderZip]').val();
+    	var addr1 = $('[name=addr1]').val();
+    	var addr2 = $('[name=addr2]').val();
+    	var extraAddress = $('[name=extraAddress]').val();
+    	
+    	if($(this).is(":checked")){
+	    	$("input#shipName").val(name);
+	    	$("[name=shipHp2]").val(hp2);
+	    	$("[name=shipHp3]").val(hp3);
+	    	$("[name=shipZip]").val(zip);
+	    	$("[name=addr3]").val(addr1);
+	    	$("[name=addr4]").val(addr2);
+	    	$("[name=extraAddress2]").val(extraAddress);
+    	}
+    });
     
     
-	// 모달창에서 동의하기클릭하면 체크하기
+    
+	// 첫번째 모달창에서 동의하기클릭하면 체크하기
+	$("#modalY").click(function(){
+		$("#agree1").prop("checked",true);
+	});
+	
+	// 두번째 모달창에서 동의하기클릭하면 체크하기
+	$("#modalY2").click(function(){
+		$("#agree2").prop("checked",true);
+	});
 	
 	
-	// 상품 등록시 리스트에서 추가생성 & 주문자 정보 받아오기
 	
+	// 연락처 hp2 숫자 4자리 아닐 경우
+	$("[name=hp2]").blur(function(){
+         
+            var regExp = /^[1-9][0-9]{3}$/i; 
+            // 첫번째 숫자는 0을 제외하고 나머지 3개는 0을 포함한 숫자만 오도록 검사해주는 정규표현식 객체 생성  
+         
+            var bool = regExp.test($(this).val());
+            
+            if(!bool) {
+            	alert("전화번호 4자리를 올바르게 입력하세요");
+            }
+         });
+    
 	
+    $("input#hp3").blur(function(){
+       
+       var regExp = /^\d{4}$/i; 
+       // 숫자 4개만 오도록 검사해주는 정규표현식 객체 생성  
+    
+       var bool = regExp.test($(this).val());
+       
+       if(!bool) {
+          alert("전화번호 4자리를 올바르게 입력하세요");
+       }
+       
+    });
+         
+         
 	// 이메일 정규표현식 검사
+	$("input#email").blur(function(){
+         
+         //   var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i; 
+         //  또는   
+            var regExp = new RegExp(/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i);
+            // 이메일 정규표현식 객체 생성   
+         
+            var bool = regExp.test($(this).val());
+            
+            if(!bool) {
+               // 이메일이 정규표현식에 위배된 경우
+            	alert("올바른 이메일 형식으로 작성하십시오");
+            }
+            
+         }); // 아이디가 email 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+      
 	
-	
+	// 사용 포인트 입력했을 때
+	$('input#usePoint').blur(function(){
+		var usePoint = $(this).val().trim();
+		var bool = isNaN(usePoint);
+	//	var havingPoint = ${loginuser.point};
+		
+		if(bool){
+			// 숫자 외 다른 문자 친 경우
+			$(this).val("");
+		}
+	/*	
+		else if(usePoint>havinPoint){
+			// 만약 보유포인트보다 큰 숫자 입력했으면 val()값 보유 적립금 금액으로 바꾸기	
+			$(this).val(havingPoint);
+		}*/
+	});
 	
 
 	
@@ -284,7 +397,7 @@ $(function(){
 			</tr>
 			<tr>
 				<td>
-					<input type="text" name="name" id="name" class="requiredInfo" /> 
+					<input type="text" name="orderName" id="orderName" class="requiredInfo" /> 
 				</td>
 			</tr>	
 			<tr>
@@ -294,7 +407,7 @@ $(function(){
 			</tr>
 			<tr>
 				<td>
-					<input type="text" name="zip" id="postcode" class="requiredInfo"  name="postcode" size="6" maxlength="5" readonly />&nbsp;&nbsp;
+					<input type="text" name="orderZip" id="postcode1" class="requiredInfo" size="6" maxlength="5" readonly />&nbsp;&nbsp;
 					<%-- 우편번호 찾기 --%>
 					<input type="button" value="우편번호" id="zipcodeSearch" style="vertical-align: middle;" onclick="openZipSearch()" />
 				</td>
@@ -306,7 +419,8 @@ $(function(){
 			</tr>
 			<tr>		
 				<td>
-					<input type="text" name="addr2"  id="extraAddress"  size="40" placeholder="참고항목" readonly />&nbsp;<input type="text" name="extraAddress" size="40" placeholder="상세주소" />
+					<input type="text" name="addr2"  id="extraAddress"  size="40" placeholder="참고항목" readonly />&nbsp;
+					<input type="text" name="extraAddress" size="40" placeholder="상세주소" />
 				</td>
 			</tr>			
 			<tr>
@@ -314,15 +428,15 @@ $(function(){
          	</tr>
          	<tr>
          		<td>
-	             	<input type="text" id="hp1" name="hp1" size="6" maxlength="3" style="text-align:center;" value="010" readonly class="requiredInfo" />&nbsp;-&nbsp;
-	             	<input type="text" id="hp2" name="hp2" size="6" maxlength="4" class="requiredInfo" />&nbsp;-&nbsp;
-	             	<input type="text" id="hp3" name="hp3" size="6" maxlength="4" class="requiredInfo" />
+	             	<input type="text" id="x" name="ordererHp1" size="6" maxlength="3" style="text-align:center;" value="010" class="requiredInfo" />&nbsp;-&nbsp;
+	             	<input type="text" id="ordererHp2" name="ordererHp2" size="6" maxlength="4" style="text-align:center; class="requiredInfo" />&nbsp;-&nbsp;
+	             	<input type="text" id="ordererHp3" name="ordererHp3" size="6" maxlength="4" style="text-align:center;class="requiredInfo" />
              	</td>
     	<tr>
 	         	<th>이메일</th>
 			</tr>
 	        <tr>	         	
-	         	<td><input type="text" name="email" id="email" placeholder="abc@def.com" /> </td>
+	         	<td><input type="text" name="orderEmail" id="email" placeholder="abc@def.com" /> </td>
             </tr>
 	</table>
 	<hr>
@@ -334,7 +448,7 @@ $(function(){
 	
 	<div class="left" style="display:inline-block; float:left; ">
 		<span style="font-size:15pt; font-weight: bold;">배송 정보</span>
-		<span style="font-size:10pt;">&nbsp;<input type="checkbox"/>&nbsp;주문자 정보와 동일</span>
+		<span style="font-size:10pt;">&nbsp;<input type="checkbox" id="sameLoginusesr"/>&nbsp;주문자 정보와 동일</span>
 	</div>
 	<div style="float:right;display:inline-block;" align="right">
 		<span style="font-size:10pt;"><span class="star">*</span>&nbsp;필수입력사항</span>
@@ -352,7 +466,7 @@ $(function(){
 			</tr>
 			<tr>
 				<td>
-					<input type="text" name="name" id="name" class="requiredInfo" /> 
+					<input type="text" name="shipName" id="shipName" class="requiredInfo" /> 
 				</td>
 			</tr>	
 			<tr>
@@ -362,7 +476,7 @@ $(function(){
 			</tr>
 			<tr>
 				<td>
-					<input type="text" name="zip2" id="postcode" class="requiredInfo" name="postcode" size="6" maxlength="5" readonly/>&nbsp;&nbsp;
+					<input type="text" name="shipZip" id="postcode2" class="requiredInfo" size="6" maxlength="5" readonly/>&nbsp;&nbsp;
 					<%-- 우편번호 찾기 --%>
 					<input type="button" value="우편번호" id="zipcodeSearch" style="vertical-align: middle;" onclick="openZipSearch2()" />
 				</td>
@@ -374,7 +488,8 @@ $(function(){
 			</tr>
 			<tr>		
 				<td>
-					<input type="text" name="addr4"  id="extraAddress"  size="40" placeholder="참고항목" readonly/>&nbsp;<input type="text" name="extraAddress" size="40" placeholder="상세주소" />
+					<input type="text" name="addr4"  id="extraAddress"  size="40" placeholder="참고항목" readonly/>&nbsp;
+					<input type="text" name="extraAddress2" size="40" placeholder="상세주소" />
 				</td>
 			</tr>	
 			<tr>
@@ -382,16 +497,16 @@ $(function(){
          	</tr>
          	<tr>
          		<td>
-	             	<input type="text" id="hp1" name="hp1" size="6" maxlength="3" style="text-align:center;" value="010" readonly />&nbsp;-&nbsp;
-	             	<input type="text" id="hp2" name="hp2" size="6" maxlength="4" class="requiredInfo" />&nbsp;-&nbsp;
-	             	<input type="text" id="hp3" name="hp3" size="6" maxlength="4" class="requiredInfo" />
+	             	<input type="text" id="shipHp1" name="shipHp1" size="6" maxlength="3" style="text-align:center;" value="010" />&nbsp;-&nbsp;
+	             	<input type="text" id="shipHp2" name="shipHp2" size="6" maxlength="4" style="text-align:center; class="requiredInfo" />&nbsp;-&nbsp;
+	             	<input type="text" id="shipHp3" name="shipHp3" size="6" maxlength="4" style="text-align:center; class="requiredInfo" />
              	</td>
 	      	<tr>
 	         	<th>배송 메세지</th>
 			</tr>
 	        <tr>	         	
 	         	<td>
-	         		<select class="orderStatus" id="shippingMsg" style="margin-left:0px;">
+	         		<select class="orderStatus" name="shippingMsg" style="margin-left:0px;">
 						<option value="" selected>&nbsp;&nbsp;배송 요청사항을 입력해주세요&nbsp;&nbsp;</option>
 						<option value="opt_1">문 앞에 놓아주세요</option>
 						<option value="opt_2">경비(관리)실에 맡겨주세요</option>
@@ -419,8 +534,9 @@ $(function(){
 		</tr>
 		<tr>
 			<th style="text-align:left; width:40%; ">사용 point</th>
-			<td style="text-align:right; width:60%;"">
-				<input type="text" style="width:100%;border:1px solid gray; text-align:right;" value="원" />
+			<td style="text-align:right; width:60%;">
+				<input type="text" id="usePoint" style="width:90%;border:1px solid gray; text-align:right; display:inline-block;" />
+				원
 			</td>
 		</tr>
 	</table>
@@ -452,10 +568,6 @@ $(function(){
 		</tr>
 		<tr>
 			<td style="text-align:left;">배송비</td>
-			<td style="text-align:right;">원</td>
-		</tr>
-		<tr>
-			<td style="text-align:left;">쿠폰 사용</td>
 			<td style="text-align:right;">원</td>
 		</tr>
 		<tr>
@@ -581,7 +693,7 @@ $(function(){
 						</div>
 						<div class="modal-footer">
 							<button class="btn" type="button" data-dismiss="modal">닫기</button>
-							<a class="btn" id="modalY"data-dismiss="modal" style="color:#0099ff;">동의합니다</a>
+							<a class="btn" id="modalY2"data-dismiss="modal" style="color:#0099ff;">동의합니다</a>
 						</div>
 					</div>
 				</div>
