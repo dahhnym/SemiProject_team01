@@ -4,6 +4,13 @@
 	font-family: 'Noto Sans KR', sans-serif;
 }
 
+/* 공통 //////////////////////////////////////////////////////// */
+
+.btn {
+	line-height: 1;	
+}
+
+
 /* login.jsp 적용 ////////////////////////////////////////////// */
 
 body{
@@ -116,7 +123,6 @@ input#changeIdlePwd {
 	 margin: 0 30px 0 20%;
 }
 button#changeIdle {
-	padding-top: 0;
 	width: 150px;
 	height: 30px;
 }
@@ -125,4 +131,63 @@ div#alert_changeIdle {
 	font-weight: bold;
 	font-size: 11pt;
 	color: red;
+}
+
+
+
+/* idFind.jsp 적용 ////////////////////////////////////////////// */
+
+div#idFindContainer {
+	padding-top:100px;
+	width: 35%;
+	margin: 0 auto;
+}
+input#registerEmailID {
+	margin-top: 10px;
+}
+.infoConfirm {
+	display: inline-block;
+	margin-left: 15px;
+	font-weight: bold;
+	font-size: 11pt;
+	color: red;
+}
+.idFindSpace {
+	height: 30px;
+	width: 273px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+.idFindSpace2 {
+	height: 30px;
+	width: 135px;
+}
+
+
+/* pwdFind.jsp 적용 ////////////////////////////////////////////// */
+
+div#pwdFindContainer {
+	padding-top:100px;
+	width: 35%;
+	margin: 0 auto;
+}
+input#registerEmailID {
+	margin-top: 10px;
+}
+.infoConfirm {
+	display: inline-block;
+	margin-left: 15px;
+	font-weight: bold;
+	font-size: 11pt;
+	color: red;
+}
+.pwdFindSpace {
+	height: 30px;
+	width: 273px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.pwdFindSpace2 {
+	height: 30px;
+	width: 135px;
 }
