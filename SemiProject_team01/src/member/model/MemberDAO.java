@@ -3,22 +3,14 @@ package member.model;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.sql.*;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
+import javax.naming.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import javax.sql.DataSource;
+import util.security.*;
 
-import util.security.AES256;
-import util.security.SecretMyKey;
-import util.security.Sha256;
 
 public class MemberDAO implements InterMemberDAO {
 
@@ -57,6 +49,8 @@ public class MemberDAO implements InterMemberDAO {
     }
 	
     /////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
 	// 아이디 중복체크   
 	@Override
 	public boolean idDuplicateCheck(String userid) throws SQLException {
@@ -195,19 +189,19 @@ public class MemberDAO implements InterMemberDAO {
 	@Override
 	public int changePwd(String userid, String newPwd) throws SQLException {
 		int n=0;
-		
+		System.out.println(userid+newPwd);
 		try {
 			conn = ds.getConnection();
 
-			String sql = " update table tbl_member set pwd=? and lastpwdchangedate=sysdate "
-					   + " where userid=? ";
+			String sql = " update tbl_member set pwd=?, lastpwdchangedate=sysdate " +
+						 " where userid=?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, Sha256.encrypt(newPwd)); 
 			pstmt.setString(2, userid);
 			
 	        n = pstmt.executeUpdate();
-	        
+
 		} finally {
 			close();
 		}

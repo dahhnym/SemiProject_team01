@@ -176,7 +176,7 @@
 			$(this).val('');
 			$(this).focus();
 			bool=true;
-			return true;
+			return true;	// *정정사항
 		} else {
 			$("span#useridCheck").hide();
 			bool=false;

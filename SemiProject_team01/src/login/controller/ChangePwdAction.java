@@ -4,7 +4,6 @@ import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
 import member.model.*;
@@ -16,13 +15,11 @@ public class ChangePwdAction extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String method = request.getMethod();
-		HttpSession session = request.getSession();
 		
 		
 		if("post".equalsIgnoreCase(method)) {	// 비밀번호 변경하기를 누른 경우
-			System.out.println("왔어");
 			
-			String userid = request.getParameter("userid"); 
+			String userid = request.getParameter("real_id"); 
 			String newPwd = request.getParameter("newPwd"); 
 			
 			InterMemberDAO dao = new MemberDAO();
