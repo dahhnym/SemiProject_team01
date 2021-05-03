@@ -1,5 +1,7 @@
 package cscenter.model;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.*;
 import java.util.*;
 
@@ -76,17 +78,20 @@ public class FaqboardDAO implements InterFaqboardDAO {
 		
 		List<FaqboardVO> faqList = new ArrayList<>();
 	      
+		System.out.println("sbsb" + paraMap.get("str") );
 	      try {
 	           conn = ds.getConnection();
 	           
-	           String sql = " select fcname,  faqNo, faqtitle, faqcontent, fk_fcNo " + 
+	           String sql = " select fcname, fccode, faqNo, faqtitle, faqcontent, fk_fcNo " + 
 	                        	  " from tbl_faq JOIN tbl_faqcategory "
 	                           + " ON fk_fcNo = fcNo"
-	                           + " where fk_fcNo = ? ";
+	                           + paraMap.get("str");
 	           
 	           pstmt = conn.prepareStatement(sql);
 	           
-	           pstmt.setString(1, paraMap.get("fk_fcNo"));
+	           if(paraMap.get("str") != "") {
+	        	   pstmt.setString(1, paraMap.get("fcname"));
+	           }
 	           
 	           rs = pstmt.executeQuery();
 	           
@@ -94,16 +99,18 @@ public class FaqboardDAO implements InterFaqboardDAO {
 	           
 	           while(rs.next()) {
 	        	   FaqboardVO faqvo = new FaqboardVO();
-	        	   faqCategoryVO fcvo = new faqCategoryVO();
 	        	   
+	        	   faqCategoryVO fcvo = new faqCategoryVO();	        	   
 	        	   fcvo.setFcname(rs.getString(1));
+	        	   fcvo.setFccode(rs.getString(2));
+	        	   faqvo.setFcvo(fcvo);
 	        	   
 	        	   System.out.println("sfsf" + rs.getString(1));
 	        	   
-	        	   faqvo.setFaqNo(rs.getInt(2));
-	        	   faqvo.setFaqtitle(rs.getString(3));
-	        	   faqvo.setFaqcontent(rs.getString(4));
-	        	   faqvo.setFk_fcNo(rs.getInt(5));
+	        	   faqvo.setFaqNo(rs.getInt(3));
+	        	   faqvo.setFaqtitle(rs.getString(4));
+	        	   faqvo.setFaqcontent(rs.getString(5));
+	        	   faqvo.setFk_fcNo(rs.getInt(6));
 	        	   
 	               faqList.add(faqvo);
 	           }// end of while----------------
@@ -114,5 +121,6 @@ public class FaqboardDAO implements InterFaqboardDAO {
 	      
 	      return faqList;
 	}
+
 
 }

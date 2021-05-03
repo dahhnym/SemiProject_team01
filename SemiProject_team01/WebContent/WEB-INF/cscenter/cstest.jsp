@@ -8,26 +8,26 @@
 <title>테스트여</title>
 </head>
 <body>
-<table id="memberTbl" class="table table-bordered" style="width: 90%; margin-top: 20px;">
-        <thead>
-           <tr>
-              <th>아이디</th>
-              <th>회원명</th>
-              <th>이메일</th>
-              <th>성별</th>
-           </tr>
-        </thead>
-        <tbody>
-					  <c:forEach var="fvo" items="${requestScope.faqlist}" >
-					  <span></span>
-						<tr class = "memberInfo">
-							<td class="userid">${fvo.faqNo}</td>
-							<td>${fvo.faqtitle}</td>
-							<td>${fvo.faqcontent}</td>
-							<td>${fvo.fk_fcNo}</td>
-						</tr>
-					</c:forEach>
+<table class="table table-hover table-expandable table-striped">
+    <thead>
+      <tr>
+        <th>NO</th>
+        <th>분류</th>
+        <th>제목</th>
+      </tr>
+    </thead>
+    <tbody>
+		  <c:forEach var="fvo" items="${requestScope.faqlist}" >
+			<tr>
+				<td>${fvo.faqNo}</td>
+				<td>${fvo.fcname}</td>
+				<td>${fvo.faqtitle}</td>
+			</tr>
+			<tr>
+				<td colspan="4">${fvo.faqcontent}</td>
+			</tr>
+		</c:forEach>
         </tbody>
-	</table>
+     </table>
 </body>
 </html>
