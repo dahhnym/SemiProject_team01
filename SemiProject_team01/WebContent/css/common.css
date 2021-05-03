@@ -6,7 +6,10 @@
 
 body {
  position:static;
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+.nohidden{
+	z-index: 100;
 }
 
 /* ==== header CSS ==== */
@@ -17,14 +20,14 @@ body {
  /* border: solid 1px gray; */
 }
 
-#navbar {
+/* #navbar {
   overflow: hidden;
   background-color: white;
   border: solid 1px gray;
   border-left: none;
   border-right: none;
-  z-index: 99;
-}
+  z-index: 1;
+} */
 
 #navbar-fixed {
   position: fixed;
@@ -56,32 +59,36 @@ body {
   font-size: 13px;
 }
 
-#navbar a {
+a.navmenu {
   display: inline-block;
   color: #333;
   text-align: center;
   text-decoration: none;
   font-size: 13px;
-  
+  margin: 0;
+  padding: 12px 6em;
 }
 
-
-#bottom-nav-container a {
-  float: left;
-  display: inline-block;
-  padding: 12px 5em;
+#bottom-nav-container > ul > li:nth-child(1){
+	margin-left: 6em;
 }
 
-#bottom-nav-container a:first-child{
-	margin-left: 5em;
+#navbar {
+	border: solid 1px gray;
+	width: 100%;
 }
 
+#bottom-nav-container {
+	/* border: solid 1px red; */
+	background-color: #fff;
+	width: 70%;
+	
+}
 
 #navbar a:hover, #navbar-fixed a:hover {
   font-weight: bold;
   color: black;
 }
-
 
 
 .sticky {
@@ -102,6 +109,85 @@ body {
 .content-width{
 	width: 70%;
 }
+
+
+/* ==== header CSS(fadeIn/fadeOut dropdown menu) ==== */
+
+.nav ul {
+    *zoom:1;
+    list-style:none;
+    margin:0;
+    padding:0;
+    background: #fff;
+    /*border: solid 1px red;*/
+}
+.nav ul:before,.nav ul:after {
+    content:"";
+    display:table;
+}
+.nav ul:after {
+    clear:both;
+}
+.nav ul > li {
+    float:left;
+    position:relative;
+   /* border: solid 1px purple; */
+}
+.nav a {
+    display:block;
+    padding:12px 20px;
+    line-height:1.2em;
+    color: #333;
+    text-decoration: none;
+    
+}
+.nav a:hover {
+    text-decoration:none;
+    font-weight: bold;
+}
+
+.nav li ul {
+    background:#fff;
+    box-shadow: 1px 2px 2px gray;
+    
+}
+
+
+.nav li ul a {
+    /* border: solid 1px red; */
+}
+
+a.navmenu{
+	padding: 12px 4em;
+}
+
+.nav li ul a:hover {
+    transition: 0.2s;
+    font-weight: bold;
+}
+
+
+
+.nav li ul {
+    position:absolute;
+    left:0;
+    top:40px;
+    /* visibility:hidden; */
+    opacity:0;
+    filter:alpha(opacity=0);
+    -webkit-transition:200ms ease;
+    -moz-transition:200ms ease;
+    -o-transition:200ms ease;
+    transition:200ms ease;
+}
+.nav ul > li:hover ul {
+    /* visibility:visible; */
+    opacity:1;
+    filter:alpha(opacity=100);
+    /* border: solid 1px blue; */
+}
+
+
 
 
 /* ==== footer CSS ==== */
@@ -213,16 +299,16 @@ p.colname {
 @media screen and (max-width: 1600px) {
 
 	
-	#bottom-nav-container a{
+	
+	a.navmenu{
 		float: left;
 	  display: inline-block;
-	  padding: 12px 4em;
+	  padding: 12px 3em;
 	}
 	
-	#bottom-nav-container a:first-child{
-		margin-left: 3em;
+	#bottom-nav-container > ul > li:nth-child(1){
+	margin-left: 2em;
 	}
-	
 	
 }
 

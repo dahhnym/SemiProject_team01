@@ -129,3 +129,12 @@ table#modal-body{
 	margin:6%;
 }
 
+
+
+/* ==== orderInfo CSS ==== */
+
+
+
+table.orderInfo > td{
+	width:90%; margin:0 auto; text-align:right
+}

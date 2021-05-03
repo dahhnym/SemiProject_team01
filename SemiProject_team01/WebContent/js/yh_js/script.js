@@ -15,5 +15,20 @@ tabs.forEach(tab => {
     });
     target.classList.add('active');
     tab.classList.add('active');
+    
+    $.ajax({
+		   url:"<%= request.getContextPath()%>/cscenter/csFaq.to",
+		   type:"get",
+		   data:{"fcNo" : "${requestScope.faqcategoryList.fcNo}"},
+	   	   dataType:"json",
+	   	   success:function(json) {
+	   		alert("호이호이");
+	   	   },
+	   	   error: function(request, status, error){
+         alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+      }
+	   });// end of ajax--------------------
   });
+  
+  
 });

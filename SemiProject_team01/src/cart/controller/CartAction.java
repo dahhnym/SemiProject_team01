@@ -1,5 +1,6 @@
 package cart.controller;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,9 +10,16 @@ public class CartAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		
+		String method = request.getMethod();
+		
+		if("get".equalsIgnoreCase(method)) {
 		super.setRedirect(false);
 		super.setViewPage("/WEB-INF/cart/cart.jsp");
+		}
+		else {
+			
+		}
 	}
 
 }

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
   
 <script>
 $(window).scroll(function(){
@@ -15,6 +16,47 @@ $('.btn_gotop').click(function(){
 	
 	return false;
 });
+
+$(document).ready(function(){
+	
+	$("select#internetBanking").change(function(){
+		
+		if($("select").val() == "국민은행"){
+			window.open("https://obank.kbstar.com/quics?page=obank#loading", "국민은행 인터넷뱅킹");
+			$("option#default").prop("selected", true);
+		} else if($("select").val() == "우리은행"){
+			window.open("https://spib.wooribank.com/pib/Dream?withyou=ps", "우리은행 인터넷뱅킹");
+			$("option#default").prop("selected", true);
+		} else if($("select").val() == "기업은행"){
+			window.open("https://mybank.ibk.co.kr/uib/jsp/index.jsp", "기업은행 인터넷뱅킹");
+			$("option#default").prop("selected", true);
+		} else if($("select").val() == "농협은행"){
+			window.open("https://banking.nonghyup.com/nhbank.html", "농협은행 인터넷뱅킹");
+			$("option#default").prop("selected", true);
+		} else if($("select").val() == "산업은행"){
+			window.open("https://banking.kdb.co.kr/bp/index.jsp", "산업은행 인터넷뱅킹");
+			$("option#default").prop("selected", true);
+		} else if($("select").val() == "하나은행"){
+			window.open("https://www.kebhana.com/", "하나은행 인터넷뱅킹");
+			$("option#default").prop("selected", true);
+		} else if($("select").val() == "부산은행"){
+			window.open("https://ibank.busanbank.co.kr/ib20/mnu/PEB00001", "부산은행 인터넷뱅킹");
+			$("option#default").prop("selected", true);
+		} else if($("select").val() == "신한은행"){
+			window.open("https://bank.shinhan.com/index.jsp?referrer=https%3A%2F%2Fsearch.naver.com%2Fsearch.naver%3Fsm%3Dtab_hty.top%26where%3Dnexearch%26query%3D%25EC%258B%25A0%25ED%2595%259C%25EC%259D%2580%25ED%2596%2589%2B%25EC%259D%25B8%25ED%2584%25B0%25EB%2584%25B7%25EB%25B1%2585%25ED%2582%25B9%26oquery%3D%25EB%25B6%2580%25EC%2582%25B0%25EC%259D%2580%25ED%2596%2589%2B%25EC%259D%25B8%25ED%2584%25B0%25EB%2584%25B7%25EB%25B1%2585%25ED%2582%25B9%26tqi%3Dh4Ju4lprvN8ss7RqjQwssssstIo-053405#010800000000", "신한은행 인터넷뱅킹");
+			$("option#default").prop("selected", true);
+		}
+		
+		
+	});
+		
+	
+	
+	
+	
+	
+});
+
 </script>
   
     
@@ -56,8 +98,8 @@ $('.btn_gotop').click(function(){
     	<p class="colname">Account Info</p>
     	<p>국민 김일조</p>
     	<p>654321-12-123456</p>
-    	<select>
-    		<option>인터넷뱅킹바로가기</option>
+    	<select id="internetBanking">
+    		<option id="default">인터넷뱅킹바로가기</option>
     		<option>국민은행</option>
     		<option>우리은행</option>
     		<option>기업은행</option>
@@ -78,7 +120,7 @@ $('.btn_gotop').click(function(){
 <hr style="margin: 0;">
 <div class="bottom-footer" style="background-color: #f2f2f2; padding: 20px 0;">
 	<div class="div-footer bottom-footer-content content-width">
-		<p>COMPANY : Ladies and gents&nbsp;&nbsp;&nbsp;OWNER: 김OO&nbsp;&nbsp;BUSINESS LICENSE : 000-00-00000 &nbsp;&nbsp;<span><button type="button" style="display: inline-block;">사업자정보조회</button></span></p>
+		<p>COMPANY : Ladies and gents&nbsp;&nbsp;&nbsp;OWNER: 김OO&nbsp;&nbsp;BUSINESS LICENSE : 000-00-00000 &nbsp;&nbsp;<span><button type="button" id="companyInfoCheck" style="display: inline-block;" onclick="window.open('https://www.ftc.go.kr/www/bizCommList.do?key=232')">사업자정보조회</button></span></p>
 		<p>ADDRESS: 12345 서울특별시 강남구 oo대로 ooo oo빌딩 7층 ooo호&nbsp;&nbsp;&nbsp;TEL : 000-0000-0000&nbsp;&nbsp;FAX: 0000-000-0000</p>
 		<p>CPO: 최OO&nbsp;&nbsp;&nbsp;&nbsp;CONTACT US: abcd@gmail.com</p>
 		<p>COPYRIGHT ⓒ Ladies and gents ALL RIGHTS RESERVED.</p>

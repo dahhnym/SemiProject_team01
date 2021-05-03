@@ -20,6 +20,8 @@
 	<link rel="stylesheet" href="./bootstrapt/css/bootstrap.min.css" />
 	<script src="./bootstrapt/js/bootstrap.min.js"></script>
 
+<!-- 다음 우편번호 제이쿼리 -->
+<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 
 <script type="text/javascript">
 
@@ -89,73 +91,64 @@ function oneAgree(a){
 
 //== 동의 체크박스 함수 끝 == //
 
-function sampleModalPopup(){
-        // 팝업 호출 url
-        var url = "호출할 URL";
-        
-        // 팝업 호출
-        $("#sampleModalPopup > .modal-dialog").load(url, function() { 
-            $("#sampleModalPopup").modal("show"); 
-        });
-    }
+
+
 
 
 // !!!!!!!!!!! ==== 결제하기 눌렀을 때 ==== !!!!!!!!!!!
 function goCheckOut(){
-	
-	////// 필수사항 값이 없을 때 //////
-	var flag = false;
-	
-	$(".requiredInfo").each(function(index,item){
-		var val=$(item).val().trim();
-		if(val==""){
-			alert("*표시된 필수사항은 모두 입력하셔야 합니다");
-			flag=true;
-			return false;
-		}
-	});
-	
-	if(!flag){
-		var frm=document.prodInputFrm;
-		frm.action = "memberRegister.up";
-		frm.submit();
-	}
-	///////////////////////////
-	
-	
-	
-    // 이용약관
-    var checkboxCheckedLength = $("input:checkbox[id=agree]:checked").length;
-    
-    if(checkboxCheckedLength == 0) {
-       alert("이용약관에 동의하셔야 합니다.");
-       return; // 종료
-    }
-    
-    //// 최종적으로 필수입력사항에 모두 입력이 되었는지 검사한다. ////
+	 //// 최종적으로 필수입력사항에 모두 입력이 되었는지 검사한다. ////
     var bFlagRequiredInfo = false;
     
     $(".requiredInfo").each(function(index, item){
-       var data = $(item).val();
-       if(data == "") {
+    	var val=$(item).val().trim();
+       if(val == "") {
           bFlagRequiredInfo = true;
           alert("*표시된 필수입력사항은 모두 입력하셔야 합니다.");
           return false; // break 라는 뜻이다.
        }
     });
+	
+    /// 이용약관 체크했는지 검사
+    var checkboxCheckedLength = $("input:checkbox[name=agree]:checked").length;
     
-    if(!b_flagIdDuplicaateClick){
-       //'아이디 중복 확인'을 클릭하지않았을 경우
-       alert("아이디 중복확인을 클릭하여 아이디 중복검사를 하세요!!");
-       return;
+    if(checkboxCheckedLength == 0) {
+       alert("이용약관에 동의하셔야 합니다.");
+       return; // 종료
     }
-    
-    if(!bFlagRequiredInfo) {
-       var frm = document.registerFrm;
-       frm.action = "memberRegister.up";
+  
+    if(!bFlagRequiredInfo && checkboxCheckedLength==2) {
+    	alert("주문이 완료되었습니다");
+       var frm = document.orderFrm;
+       frm.action = "orderInfo.to";
        frm.method = "post";
        frm.submit();
     }
+}
+
+
+
+
+// 첫번째 우편번호 함수
+function openZipSearch() {
+	new daum.Postcode({
+		oncomplete: function(data) {
+			$('[name=zip]').val(data.zonecode); // 우편번호 (5자리)
+			$('[name=addr1]').val(data.address);
+			$('[name=addr2]').val(data.buildingName);
+		}
+	}).open();
+}
+
+//두번째 우편번호 함수
+function openZipSearch2() {
+	new daum.Postcode({
+		oncomplete: function(data) {
+			$('[name=zip2]').val(data.zonecode); // 우편번호 (5자리)
+			$('[name=addr3]').val(data.address);
+			$('[name=addr4]').val(data.buildingName);
+		}
+	}).open();
 }
 
 
@@ -188,54 +181,7 @@ $(function(){
 	    });
 	});
 	
-	// 우편번호 클릭시
-    $("img#zipcodeSearch").click(function(){
-        new daum.Postcode({
-              oncomplete: function(data) {
-                  // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-                  // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-                  // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-                  var addr = ''; // 주소 변수
-                  var extraAddr = ''; // 참고항목 변수
-
-                  //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-                  if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                      addr = data.roadAddress;
-                  } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                      addr = data.jibunAddress;
-                  }
-
-                  // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-                  if(data.userSelectedType === 'R'){
-                      // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-                      // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-                      if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                          extraAddr += data.bname;
-                      }
-                      // 건물명이 있고, 공동주택일 경우 추가한다.
-                      if(data.buildingName !== '' && data.apartment === 'Y'){
-                          extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                      }
-                      // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-                      if(extraAddr !== ''){
-                          extraAddr = ' (' + extraAddr + ')';
-                      }
-                      // 조합된 참고항목을 해당 필드에 넣는다.
-                      document.getElementById("extraAddress").value = extraAddr;
-                  
-                  } else {
-                      document.getElementById("extraAddress").value = '';
-                  }
-
-                  // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                  document.getElementById('postcode').value = data.zonecode;
-                  document.getElementById("address").value = addr;
-                  // 커서를 상세주소 필드로 이동한다.
-                  document.getElementById("detailAddress").focus();
-              }
-          }).open();
-     });   
+	
     
     // 모달창 만들기
     $('#testBtn1').click(function(e){
@@ -259,7 +205,10 @@ $(function(){
 	// 모달창에서 동의하기클릭하면 체크하기
 	
 	
+	// 상품 등록시 리스트에서 추가생성 & 주문자 정보 받아오기
 	
+	
+	// 이메일 정규표현식 검사
 	
 	
 	
@@ -300,7 +249,7 @@ $(function(){
 				<td align="left"><a href="">[상품정보]링크걸기</a><br>[옵션:컬러]</td>
 				<td>1</td>
 				<td>30,000원</td>
-				<td align="center"><div id="pointbox">5% 적립</div>150원</td>
+				<td align="center"><div id="pointbox">5% 적립</div>150p</td>
 				<td>[무료]</td>
 				<td>30,000원</td>
 			</tr>
@@ -345,29 +294,29 @@ $(function(){
 			</tr>
 			<tr>
 				<td>
-					<input type="text" id="postcode" name="postcode" size="6" maxlength="5" />&nbsp;&nbsp;
+					<input type="text" name="zip" id="postcode" class="requiredInfo"  name="postcode" size="6" maxlength="5" readonly />&nbsp;&nbsp;
 					<%-- 우편번호 찾기 --%>
-					<img id="zipcodeSearch" src="../b_zipcode.gif" style="vertical-align: middle;" />
+					<input type="button" value="우편번호" id="zipcodeSearch" style="vertical-align: middle;" onclick="openZipSearch()" />
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="text" id="address" name="address" size="40" placeholder="주소" /><br/>
+					<input type="text" name="addr1"  size="40" placeholder="주소" readonly /><br>
 				</td>
 			</tr>
 			<tr>		
 				<td>
-					<input type="text" id="detailAddress" name="detailAddress" size="40" placeholder="상세주소" />&nbsp;<input type="text" id="extraAddress" name="extraAddress" size="40" placeholder="참고항목" /> 
+					<input type="text" name="addr2"  id="extraAddress"  size="40" placeholder="참고항목" readonly />&nbsp;<input type="text" name="extraAddress" size="40" placeholder="상세주소" />
 				</td>
-			</tr>
+			</tr>			
 			<tr>
          		<th>연락처&nbsp;<span class="star">*</span><th>
          	</tr>
          	<tr>
          		<td>
-	             	<input type="text" id="hp1" name="hp1" size="6" maxlength="3" value="010" readonly />&nbsp;-&nbsp;
-	             	<input type="text" id="hp2" name="hp2" size="6" maxlength="4" />&nbsp;-&nbsp;
-	             	<input type="text" id="hp3" name="hp3" size="6" maxlength="4" />
+	             	<input type="text" id="hp1" name="hp1" size="6" maxlength="3" style="text-align:center;" value="010" readonly class="requiredInfo" />&nbsp;-&nbsp;
+	             	<input type="text" id="hp2" name="hp2" size="6" maxlength="4" class="requiredInfo" />&nbsp;-&nbsp;
+	             	<input type="text" id="hp3" name="hp3" size="6" maxlength="4" class="requiredInfo" />
              	</td>
     	<tr>
 	         	<th>이메일</th>
@@ -413,29 +362,29 @@ $(function(){
 			</tr>
 			<tr>
 				<td>
-					<input type="text" id="postcode" name="postcode" size="6" maxlength="5" />&nbsp;&nbsp;
+					<input type="text" name="zip2" id="postcode" class="requiredInfo" name="postcode" size="6" maxlength="5" readonly/>&nbsp;&nbsp;
 					<%-- 우편번호 찾기 --%>
-					<img id="zipcodeSearch" src="../b_zipcode.gif" style="vertical-align: middle;" />
+					<input type="button" value="우편번호" id="zipcodeSearch" style="vertical-align: middle;" onclick="openZipSearch2()" />
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="text" id="address" name="address" size="40" placeholder="주소" /><br/>
+					<input type="text" name="addr3"  size="40" placeholder="주소" readonly /><br>
 				</td>
 			</tr>
 			<tr>		
 				<td>
-					<input type="text" id="detailAddress" name="detailAddress" size="40" placeholder="상세주소" />&nbsp;<input type="text" id="extraAddress" name="extraAddress" size="40" placeholder="참고항목" /> 
+					<input type="text" name="addr4"  id="extraAddress"  size="40" placeholder="참고항목" readonly/>&nbsp;<input type="text" name="extraAddress" size="40" placeholder="상세주소" />
 				</td>
-			</tr>
+			</tr>	
 			<tr>
          		<th>연락처&nbsp;<span class="star">*</span><th>
          	</tr>
          	<tr>
          		<td>
-	             	<input type="text" id="hp1" name="hp1" size="6" maxlength="3" value="010" readonly />&nbsp;-&nbsp;
-	             	<input type="text" id="hp2" name="hp2" size="6" maxlength="4" />&nbsp;-&nbsp;
-	             	<input type="text" id="hp3" name="hp3" size="6" maxlength="4" />
+	             	<input type="text" id="hp1" name="hp1" size="6" maxlength="3" style="text-align:center;" value="010" readonly />&nbsp;-&nbsp;
+	             	<input type="text" id="hp2" name="hp2" size="6" maxlength="4" class="requiredInfo" />&nbsp;-&nbsp;
+	             	<input type="text" id="hp3" name="hp3" size="6" maxlength="4" class="requiredInfo" />
              	</td>
 	      	<tr>
 	         	<th>배송 메세지</th>
@@ -473,17 +422,6 @@ $(function(){
 			<td style="text-align:right; width:60%;"">
 				<input type="text" style="width:100%;border:1px solid gray; text-align:right;" value="원" />
 			</td>
-		</tr>
-		<tr>	         	
-			<th style="text-align:left; width:40%; ">할인 쿠폰</th>
-         	<td>
-         		<select class="orderStatus" id="coupon" style=" margin-right:0px;">
-					<option value="" selected>&nbsp;쿠폰을 사용하시겠습니까?&nbsp;</option>
-					<c:forEach var="" items="">
-						<option value=""></option>
-					</c:forEach>
-				</select>				
-         	</td>
 		</tr>
 	</table>
 	<hr>

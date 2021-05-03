@@ -23,9 +23,6 @@
 <!-- Bootstrap 4 icon-->
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-
-
-
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -58,7 +55,7 @@ $(document).ready(function(){
   <div id="top-nav-container" class="content-width">
 	  <a href="<%=ctxPath%>/cscenter/csHome.to">고객센터</a>
 	  <a href="<%=ctxPath%>/cart/cart.to">장바구니</a>
-	  <a href="javascript:void(0)">마이페이지</a>
+	  <a href="<%=ctxPath%>/member/memberAccount.to">마이페이지</a>
 	  <a href="javascript:void(0)">로그인</a>
 	  <a href="<%=ctxPath%>/member/memberRegister.to">회원가입</a>
   </div>
@@ -68,14 +65,38 @@ $(document).ready(function(){
 	<a href="<%=ctxPath%>/home.to"><img style="margin-top: 5px;"src="<%=ctxPath%>/images/logo.jpg"/></a>
 </div>
 
-<div id="navbar">
-	<div id="bottom-nav-container" class="content-width">
-			  <a href="<%=ctxPath%>/List.to">Best상품</a>
-			  <a href="<%=ctxPath%>/List.to">Sale상품</a>
-			  <a href="<%=ctxPath%>/List.to">토트백</a>
-			  <a href="<%=ctxPath%>/List.to">숄더백</a>
-			  <a href="<%=ctxPath%>/List.to">백백</a>
-			  <a href="<%=ctxPath%>/List.to">클러치백</a>
-			  <a href="<%=ctxPath%>/List.to">악세사리</a>
+
+
+<div id="navbar" class="nohidden">
+	<div id="bottom-nav-container" class="nav nohidden">
+	    <ul class="nohidden">
+	        <li>
+	            <a class="navmenu" href="#">Best 상품</a>
+	            <ul>
+	                <li><a href="#">토트백</a></li>
+	                <li><a href="#">숄더백</a></li>
+	                <li><a href="#">크로스백</a></li>
+	            </ul>
+	        </li>
+	        <li>
+	            <a class="navmenu" href="#">Sale 상품</a>
+	            <ul>
+	                <li><a href="#">토트백</a></li>
+	                <li><a href="#">숄더백</a></li>
+	                <li><a href="#">크로스백</a></li>
+	            </ul>
+	        </li>
+	        <li><a class="navmenu" href="#">토트백</a></li>
+	        <li><a class="navmenu" href="#">숄더백</a></li>
+	        <li><a class="navmenu" href="#">크로스백</a></li>
+	        <li><a class="navmenu" href="#">백팩</a></li>
+	        <li>
+	        	<a class="navmenu" href="#">악세사리</a>
+	        	<ul>
+	                <li><a href="#">크로스벨트</a></li>
+	                <li><a href="#">키링</a></li>
+	            </ul>
+	        </li>
+	    </ul>
 	</div>
 </div>
