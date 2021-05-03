@@ -1,5 +1,6 @@
 package cscenter.model;
 
+
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.sql.*;
@@ -7,6 +8,8 @@ import java.util.*;
 
 import javax.naming.*;
 import javax.sql.DataSource;
+
+import member.model.MemberVO;
 
 public class FaqboardDAO implements InterFaqboardDAO {
 	
@@ -77,25 +80,24 @@ public class FaqboardDAO implements InterFaqboardDAO {
 	public List<FaqboardVO> selectbyfaq(Map<String, String> paraMap) throws SQLException {
 		
 		List<FaqboardVO> faqList = new ArrayList<>();
-	      
-		System.out.println("sbsb" + paraMap.get("str") );
 	      try {
 	           conn = ds.getConnection();
 	           
+	           
 	           String sql = " select fcname, fccode, faqNo, faqtitle, faqcontent, fk_fcNo " + 
 	                        	  " from tbl_faq JOIN tbl_faqcategory "
-	                           + " ON fk_fcNo = fcNo"
-	                           + paraMap.get("str");
+	                           + " ON fk_fcNo = fcNo";
 	           
+	           if( !"전체보기".equals(paraMap.get("fcname")) ) {
+		        	  sql += " where fcname = ? ";
+		          }
 	           pstmt = conn.prepareStatement(sql);
 	           
-	           if(paraMap.get("str") != "") {
+	           if( !"전체보기".equals(paraMap.get("fcname")) ) {
 	        	   pstmt.setString(1, paraMap.get("fcname"));
-	           }
+		          }
 	           
 	           rs = pstmt.executeQuery();
-	           
-	           System.out.println("sfdsf");
 	           
 	           while(rs.next()) {
 	        	   FaqboardVO faqvo = new FaqboardVO();
@@ -104,8 +106,6 @@ public class FaqboardDAO implements InterFaqboardDAO {
 	        	   fcvo.setFcname(rs.getString(1));
 	        	   fcvo.setFccode(rs.getString(2));
 	        	   faqvo.setFcvo(fcvo);
-	        	   
-	        	   System.out.println("sfsf" + rs.getString(1));
 	        	   
 	        	   faqvo.setFaqNo(rs.getInt(3));
 	        	   faqvo.setFaqtitle(rs.getString(4));
@@ -118,8 +118,93 @@ public class FaqboardDAO implements InterFaqboardDAO {
 	      } finally {
 	         close();
 	      }
-	      
 	      return faqList;
+	}
+
+	@Override
+	public int selectTotalPage(Map<String, String> paraMap) throws SQLException {
+		int totalPage = 0;
+	      
+	      try {
+	          conn = ds.getConnection();
+	          
+	          String sql = " select ceil(count(*)/10) "  
+							  + " from tbl_faq JOIN tbl_faqcategory "
+							  + " ON fk_fcNo = fcNo ";
+	          
+	          pstmt = conn.prepareStatement(sql);
+           
+	          rs = pstmt.executeQuery();
+	          
+	          rs.next();
+	          
+	          totalPage = rs.getInt(1);
+	      
+	      } finally {
+	         close();
+	      }
+	      
+	      return totalPage;
+	}
+
+	@Override
+	public List<FaqboardVO> selectPagingFaq(Map<String, String> paraMap) throws SQLException {
+		List<FaqboardVO> faqList = new ArrayList<>();
+		
+		try {
+	          
+	          conn = ds.getConnection();
+	          
+	          String sql =  "select fcname, fccode, faqNo, faqtitle, faqcontent "+
+				        		  " from "+
+				        		  " ( "+
+				        		  "     select rownum as rno, fcname, fccode, faqNo, faqtitle, faqcontent, fk_fcNo "+
+				        		  "     from "+
+				        		  "     ( "+
+				        		  "         select fcname, fccode, faqNo, faqtitle, faqcontent, fk_fcNo "+
+				        		  "         from tbl_faq JOIN tbl_faqcategory "+
+				        		  "         ON fk_fcNo = fcNo " +
+				        		  "			order by faqNo asc " +
+				        		  "     )V "+
+				        		  " )T "+
+				        		  " where rno between ? and ? ";
+ 		  			  
+	          
+	          
+	          int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+	          int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage"));
+	          
+	          pstmt = conn.prepareStatement(sql);
+	          
+	          
+	    	  pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+	          pstmt.setInt(2, (currentShowPageNo * sizePerPage));
+		      
+	          
+	          rs = pstmt.executeQuery();
+	          
+	          while(rs.next()) {
+	        	  
+	        	  FaqboardVO fvo = new FaqboardVO();
+	        	  faqCategoryVO fcvo = new faqCategoryVO();
+	        	  
+	        	  fcvo.setFcname(rs.getString(1));
+	        	  fcvo.setFccode(rs.getString(2));
+	        	  fvo.setFcvo(fcvo);
+	        	  
+	        	  fvo.setFaqNo(rs.getInt(3));
+	        	  fvo.setFaqtitle(rs.getString(4));
+	        	  fvo.setFaqcontent(rs.getString(5));
+	        	  
+	        	  faqList.add(fvo);
+	        	  
+	          }// end of while --------------------
+			
+		} finally {
+			close();
+		}
+		
+		return faqList;
 	}
 
 
