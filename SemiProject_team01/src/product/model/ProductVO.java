@@ -1,24 +1,25 @@
 package product.model;
 
-import product.model.CategoryVO;
 
 public class ProductVO {
-	private int pnum; 	//제품번호
-	private String pname;	//제품명
-	private int fk_cnum; // 카테고리코드(Foreign Key)의 시퀀스번호 참조
-	private String pcompany;	//제조회사명
-	private String pimage1; // 제품이미지1   이미지파일명
-	private String pimage2; // 제품이미지2   이미지파일명 
-	private int price;	//제품 정가
-	private int saleprice; //제품 판매가(할인해서 팔 것이므로)
-	private int fk_snum; // 'HIT', 'NEW', 'BEST' 에 대한 스펙번호인 시퀀스번호를 참조
-	private String pcontent; //제품설명                                         
-	private int point; // 포인트 점수 
+
 	
+	private int pnum;         // 제품번호(Primary Key)
+	private String pname;     // 제품명
+	private int fk_cnum;      // 카테고리코드(Foreign Key)의 시퀀스번호 참조
+	private String pcompany;  // 제조회사명
+	private String pimage1;   // 제품이미지1   이미지파일명
+	private String pimage2;   // 제품이미지2   이미지파일명 
+	private int price;        // 제품 정가
+	private int saleprice;    // 제품 판매가(할인해서 팔 것이므로)
+	private int fk_snum;      // 'NEW', 'BEST', 'SALE' 에 대한 스펙번호인 시퀀스번호를 참조
+	private String pcontent;  // 제품설명  varchar2는 varchar2(4000) 최대값이므로	                                         
+	
+	// 자식테이블(tbl_product)에 부모테이블인 category와 spec 테이블이 필요하다
 	private CategoryVO categvo; // 카테고리VO 
-	private SpecVO	spvo; //스펙VO
-	
-	public ProductVO() { }
+	private SpecVO spvo;        // 스펙VO 
+  
+  public ProductVO() { }
 	
 	public ProductVO(int pnum, String pname, int fk_cnum, String pcompany, String pimage1, String pimage2,
 			int price, int saleprice, int fk_snum, String pcontent, int point) {
@@ -36,6 +37,18 @@ public class ProductVO {
 		this.point = point;
 	}
 	
+	public CategoryVO getCategvo() {
+		return categvo;
+	}
+	public void setCategvo(CategoryVO categvo) {
+		this.categvo = categvo;
+	}
+	public SpecVO getSpvo() {
+		return spvo;
+	}
+	public void setSpvo(SpecVO spvo) {
+		this.spvo = spvo;
+	}
 	public int getPnum() {
 		return pnum;
 	}
@@ -96,32 +109,8 @@ public class ProductVO {
 	public void setPcontent(String pcontent) {
 		this.pcontent = pcontent;
 	}
-	public int getPoint() {
-		return point;
-	}
-	public void setPoint(int point) {
-		this.point = point;
-	}
-
-	public CategoryVO getCategvo() {
-		return categvo;
-	}
-
-	public void setCategvo(CategoryVO categvo) {
-		this.categvo = categvo;
-	}
-
-	public SpecVO getSpvo() {
-		return spvo;
-	}
-
-	public void setSpvo(SpecVO spvo) {
-		this.spvo = spvo;
-	}
-	
-	
-
 	
 	
 	
 }
+

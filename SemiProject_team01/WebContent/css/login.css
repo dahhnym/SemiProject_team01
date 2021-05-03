@@ -1,0 +1,128 @@
+@charset "UTF-8";
+
+*{
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* login.jsp 적용 ////////////////////////////////////////////// */
+
+body{
+	/* text-align: center; */
+}
+div#loginSide {
+	padding-top:100px;
+	margin: 0 30px 0 27%;
+	float:left;
+	width: 20%;
+}
+div#loginBanner {			/* 정정사항 */
+	display:inline-block;
+	padding-top:120px;	
+	width: 40%;
+}
+form#registerFrm {;
+	margin: 0;
+}
+h2#loginh2{
+	text-align: left;
+	font-weight: bold;
+}
+.login {
+	margin-bottom: 15px;
+	width:240px;
+}
+.addedMenu {
+	color: black;
+	font-size: 9pt;
+}
+a.addedMenu {
+	text-decoration: underline; 
+}
+img#loginBanner {
+	width: 400px;
+ 	height: 250px;
+}
+span#loginConfirm {
+	font-weight: bold;
+	font-size: 11pt;
+	color: red;
+}
+.eventspace {
+	margin-bottom: 15px;
+}
+
+
+/* changPwd.jsp 적용 ////////////////////////////////////////////// */
+
+div#changePwdContainer {
+	padding-top:100px;
+	width: 70%;
+	margin: 0 auto;
+}
+div#alert {
+	font-weight: bold;
+	margin: 0 0 50px 10%;
+	font-size: 18pt;
+}
+div#changePwd {
+	margin-left: 20%;
+}
+.loginWidth {
+	width:240px;
+}
+label#letter {
+	width: 150px;
+	font-weight: bold;
+}
+button.changePwd {
+	margin: 10px 0 0 150px;
+
+}
+
+input.loginWidth {
+	margin-right: 30px;
+	margin-bottom: 10px;
+}
+.confirm {
+	display: inline-block;
+	margin-left: 15px;
+	font-weight: bold;
+	font-size: 11pt;
+	color: red;
+}
+
+
+
+/* changeIdle.jsp 적용 ////////////////////////////////////////////// */
+
+div#changeIdleContainer {
+	padding-top:100px;
+	width: 45%;
+	margin: 0 auto;
+}
+div#alert_changeIdle {
+	font-weight: bold;
+	margin: 0 0 50px 10%;
+	font-size: 18pt;
+}
+.bold {
+	font-weight: bold;
+	margin-bottom:10px;
+}
+div#changeIdleContents {
+	margin: 30px 0 50px 10%;
+}
+input#changeIdlePwd {
+	 margin: 0 30px 0 20%;
+}
+button#changeIdle {
+	padding-top: 0;
+	width: 150px;
+	height: 30px;
+}
+div#alert_changeIdle {
+	margin: 15px 0 0 20%;
+	font-weight: bold;
+	font-size: 11pt;
+	color: red;
+}

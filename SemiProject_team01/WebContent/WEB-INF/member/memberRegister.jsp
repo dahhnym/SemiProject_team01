@@ -2,9 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<% 
-	String ctxPath = request.getContextPath(); 
-%>
+<% String ctxPath = request.getContextPath(); %>
 
 <jsp:include page="../header.jsp" />
 <link rel="stylesheet" href="../css/member.css"/>
@@ -14,37 +12,82 @@
     var bool = false;
 	
 	$(function(){
-
+		
 		$("span.confirm").hide();
 		$("tr#etc").hide();
 		$("input#userid").focus();
 		
-		// 이메일주소를 기타로 설정한 경우
-		$("select#emailAddress").change(function(){
-			if($("select#emailAddress").val()=="6"){
+		
+		// 이메일주소를 select한 경우 
+		$("input#emailAddress").val($("select#selectedEmailAddress option:selected").val());	// 기본값
+		
+		$("select#selectedEmailAddress").change(function(){			
+			if($("select#selectedEmailAddress").val()=="기타"){	// select 기타 선정시
 				$("tr#etc").show();	
-			} else {
-				$("tr#etc").hide();		
+				$("input#etcEmailAddress").blur(function(){
+					$("input#emailAddress").val($(this).val());	
+				});						
+			} else {	// 그 외 select 옵션 선택시
+				$("tr#etc").hide();	
+				$("input#etcEmailAddress").val("");
+				$("input#emailAddress").val($("select#selectedEmailAddress option:selected").val());	
 			}
 		});		
 		
 		
+		// 약관동의 처리
+		$("input#Agreements1").click(function(){	// 모두 동의를 클릭한 경우
+			if($("input#Agreements1").is(":checked")){
+				$("input#Agreements2").prop("checked",true);
+				$("input#Agreements3").prop("checked",true);
+				$("input#checkedAgreements3").val("1");
+			} else {
+				$("input#Agreements2").prop("checked",false);
+				$("input#Agreements3").prop("checked",false);
+				$("input#checkedAgreements3").val("0");
+			}			
+		});
+		$("input#Agreements2").click(function(){	// 모두 동의 외 약관이 모두 체크된 경우의 모두 동의 체크하기
+			if($("input#Agreements2").is(":checked")&&$("input#Agreements3").is(":checked")){
+				$("input#Agreements1").prop("checked",true);
+				$("input#checkedAgreements3").val("1");
+			} else {
+				$("input#Agreements1").prop("checked",false);
+				$("input#checkedAgreements3").val("0");
+			}
+		});
+		$("input#Agreements3").click(function(){	// 모두 동의 외 약관이 모두 체크된 경우의 모두 동의 체크하기
+			if($("input#Agreements2").is(":checked")&&$("input#Agreements3").is(":checked")){
+				$("input#Agreements1").prop("checked",true);
+				$("input#checkedAgreements3").val("1");
+			} else if($("input#Agreements3").is(":checked")) {
+				$("input#checkedAgreements3").val("1");
+			} else if(!$("input#Agreements3").is(":checked")) {
+				$("input#Agreements1").prop("checked",false);
+				$("input#checkedAgreements3").val("0");
+			} 
+			
+		});
+
+		
 		// 회원가입 버튼을 누른 경우
-		$("button#submit").click(function(){
+		$("button#register").click(function(){
 			window.scrollTo(0,0);
-			goCheck();
+			goCheck();	// 유효성 검사 함수
 			
 			if(!bool) {
 				var frm = document.registerFrm;
-				frm.action="";
+				frm.action="memberRegister.to";
 				frm.method="POST";
 				frm.submit();
 			}
 		});
+		
+		
 	});	// end of $(function() -----------------------------------------------------------
 	
 
-	// submit 버튼 클릭시, 유효성 검사
+	// register 버튼 클릭시, 유효성 검사
 	function goCheck(){
 		
 		// 아이디 체크
@@ -72,24 +115,32 @@
 		});
 		
 		// 생년월일 체크
-		birthdateCheck();
-		$("input#birthdate").blur(function(){
-			birthdateCheck();
+		birthdayCheck();
+		$("input#birthday").blur(function(){
+			birthdayCheck();
+		});
+		
+		// 성별 체크
+		genderCheck();
+		$("button#gender").blur(function(){
+			genderCheck();
 		});
 		
 		// 이메일 아이디 체크
 		emailIDCheck();
 		$("input#emailID").blur(function(){
 			emailIDCheck();
-		});
+		});		
 		
-		// 기타 이메일 주소 입력여부
-		if($('tr#etc').is(':visible')){
-			etcEmailAddressCheck();
-			$("input#etcEmailAddress").blur(function(){
+		// 기타 이메일 주소 체크
+		$("select#selectedEmailAddress").change(function(){		
+			if($("select#selectedEmailAddress").val()=="기타"){	// select 기타 선정시
 				etcEmailAddressCheck();
-			});	
-		}
+				$("input#etcEmailAddress").blur(function(){
+					etcEmailAddressCheck();
+				});	
+			}
+		});	
 
 		// 전화번호 체크
 		ph2Check();
@@ -103,6 +154,16 @@
 			postcodeCheck();
 		});
 		
+		// 필수 약관 체크
+		agreementsCheck();
+		$(document).on("click","input#Agreements1", function(){
+			agreementsCheck();
+		});
+		$(document).on("click","input#Agreements2", function(){
+			agreementsCheck();
+		});
+		
+		
 	}// end of function goCheck() ------------------------------------------------------------------
 	
 	
@@ -115,7 +176,7 @@
 			$(this).val('');
 			$(this).focus();
 			bool=true;
-			return true;
+			return true;	// *정정사항
 		} else {
 			$("span#useridCheck").hide();
 			bool=false;
@@ -158,8 +219,10 @@
 				$("span#pwdCheck2").show();
 				$("span#pwdCheck2").html("일치하지 않는 비밀번호입니다.");
 				bool=true;
-			} else 
+			} else {
 				$("span#pwdCheck2").hide();
+				bool=false;
+			}
 		}
 	}
 	
@@ -174,31 +237,52 @@
 			bool=true;
 		} else {
 			$("span#nameCheck").hide();
+			bool=false;
 		}
 	}
 	
 	
 	// 생년월일 체크 함수
-	function birthdateCheck(){
-		var birthdate = $("input#birthdate").val().trim();
-		if(birthdate==""){
-			$("span#birthdateCheck").show();
-			$("span#birthdateCheck").html("생년월일을 입력해주세요.");
+	function birthdayCheck(){
+		var birthday = $("input#birthday").val().trim();
+		if(birthday==""){
+			$("span#birthdayCheck").show();
+			$("span#birthdayCheck").html("생년월일을 입력해주세요.");
 			$(this).focus();
 			bool=true;
 		} else {
 			// 6자리 생년월일 정규표현식
 			var regExp=/([0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1,2][0-9]|3[0,1]))/;
-			var bool = regExp.test(birthdate);
+			var bool = regExp.test(birthday);
 			if(!bool){
-				$("span#birthdateCheck").show();
-				$("span#birthdateCheck").html("생년월일 날짜형식이 올바르지 않습니다.");
+				$("span#birthdayCheck").show();
+				$("span#birthdayCheck").html("생년월일 날짜형식이 올바르지 않습니다.");
+				bool=true;
 			} else {
-				$("span#birthdateCheck").hide();
+				$("span#birthdayCheck").hide();
+				bool=false;
 			}
 		}
 	}
 	
+	
+	// 성별 체크 함수
+	function genderCheck(){
+		if($("input#gender").val().trim()==""){
+			$("span#genderCheck").show();
+			$("span#genderCheck").html("성별을 선택해주세요.");
+			bool=true;
+		}
+	}
+	
+	
+	// 성별 값 input 입력함수
+	function genderInput(checkedbtn){
+		$("input#gender").val($(checkedbtn).attr('value'));	
+		$("span#genderCheck").html("");
+		bool=false;
+	}
+
 	
 	// 이메일 아이디 체크 함수
 	function emailIDCheck(){
@@ -210,6 +294,7 @@
 			bool=true;
 		} else {
 			$("span#emailIDCheck").hide();
+			bool=false;
 		}
 	}
 	
@@ -217,13 +302,27 @@
 	// 기타 이메일 주소 체크 함수
 	function etcEmailAddressCheck(){
 		var etcEmailAddress = $("input#etcEmailAddress").val().trim();
+		var regExp=/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
+		var b = regExp.test(etcEmailAddress);
+		
 		if(etcEmailAddress==""){
 			$("span#etcEmailAddressCheck").show();
 			$("span#etcEmailAddressCheck").html("이메일 주소를 입력해주세요.");
 			$(this).focus();
 			bool=true;
 		} else {
-			$("span#etcEmailAddressCheck").hide();
+			if(etcEmailAddress.includes("@")){
+				$("span#etcEmailAddressCheck").show();
+				$("span#etcEmailAddressCheck").html("@ 제외 주소값만 입력해주세요.");
+				bool=true;
+			} else if(!b) {
+				$("span#etcEmailAddressCheck").show();
+				$("span#etcEmailAddressCheck").html("이메일 형식이 올바르지 않습니다. 다시 입력해주세요.");
+				bool=true;
+			} else {
+				$("span#etcEmailAddressCheck").hide();
+				bool=false;
+			}
 		}
 	}
 	
@@ -243,8 +342,10 @@
 			if(!bool){
 				$("span#ph2Check").show();
 				$("span#ph2Check").html("010 뒤 숫자 8자리를 입력해주세요.");
+				bool=true;
 			} else {
 				$("span#ph2Check").hide();
+				bool=false;
 			}
 		}
 	}
@@ -255,12 +356,31 @@
 		if(postcode==""){
 			$("span#postcodeCheck").show();
 			$("span#postcodeCheck").html("우편번호 찾기를 해주세요.");
-			$(this).focus();
 			bool=true;
 		} else {
 			$("span#postcodeCheck").hide();
+			bool=false;
 		}
 	}
+	
+	// 우편번호 찾기 클릭시 에러문구 삭제하기
+	function postcodeError(){
+		$("span#postcodeCheck").hide();
+		bool=false;
+	}	
+		
+	// 약관 체크 함수
+	function agreementsCheck(){
+		if($("input#Agreements1").is(":checked")||$("input#Agreements2").is(":checked")){
+		   $("span#agreementsCheck").hide();	
+		   bool=false;
+		} else {
+			$("span#agreementsCheck").show();
+			$("span#agreementsCheck").html("필수 약관에 동의해주세요.");
+			bool=true;
+		}
+	}
+	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	// 아이디 중복확인 함수	
@@ -281,7 +401,7 @@
 	 					// 입력한 userid 가 DB 테이블에 존재하지 않는 경우라면
 	 					$("span#useridCheck").show();
 	 					$("span#useridCheck").html("사용가능한 ID 입니다.").css("color","green");
-	 				}            
+	 				} 
 				},
 					error: function(request, status, error){
 	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -290,9 +410,9 @@
 		}		
 	}
 	
+	
 	///////////////////////////////////////////////////////////////////////////////////////
 	var b_sendCode = false;	// 인증번호 발송여부 확인용
-	var sent_certificationCode = "";	// 실제 보내진 인증번호
 	
 	// 전화번호 인증번호 발송 함수
 	function func_sendCode() {
@@ -310,24 +430,26 @@
 			if(!bool){
 				$("span#ph2Check").show();
 				$("span#ph2Check").html("010 뒤 숫자 8자리를 입력해주세요.");
-				
+				$("input#ph2").html("");
+				$("input#ph2").focus();
+				bool=true;
 			} else {
 				$("span#ph2Check").hide();
 				$.ajax({
 					url:"<%= ctxPath%>/member/sendCode.to",
-					data:{"ph2":$("input#ph2").val().trim()},
-					dataType:"json",	
+					dataType:"json",
+					data: {"ph2":$("input#ph2").val().trim()},
 					success:function(json){
 						if(json!=null&&json!="") {
 		 					// 인증코드가 발송되었다면
 		 					$("span#sendCodeCheck").show();
 		 					$("span#sendCodeCheck").html("인증번호가 발송되었습니다.").css("color","green");
-		 					$("input#userid").val("");
 		 					b_sendCode=true;
 		 				} else {
 		 					// 인증코드가 발송되지 않았다면
 		 					$("span#sendCodeCheck").show();
 		 					$("span#sendCodeCheck").html("인증번호 발송에 실패했습니다.").css("color","red");
+		 					bool=true;
 		 				} 
 					},
 						error: function(request, status, error){
@@ -341,23 +463,41 @@
 	///////////////////////////////////////////////////////////////////////////////////////
 	// 인증번호 일치여부 확인 함수
 	function func_codeCheck() {
-		var certificationCode = $("input#certificationCode").val().trim();	// 사용자가 입력한 인증번호
-		
+		var certificationCode = $("input#certificationCode").val().trim();	
+	
 		if(b_sendCode&&certificationCode==""){	// 발송되었는데 인증번호 입력이 안된 경우
 			$("span#codeCheck").show();
 			$("span#codeCheck").html("인증번호를 입력해주세요.");	
+			bool=true;
 			
 		} else if(b_sendCode&&certificationCode!="") {	// 발송되었고 인증번호 입력된 경우
-			console.log(sent_certificationCode);
+			$.ajax({
+				url:"<%= ctxPath%>/member/codeConfirm.to",
+				data:{"inputCode":$("input#certificationCode").val().trim()},
+				dataType:"json",
+				success:function(json){ 
+					// json 은 {"result":true}  또는  {"result":false} 이다. 
+					if(json.result) {
+	 					// 발송된 인증코드와 사용자가 입력해준 발송코드가 일치한다라면
+	 					$("span#sendCodeCheck").show();
+	 					$("span#sendCodeCheck").html("인증되었습니다.").css("color","green");
+	 				} else {
+	 					// 발송된 인증코드와 사용자가 입력해준 발송코드가 일치하지 않으면
+	 					alert("인증실패");
+	 					$("span#sendCodeCheck").show();
+	 					$("span#sendCodeCheck").html("인증에 실패했습니다. 다시 인증번호를 입력해주세요.").css("color","red");
+	 					$("input#certificationCode").val("");
+	 					$("input#certificationCode").focus();
+	 					bool=true;
+	 				} 
+				},
+				error: function(request, status, error){
+	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	            }    				
+			}); // end of $.ajax ----------------------------------------------
 			
-			if(sent_certificationCode==certificationCode) {
-				$("span#codeCheck").show();
-				$("span#codeCheck").html("인증번호 되었습니다.");	
-			} else {
-				$("span#codeCheck").show();
-				$("span#codeCheck").html("인증번호가 틀립니다. 다시 입력해주세요.");	
-			}
 		}
+		
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -416,8 +556,8 @@
 
 <div id="registerContainer">
    <form name="registerFrm">
-   	   <div id="main">
-   	   	   <h2 style="text-align:center;">회원가입</h2>
+   	   <div id="registerContainer">
+   	   	   <h2 style="text-align:center; font-weight: bold;">회원가입</h2>
    	   	   <hr>
 		   <table id="registerTable">
 		      <tbody>
@@ -448,26 +588,34 @@
 			      </tr>
 			      <tr>
 			      	 <td colspan="2" class="design">
-			      	 	<input type="text" name="birthdate" id="birthdate" class="space" placeholder="생년월일(ex 201010)" />    
-			      		<span id="birthdateCheck" class="confirm"></span>
+			      	 	<input type="text" name="birthday" id="birthday" class="space" placeholder="생년월일(ex 201010)" />    
+			      		<span id="birthdayCheck" class="confirm"></span>
 			      	</td> 
 			      </tr>
 			      <tr>
 			      	 <td colspan="2" class="design">
+			      	 	<button type="button" class="check btn btn-outline-secondary" style="width: 118px;" id="male" value="1" onclick="genderInput(this)" >남자</button>
+			      	 	<button type="button" class="check btn btn-outline-secondary" style="width: 118px; margin-right: 20px;" id="female" value="2" onclick="genderInput(this)" >여자</button>
+			      	 	<input type="hidden" name="gender" id="gender" />
+			      	 	<span id="genderCheck" class="confirm"></span>
+			      	 </td>    
+			      </tr>
+			      <tr>
+			      	 <td colspan="2" class="design">
 			      	 	<input type="text" name="emailID" id="emailID" style="width: 100px;" placeholder="이메일 아이디" />
-				      	<select id="emailAddress" class="space" style="width: 135px; height: 30px;">
-					      	<option value="1">gmail.com</option>
-							<option value="2">naver.com</option>
-							<option value="3">daum.net</option>
-						 	<option value="4">hanmail.net</option>
-						 	<option value="5">kakao.com</option>
-						 	<option value="6">기타</option>
+				      	<select id="selectedEmailAddress" class="space" style="width: 135px; height: 30px;">
+					      	<option value="gmail.com">gmail.com</option>
+							<option value="naver.com">naver.com</option>
+							<option value="daum.net">daum.net</option>
+						 	<option value="hanmail.net">hanmail.net</option>
+						 	<option value="kakao.com">kakao.com</option>
+						 	<option value="기타">기타</option>
 				      	</select> 
+				      	<input type="hidden" name="emailAddress" id="emailAddress" />
 			      	 	<span id="emailIDCheck" class="confirm"></span>
 			      	 </td>    
 			      </tr>
 			      <tr id="etc">
-			         <td class="star">*</td>
 			      	 <td>
 			      	 	<input type="text" name="etcEmailAddress" id="etcEmailAddress" class="space" placeholder="이메일 주소" />
 			      	 	<span id="etcEmailAddressCheck" class="confirm"></span>
@@ -495,7 +643,7 @@
 			      <tr>
 			         <td class="design">
 				         <input type="text" name="postcode" id="postcode"  style="width: 138px;" placeholder="우편번호" />
-				         <button type="button" class="btn btn-secondary check" id="zipcodeSearch" style="width: 100px; margin-right:25px;" onclick="execDaumPostcode()" >우편번호 찾기</button>
+				         <button type="button" class="btn btn-secondary check" id="zipcodeSearch" style="width: 100px; margin-right:25px;" onclick="execDaumPostcode(); postcodeError();" >우편번호 찾기</button>
 			        	 <span id="postcodeCheck" class="confirm"></span>
 			         </td>
 			      </tr>
@@ -511,20 +659,20 @@
 			    </tbody>
 			</table>
 			<br>
-			<div id="Aggrements">
-				<h4>Aggrements</h4><br>
-				<input type="checkbox" id="Aggrements1" name="Aggrements1" value="1">
-			    <label for="Aggrements1">&nbsp;&nbsp;<a href="<%= ctxPath%>/member/agreements.to">이용약관 및 개인정보 처리방침</a>에 동의하십니까? (필수)</label>
-			    <span id="aggrementsCheck" class="confirm"></span><br>
-			    <input type="checkbox" id="Aggrements2" name="Aggrements2" value="2">
-			    <label for="Aggrements2">&nbsp;&nbsp;뉴스레터 및 프로모션정보를 받고 싶습니다! (선택)</label><br>
-			    <input type="checkbox" id="Aggrements3" name="Aggrements3" value="3">
-			    <label for="Aggrements3">&nbsp;&nbsp;모두 동의</label><br><br>		
-			    <span id="aggrementsCheck" class="confirm"></span>
+			<div id="Agreements">
+				<h4>Agreements</h4><br>
+				<input type="checkbox" id="Agreements1" name="Agreements1" value="1" >
+				<label for="Agreements1">&nbsp;&nbsp;모두 동의</label>	
+			    <span id="agreementsCheck" class="confirm" style="margin-left:370px;"></span><br>
+				<input type="checkbox" id="Agreements2" name="Agreements2" value="2" >
+			    <label for="Agreements2">&nbsp;&nbsp;<a href="<%= ctxPath%>/member/agreements.to">이용약관 및 개인정보 처리방침</a>에 동의하십니까? (필수)</label><br>
+			    <input type="checkbox" id="Agreements3" name="Agreements3" value="3">
+			    <label for="Agreements3">&nbsp;&nbsp;뉴스레터 및 프로모션정보를 받고 싶습니다! (선택)</label><br>
+			    <input type="hidden" name="checkedAgreements3" id="checkedAgreements3" />
 			</div>
 			<br>
 			
-			<button type="button" id="submit" class="btn btn-primary">회원가입하기</button>
+			<button type="button" name="register" id="register" class="btn btn-primary">회원가입하기</button>
 		<br><br>
 		</div>
 	</form>

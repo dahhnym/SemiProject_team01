@@ -26,4 +26,6 @@ hs_err_pid*
 
 /.gitignore
 
-semi_team01.sql
+*.sql
+*.properties
+
