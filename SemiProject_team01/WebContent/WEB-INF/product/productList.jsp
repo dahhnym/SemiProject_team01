@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>   
 
-<%--  <jsp:include page="../header.jsp" /> --%>
+<jsp:include page="../header.jsp" />
 
 <style>
 	div#sortby {
@@ -90,7 +90,7 @@ $(document).ready(function(){
 	      $.ajax({
 	         url:"/SemiProject_team01/product/mallDisplayJSON.up", 
 	      //   type:"GET",
-	         data:{"sname":"HIT"
+	         data:{"sname":"BEST"
 	             ,"start":start  // "1"   "9"   "17"   "25"   "33"
 	             ,"len":lenHIT}, //  8     8     8      8      8
 	         dataType:"JSON",
@@ -190,4 +190,4 @@ $(document).ready(function(){
 	</div>
 	
 
-<%--  <jsp:include page="../footer.jsp" /> --%>
+<jsp:include page="../footer.jsp" />
