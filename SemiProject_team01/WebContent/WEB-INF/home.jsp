@@ -6,37 +6,37 @@
 <link rel="stylesheet" href="<%=ctxPath%>/css/kimdanim.css" />
 <script type="text/javascript">
 
-var lenHIT = 8;
+var lenNEW = 8;
 var start = 1;
 
 $(document).ready(function(){
 
-	$("span#totalHITCount").hide();
-	$("span#countHIT").hide();
+	$("span#totalNEWCount").hide();
+	$("span#countNEW").hide();
 	
-	displayHIT(start);
+		displayNEW(start);
 	
 	$(window).scroll(function(){
 	
 		if($(window).scrollTop() + 200 >= $(document).height() - $(window).height()){
 		
-			var totalHITCount =   Number( $("span#totalHITCount").text() );
-	        var countHIT = Number( $("span#countHIT").text() );
+			var totalNEWCount =   Number( $("span#totalNEWCount").text() );
+	        var countNEW = Number( $("span#countNEW").text() );
 	        
-	         if( totalHITCount != countHIT ) {
-	            start = start + lenHIT;
-	            displayHIT(start);
+	         if( totalNEWCount != countNEW ) {
+	            start = start + lenNEW;
+	            displayNEW(start);
 	         }
 			
 		} 
 		
 		 if( $(window).scrollTop() == 0){
 			 //다시 처음부터 시작하도록 한다.
-			 $("div#displayHIT").empty();
+			 $("div#displayNEW").empty();
 			 $("span#end").empty();
-			 $("span#countHIT").text("0");
+			 $("span#countNEW").text("0");
 			 start = 1;
-			 displayHIT(start);
+			 displayNEW(start);
 		 }	
 	
 	
@@ -46,14 +46,14 @@ $(document).ready(function(){
 }); //end of $(document).ready(function() --------------------
 
 // Function Declaration
-function displayHIT(start) { 
+function displayNEW(start) { 
 
   $.ajax({
-     url:"/MyMVC/shop/mallDisplayJSON.up", 
+     url:"/SemiProject_team01/product/prodDisplayJSON.up", 
   //   type:"GET",
-     data:{"sname":"HIT"
+     data:{"sname":"NEW"
          ,"start":start
-         ,"len":lenHIT},
+         ,"len":lenNEW},
      dataType:"JSON",
      success:function(json){
         
@@ -62,7 +62,7 @@ function displayHIT(start) {
          if(start == "1" && json.length == 0) {
             html += "현재 상품 준비중....";
             
-            $("div#displayHIT").html(html);
+            $("div#displayNEW").html(html);
           }   
            
          else if( json.length > 0 ) {
@@ -75,7 +75,7 @@ function displayHIT(start) {
 			             		"<span>할인가 : "+(item.saleprice).toLocaleString('en')+"원</span>"+
          					"</div>"+
                  			"<a href=\"<%=ctxPath%>/Info.to\">"+
-                 				"<img width='100%' height='300px' src='/MyMVC/images/"+item.pimage1+"'/>"+
+                 				"<img width='100%' height='300px' src='/SemiProject_team01/images/"+item.pimage1+"'/>"+
                  			"</a>"+
          				  "</div>";
                   			
@@ -85,14 +85,14 @@ function displayHIT(start) {
               }
            }); // end of $.each(json, function(index, item){})------------
         
-           // HIT 상품 결과를 출력하기
-           $("div#displayHIT").append(html);
+           // NEW 상품 결과를 출력하기
+           $("div#displayNEW").append(html);
         
-           // countHIT 에 지금까지 출력된 상품의 개수를 누적해서 기록한다.
-           $("span#countHIT").text( Number($("span#countHIT").text()) + json.length ); 
+           // countNEW 에 지금까지 출력된 상품의 개수를 누적해서 기록한다.
+           $("span#countNEW").text( Number($("span#countNEW").text()) + json.length ); 
            
-           // 스크롤을 계속해서  countHIT 값과 totalHITCount 값이 일치하는 경우 
-           if( $("span#countHIT").text() == $("span#totalHITCount").text() ) { 
+           // 스크롤을 계속해서  countNEW 값과 totalNEWCount 값이 일치하는 경우 
+           if( $("span#countNEW").text() == $("span#totalNEWCount").text() ) { 
               $("span#end").html("더이상 조회할 제품이 없습니다.");
            }
            
@@ -104,7 +104,7 @@ function displayHIT(start) {
      }
   });
   
-}// end of function displayHIT( ){}-----------------------------
+}// end of function displayNEW( ){}-----------------------------
 	
 	
 
@@ -199,11 +199,11 @@ function myFunction(imgs) {
 <div class="hr-sect itemtitle">New Arrival</div>
 
    <div>
-      <div id="displayHIT"></div>
+      <div id="displayNEW"></div>
    
       <div style="margin: 20px 0;">
-        <span id="totalHITCount">${requestScope.totalHITCount}</span>
-         <span id="countHIT">0</span>
+        <span id="totalNEWCount">${requestScope.totalHITCount}</span>
+         <span id="countNEW">0</span>
       </div>
    </div> 
  

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -219,6 +220,58 @@ public class ProductDAO implements InterProductDAO {
 	      }
 	      
 	      return m;   
+	}
+
+
+	// 신상품 select 해오기
+	@Override
+	public List<product.model.ProductVO> selectNEWonly(Map<String, String> paraMap) throws SQLException {
+		List<ProductVO> prodList = new ArrayList<>();
+	      
+	      try {
+	          conn = ds.getConnection();
+	          
+	          String sql = "select pnum, pname, pimage1, price, saleprice\n"+
+	        		  		"from\n"+
+	        		  		"(\n"+
+	        		  		"select row_number() over(order by pnum asc) AS RNO \n"+
+	        		  		"      , pnum, pname, pcompany, pimage1, price, saleprice, S.sname\n"+
+	        		  		" from tbl_product P \n"+
+	        		  		" JOIN tbl_category C \n"+
+	        		  		" ON P.fk_cnum = C.cnum \n"+
+	        		  		" JOIN tbl_spec S \n"+
+	        		  		" ON P.fk_snum = S.snum\n"+
+	        		  		" where S.sname = ? \n"+
+	        		  		") V\n"+
+	        		  		"where RNO between ? and ?\n"+
+	        		  		"order by pnum desc";
+	          
+	          pstmt = conn.prepareStatement(sql);
+	          pstmt.setString(1, paraMap.get("sname"));
+	          pstmt.setString(2, paraMap.get("start"));
+	          pstmt.setString(3, paraMap.get("end"));
+	          
+	          rs = pstmt.executeQuery();
+	          
+	          while( rs.next() ) {
+	             
+	             ProductVO pvo = new ProductVO();
+	             
+	             pvo.setPnum(rs.getInt(1));     // 제품번호
+	             pvo.setPname(rs.getString(2)); // 제품명
+	             pvo.setPimage1(rs.getString(3));   // 제품이미지1   이미지파일명
+	             pvo.setPrice(rs.getInt(4));        // 제품 정가
+	             pvo.setSaleprice(rs.getInt(5));    // 제품 판매가
+	               
+	             
+	             prodList.add(pvo);
+	          }// end of while-----------------------------------------
+	          
+	      } finally {
+	         close();
+	      }      
+	      
+	      return prodList;
 	}
 
 	
