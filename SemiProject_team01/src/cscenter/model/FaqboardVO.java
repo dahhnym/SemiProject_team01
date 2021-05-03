@@ -7,7 +7,16 @@ public class FaqboardVO {
 	private String faqcontent;
 	private int fk_fcNo;
 	
+	private faqCategoryVO fcvo;
 	
+	public faqCategoryVO getFcvo() {
+		return fcvo;
+	}
+
+	public void setFcvo(faqCategoryVO fcvo) {
+		this.fcvo = fcvo;
+	}
+
 	public int getFaqNo() {
 		return faqNo;
 	}

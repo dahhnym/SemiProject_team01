@@ -30,21 +30,36 @@
   <ul class="tabs">
     <li data-tab-target="#home">전체보기</li>
     <c:forEach var="map" items="${requestScope.faqcategoryList}">
-         <li class="tabs_li " data-tab-target="#${map.fccode}"><a href="<%=request.getContextPath()%>/cscenter/csFaq?fcNo="></a>${map.fcname}</li>
+         <li class="tabs_li " data-tab-target="#${map.fccode}">${map.fcname}</li>
       </c:forEach>
   </ul>
 
   <div class="tab-content">
     <div id="home" data-tab-content class="active">
-      <jsp:include page="../cscenter/faq/faq_all.jsp" />
-      <div align="center">
-	   	<a class="paging" href="#" style="padding-right:15px">1</a>
-	   	<a class="paging" href="#">2</a>
-	   </div>
+      <table class="table table-hover table-expandable table-striped">
+    <thead>
+      <tr>
+        <th>NO</th>
+        <th>분류</th>
+        <th>제목</th>
+      </tr>
+    </thead>
+    <tbody>
+		  <c:forEach var="fvo" items="${requestScope.faqlist}" >
+			<tr>
+				<td>${fvo.faqNo}</td>
+				<td>${fvo.fcname}</td>
+				<td>${fvo.faqtitle}</td>
+			</tr>
+			<tr>
+				<td colspan="4">${fvo.faqcontent}</td>
+			</tr>
+		</c:forEach>
+        </tbody>
+     </table>
     </div>
     <c:forEach var="map" items="${requestScope.faqcategoryList}">
-		<div id="${map.fccode}" data-tab-content >
-	    	<jsp:include page="../cscenter/faq/faq_${map.fccode}.jsp" />
+		<div class = "ajax_table" id="${map.fccode}" data-tab-content >
 	    </div>
     </c:forEach>
 	</div>
@@ -66,5 +81,5 @@
   	</div>
   	
 <!-- partial -->
-<script  src="../js/yh_js/script.js"></script>
+<script charset="UTF-8" src="../js/yh_js/script.js"></script>
 <jsp:include page="../footer.jsp" />
