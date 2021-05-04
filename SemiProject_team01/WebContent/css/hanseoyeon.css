@@ -138,3 +138,17 @@ table#modal-body{
 table.orderInfo > td{
 	width:90%; margin:0 auto; text-align:right
 }
+
+
+
+
+/* ==== reviewList CSS ==== */
+
+
+<style type="text/css">
+   tr.memberInfo:hover {
+   	  background-color: #e6ffe6;
+   	  cursor: pointer;
+   }
+</style>
+

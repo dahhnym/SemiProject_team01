@@ -6,6 +6,9 @@ import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
 import member.model.MemberVO;
+
+import product.model.InterProductDAO;
+import product.model.ProductDAO;
 public class OrderAction extends AbstractController {
 
 	@Override
@@ -24,9 +27,13 @@ public class OrderAction extends AbstractController {
 			//	super.getCartList(request);				
 				
 				// 로그인한 사용자 정보를 조회해오기
-			//	InterProductDAO pdao = new productDAO();
+				InterProductDAO pdao = new ProductDAO();
 			//	List<ProdVO> specList = pdao.selectSpecList();
 			//	request.setAttribute("specList", specList);
+				
+				// 제품번호를 가지고서 해당 제품의 정보를 조회해오기
+			//	ProductVO pvo = pdao.selectOneProductByPnum(pnum);
+				
 				
 				super.setRedirect(false);
 				super.setViewPage("/WEB-INF/order/order.jsp");

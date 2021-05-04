@@ -29,7 +29,8 @@ public interface InterProductDAO {
 	// 신상품 select 해오기
 	List<ProductVO> selectNEWonly(Map<String, String> paraMap) throws SQLException;
 
-
+  // 페이징처리를 위해서 주문상세 내역에 대한 총 페이지 개수 알아오기(select)
+	int selectTotalPage(Map<String, String> paraMap) throws SQLException;
+  
+  
 }
-
-
