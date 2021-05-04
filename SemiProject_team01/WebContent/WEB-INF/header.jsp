@@ -56,7 +56,7 @@ $(document).ready(function(){
 	  <a href="<%=ctxPath%>/cscenter/csHome.to">고객센터</a>
 	  <a href="<%=ctxPath%>/cart/cart.to">장바구니</a>
 	  <a href="<%=ctxPath%>/member/memberAccount.to">마이페이지</a>
-	  <a href="javascript:void(0)">로그인</a>
+	  <a href="<%=ctxPath%>/login/login.to">로그인</a>
 	  <a href="<%=ctxPath%>/member/memberRegister.to">회원가입</a>
   </div>
 </div>
@@ -71,7 +71,7 @@ $(document).ready(function(){
 	<div id="bottom-nav-container" class="nav nohidden">
 	    <ul class="nohidden">
 	        <li>
-	            <a class="navmenu" href="#">Best 상품</a>
+	            <a class="navmenu" href="<%=ctxPath%>/List.to">Best 상품</a>
 	            <ul>
 	                <li><a href="#">토트백</a></li>
 	                <li><a href="#">숄더백</a></li>
@@ -79,17 +79,17 @@ $(document).ready(function(){
 	            </ul>
 	        </li>
 	        <li>
-	            <a class="navmenu" href="#">Sale 상품</a>
+	            <a class="navmenu" href="<%=ctxPath%>/List.to">Sale 상품</a>
 	            <ul>
 	                <li><a href="#">토트백</a></li>
 	                <li><a href="#">숄더백</a></li>
 	                <li><a href="#">크로스백</a></li>
 	            </ul>
 	        </li>
-	        <li><a class="navmenu" href="#">토트백</a></li>
-	        <li><a class="navmenu" href="#">숄더백</a></li>
-	        <li><a class="navmenu" href="#">크로스백</a></li>
-	        <li><a class="navmenu" href="#">백팩</a></li>
+	        <li><a class="navmenu" href="<%=ctxPath%>/List.to">토트백</a></li>
+	        <li><a class="navmenu" href="<%=ctxPath%>/List.to">숄더백</a></li>
+	        <li><a class="navmenu" href="<%=ctxPath%>/List.to">크로스백</a></li>
+	        <li><a class="navmenu" href="<%=ctxPath%>/List.to">백팩</a></li>
 	        <li>
 	        	<a class="navmenu" href="#">악세사리</a>
 	        	<ul>
