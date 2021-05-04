@@ -168,7 +168,7 @@ input#registerEmailID {
 
 div#pwdFindContainer {
 	padding-top:100px;
-	width: 35%;
+	width: 45%;
 	margin: 0 auto;
 }
 input#registerEmailID {
@@ -190,4 +190,8 @@ input#registerEmailID {
 .pwdFindSpace2 {
 	height: 30px;
 	width: 135px;
+}
+div#findPwd {
+	height: 30px;
+	vertical-align: text-top;
 }

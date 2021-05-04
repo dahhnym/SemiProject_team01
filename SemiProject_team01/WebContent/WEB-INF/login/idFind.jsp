@@ -79,35 +79,38 @@
 			bool=true;
 		}		
 		
-		// 기타 주소 체크
-		var etcEmailAddress = $("input#etcEmailAddress").val().trim();
-		var regExp=/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
-		var b = regExp.test(etcEmailAddress);
-		
-		if(etcEmailAddress==""){
-			$("div#etcEmailAddressCheck").show();
-			$("div#etcEmailAddressCheck").html("이메일 주소를 입력해주세요.");
-			$(this).focus();
-			bool=false;
-			return;
-		} else {
-			if(etcEmailAddress.includes("@")){
+		if($("select#selectedEmailAddress").val()=="기타"){
+			// 기타 주소 체크
+			var etcEmailAddress = $("input#etcEmailAddress").val().trim();
+			var regExp=/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
+			var b = regExp.test(etcEmailAddress);
+			
+			if(etcEmailAddress==""){
 				$("div#etcEmailAddressCheck").show();
-				$("div#etcEmailAddressCheck").html("@ 제외 주소값만 입력해주세요.");
-				$(this).focus();
-				bool=false;
-				return;
-			} else if(!b) {
-				$("div#etcEmailAddressCheck").show();
-				$("div#etcEmailAddressCheck").html("이메일 형식이 올바르지 않습니다. 다시 입력해주세요.");
+				$("div#etcEmailAddressCheck").html("이메일 주소를 입력해주세요.");
 				$(this).focus();
 				bool=false;
 				return;
 			} else {
-				$("div#etcEmailAddressCheck").hide();
-				bool=true;
+				if(etcEmailAddress.includes("@")){
+					$("div#etcEmailAddressCheck").show();
+					$("div#etcEmailAddressCheck").html("@ 제외 주소값만 입력해주세요.");
+					$(this).focus();
+					bool=false;
+					return;
+				} else if(!b) {
+					$("div#etcEmailAddressCheck").show();
+					$("div#etcEmailAddressCheck").html("이메일 형식이 올바르지 않습니다. 다시 입력해주세요.");
+					$(this).focus();
+					bool=false;
+					return;
+				} else {
+					$("div#etcEmailAddressCheck").hide();
+					bool=true;
+				}
 			}
 		}
+		
 	}// end of function goConfirm() ----------------------------------------------------------
 
 	
@@ -165,7 +168,7 @@
 	      	<input type="hidden" name="emailAddress" id="emailAddress" />
       	 	
 	  	    <button type="button" name="idFind" id="idFind" class="btn btn-primary idFindSpace" >아이디 찾기</button>
-	  	    <div id="findUserid" class="infoConfirm"></div><br>
+	  	    <div id="findUserid" class="infoConfirm" style="margin-top: 10px;"></div><br>
 	  	    <button type="button" name="pwdFind" id="pwdFind" class="btn btn-outline-secondary idFindSpace2" >비밀번호 찾기</button> 
 	  	    <button type="button" name="goRegister" id="goRegister" class="btn btn-outline-secondary idFindSpace2" >회원가입 하기</button> 
 	   </div> 	
