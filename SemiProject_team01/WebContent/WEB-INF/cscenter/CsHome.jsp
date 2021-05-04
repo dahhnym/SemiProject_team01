@@ -13,8 +13,14 @@
   
   $(function() {
 	  var html = "";
+	  
 	  $(document).on('click','a.nav-link',function(){
-		  $.ajax({
+		  
+		  if($(this).text() == "전체보기") {
+			  location.href="csHome.to";
+		  } else {
+			  var cnt = 0;
+			  $.ajax({
 			   url:"/SemiProject_team01/cscenter/csFaq.to",
 			   type:"GET",
 			   data:{"fcname" : $(this).text()},
@@ -30,9 +36,9 @@
 						   	    "</thead>" +
 						   	    "<tbody>";
 		   			$.each(json, function(index, item){
-		   				console.log("each");
+		   				cnt++;
 					   html += "<tr data-toggle='collapse' data-target='#"+(item.fccode+index)+"'>"+
-					   					"<td>"+item.faqNo+"</td>"+
+					   					"<td>"+cnt+"</td>"+
 					   					"<td>"+item.fcname+"</td>"+
 					   					"<td>"+item.faqtitle+"</td>"+
 				   					"</tr>"+  
@@ -48,6 +54,8 @@
 			      alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			   }
 		   });// end of ajax--------------------
+		  }
+		  
 		  
 	  });
   });
@@ -69,27 +77,27 @@
   <div class="tab-content">
     <div class="tab-pane fade show active" id="home">
       <table class="table table-hover table-striped">
-    <thead>
-      <tr>
-        <th>NO</th>
-        <th>분류</th>
-        <th>제목</th>
-      </tr>
-    </thead>
-    <tbody>
-    <c:forEach var="fvo" items="${requestScope.faqList}" varStatus="status" >
-     <tr data-toggle="collapse" data-target="#main${status.count}">
-        <td>${fvo.faqNo}</td>
-        <td></td>
-        <td>${fvo.faqtitle}</td>
-      </tr>
-      <tr id="main${status.count}" class="collapse">
-      <td colspan="4">${fvo.faqcontent}</td>
-      </tr>
-      </c:forEach>
-     </tbody>
-     </table>
-     <div>
+	    <thead>
+	      <tr>
+	        <th>NO</th>
+	        <th>분류</th>
+	        <th>제목</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	    <c:forEach var="fvo" items="${requestScope.faqList}" varStatus="status" >
+	     <tr data-toggle="collapse" data-target="#main${status.count}">
+	        <td>${fvo.faqNo}</td>
+	        <td></td>
+	        <td>${fvo.faqtitle}</td>
+	      </tr>
+	      <tr id="main${status.count}" class="collapse">
+	      <td colspan="4">${fvo.faqcontent}</td>
+	      </tr>
+	      </c:forEach>
+	     </tbody>
+	     </table>
+     <div class="pagebar">
      	${pageBar}
      </div>
     </div>
@@ -100,7 +108,7 @@
     </c:forEach>
 	</div>
 </div>
-<br><br><br>
+<br><br><br><br>
 
 <h2 align="center">문의 게시판</h2><br> 
   	<div align="center">

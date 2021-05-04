@@ -2,7 +2,14 @@
   max-width: 800px;
   margin: 0 auto;
 }
-
+div.tab-content{
+	 max-width: 800px;
+  margin: 0 auto;
+}
+ul.nav {
+	max-width: 850px;
+  margin: 0 auto;
+}
 ul {
   display: flex;
   padding: 0;
@@ -42,14 +49,14 @@ td.pd_right {
 	align:center;
 }
 
-a {
-	color: #555;
-}
-a.menu_cs:hover {
-	color: #999;
+div.pagebar {
+	font-size: 17pt;
+	padding-left: 45%;
 }
 
-a.paging {
-	color:#999;
-	font-size: 14pt;
+a.menu_cs, div.pagebar > a {
+	color: #555;
+}
+a.menu_cs:hover, div.pagebar > a:hover {
+	color: #999;
 }
