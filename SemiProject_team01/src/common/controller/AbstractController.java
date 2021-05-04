@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-
-import product.model.InterProductDAO;
-import product.model.ProductDAO;
 import cscenter.model.*;
+import my.util.MyUtil;
 
 
 public abstract class AbstractController implements InterCommand {
@@ -66,5 +65,12 @@ public abstract class AbstractController implements InterCommand {
 	request.setAttribute("faqcategoryList", faqcategoryList);
 
 	}
+	
+	// 로그인 또는 로그아웃을 하면 시작페이지로 가는 것이 아니라 방금 보았던 그 페이지로 그대로 가기 위한 것임. 
+	   public void goBackURL(HttpServletRequest request) {
+	      HttpSession session = request.getSession();
+	      session.setAttribute("goBackURL", MyUtil.getCurrentURL(request));
+	   }
+	
 	
 }
