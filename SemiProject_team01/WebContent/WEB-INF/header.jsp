@@ -57,7 +57,7 @@ $(document).ready(function(){
 
 <div id="navbar-fixed">
   <div id="top-nav-container" class="content-width">
- 	  <i class="fas fa-search"></i>
+ 	  <i id="searchbutton" class="fas fa-search"></i>
 	  <a href="<%=ctxPath%>/cscenter/csHome.to">고객센터</a>
 	  <a href="<%=ctxPath%>/cart/cart.to">장바구니</a>
 	  <a href="<%=ctxPath%>/member/memberAccount.to">마이페이지</a>

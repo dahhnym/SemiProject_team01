@@ -46,9 +46,32 @@ body {
 }
 
 
-#top-nav-container a{
+#top-nav-container a {
 	float: right;
 }
+
+i#searchbutton{
+	float: right;
+	padding: 5px 5px;
+	display: inline-block;
+	vertical-align: middle;	
+	margin-top: 10px;
+}
+
+.fa-search{
+	color: #1a1a1a;
+	border: solid 1px white;
+	border-radius: 10px;
+}
+
+i#searchbutton:hover{
+	border: solid 1px #ccc;
+}
+
+a#admin {
+	float: left;
+}
+
 
 #navbar-fixed a {
   color: #333;
@@ -76,6 +99,8 @@ a.navmenu {
 #navbar {
 	border: solid 1px gray;
 	width: 100%;
+	border-left: none;
+	border-right: none;
 }
 
 #bottom-nav-container {
@@ -102,9 +127,7 @@ a.navmenu {
   padding-top: 60px;
 }
 
-a#admin {
-	float: left;
-}
+
 
 
 /* 기존 header css */
