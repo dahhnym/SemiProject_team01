@@ -4,10 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.sql.*;
 import java.util.*;
-
 import javax.naming.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import javax.sql.DataSource;
 import util.security.*;
 
@@ -58,9 +55,7 @@ public class MemberDAO implements InterMemberDAO {
 		
 		try {
 			conn = ds.getConnection();
-			String sql = " select userid "
-					   + " from tbl_member "
-					   + " where userid= ? ";
+			String sql = " select userid from tbl_member where userid= ? ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userid);
 			
@@ -230,6 +225,62 @@ public class MemberDAO implements InterMemberDAO {
 		
 		return n;
 	}// end of public int changeIdle(String userid) throws SQLException ----------------------------------------------------
+
+	
+	// 아이디 찾기
+	@Override
+	public String findUserid(String name, String email) throws SQLException {
+		String userid = "";
+		
+		try {
+			conn = ds.getConnection();
+			String sql = " select userid from tbl_member where name=? and email=? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+			pstmt.setString(2, aes.encrypt(email));
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				userid = rs.getString(1);
+			}
+			
+		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return userid;
+	}
+
+	
+	// 비밀번호 찾기
+	@Override
+	public int findPwd(Map<String, String> paraMap) throws SQLException {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select userid from tbl_member where name=? and userid=? and email=? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("name"));
+			pstmt.setString(2, paraMap.get("userid"));
+			pstmt.setString(3, aes.encrypt(paraMap.get("email")));
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				n=1;
+			}
+			
+		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
 
 		
 }
