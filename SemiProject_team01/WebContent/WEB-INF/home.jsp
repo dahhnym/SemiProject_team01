@@ -67,18 +67,17 @@ function displayNEW(start) {
            
          else if( json.length > 0 ) {
            $.each(json, function(index, item){
-              
-                 html += "<div class='moreProdInfo'>"+
-                 			"<div class='overlay' style='height:75px' onClick='location.href=\"<%=ctxPath%>/Info.to?pnum="+item.pnum+">"+
-             					"<span>제품명 : "+item.pname+"</span><br>"+
-			             		"<span style='text-decoration: line-through'>정가 : "+(item.price).toLocaleString('en')+"원</span><br>"+
-			             		"<span>할인가 : "+(item.saleprice).toLocaleString('en')+"원</span>"+
-         					"</div>"+
-                 			"<a href=\"<%=ctxPath%>/Info.to?pnum="+item.pnum+">"+
-                 				"<img width='100%' height='300px' src='/SemiProject_team01/images/"+item.pimage1+"'/>"+
-                 			"</a>"+
-         				  "</div>";
-                  			
+                html += "<div class='moreProdInfo prodImg'>"+
+               			"<div class='overlay' style='height:75px' onclick='location.href=\"<%=ctxPath%>/Info.to?pnum="+item.pnum+"\"'>"+
+           					"<span>제품명 : "+item.pname+"</span><br>"+
+			           		"<span style='text-decoration: line-through'>정가 : "+(item.price).toLocaleString('en')+"원</span><br>"+
+			           		"<span>할인가 : "+(item.saleprice).toLocaleString('en')+"원</span>"+
+         				"</div>"+
+         				"<a href='<%=ctxPath%>/Info.to?pnum="+item.pnum+"'>"+
+               				"<img class='prodImg' width='100%' height='300px' src='/SemiProject_team01/images/"+item.pimage1+"'>"+
+         			  	"</a>"+
+               			"</div>";
+                  			 
              				  
               if ( (index+1)%4 == 0 ) {
                  html += "<br>";
@@ -109,9 +108,10 @@ function displayNEW(start) {
 	
 
 <%-- 제품 이미지 클릭시 제품 상세 페이지 이동--%>
-function myFunction(imgs) {
-	window.location.href = "<%=ctxPath%>/Info.to";
+function goProdDetail(imgs) {
+	window.location.href = "<%=ctxPath%>/Info.to?pnum=${requestScope.pvo.pnum}";
 }
+
 
 
 </script>
@@ -132,13 +132,13 @@ function myFunction(imgs) {
   <!-- The slideshow -->
   <div class="carousel-inner">
     	<div class="carousel-item active clickable">
-	      <img class="clickable" src="<%=ctxPath%>/images/ad1.jpg" alt="ad1" width="100%" height="500" onclick="myFunction(this)">
+	      <img class="clickable" src="<%=ctxPath%>/images/ad1.jpg" alt="ad1" width="100%" height="500" onclick="goProdDetail(this)">
 	    </div>
 	    <div class="carousel-item clickable">
-	      <img class="clickable" src="<%=ctxPath%>/images/ad2.jpg" alt="ad2" width="100%" height="500" onclick="myFunction(this)">
+	      <img class="clickable" src="<%=ctxPath%>/images/ad2.jpg" alt="ad2" width="100%" height="500" onclick="goProdDetail(this)">
 	    </div>
 	    <div class="carousel-item clickable">
-	      <img class="clickable" src="<%=ctxPath%>/images/ad3.jpg" alt="ad3" width="100%" height="500" onclick="myFunction(this)">
+	      <img class="clickable" src="<%=ctxPath%>/images/ad3.jpg" alt="ad3" width="100%" height="500" onclick="goProdDetail(this)">
     </div>
   </div>
   
@@ -172,13 +172,13 @@ function myFunction(imgs) {
   <!-- The slideshow -->
   <div class="carousel-inner">
     	<div class="carousel-item active clickable">
-	      <img class="clickable" src="<%=ctxPath%>/images/newarrival1.jpg" alt="newarrival1" width="100%" height="500" onclick="myFunction(this)">
+	      <img class="clickable" src="<%=ctxPath%>/images/newarrival1.jpg" alt="newarrival1" width="100%" height="500" onclick="goProdDetail(this)">
 	    </div>
 	    <div class="carousel-item clickable">
-	      <img class="clickable" src="<%=ctxPath%>/images/newarrival2.jpg" alt="newarrival2" width="100%" height="500" onclick="myFunction(this)">
+	      <img class="clickable" src="<%=ctxPath%>/images/newarrival2.jpg" alt="newarrival2" width="100%" height="500" onclick="goProdDetail(this)">
 	    </div>
 	    <div class="carousel-item clickable">
-	      <img class="clickable" src="<%=ctxPath%>/images/newarrival3.jpg" alt="newarrival3" width="100%" height="500" onclick="myFunction(this)">
+	      <img class="clickable" src="<%=ctxPath%>/images/newarrival3.jpg" alt="newarrival3" width="100%" height="500" onclick="goProdDetail(this)">
     </div>
   </div>
   
