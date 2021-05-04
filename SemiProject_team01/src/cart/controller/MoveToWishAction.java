@@ -1,5 +1,6 @@
 package cart.controller;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +39,9 @@ public class MoveToWishAction extends AbstractController {
 		// 해당 상품을 장바구니에 삭제(delete)하고 위시리스트에 추가(insert)
 		  try {
 			  n = cdao.deleteCartAddWish(paraMap);
+		  }catch (SQLIntegrityConstraintViolationException e) { // 제약조건에 위배된 경우 (동일한 제품에 대하여 동일한 회원이 제품후기를 2번 쓴 경우 unique 제약에 위배됨)
+				e.printStackTrace();
+				n=-1;
 		  }catch (Exception e) {
 			e.printStackTrace();
 		}

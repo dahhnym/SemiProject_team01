@@ -208,9 +208,10 @@ $(document).ready(function(){
 						if(json.n == 1){
 							location.href="javascript:history.go(0);"; // 새로고침해주기
 						 }
-						 else{
-							 alert("위시리스트 담기에 실패했습니다.");
-						 }
+						 else if(json.n == -1)  {
+			             	alert("위시리스트에 이미 존재하는 상품입니다.");
+			                  
+			             }
 							
 					},
 					 error: function(request, status, error){
@@ -305,8 +306,8 @@ $(document).ready(function(){
 													<strong class="cname">${cart.pvo.pname}</strong>	
 												</a>
 												<input type="hidden" value="${cart.cartnum}"/>
-												<input type="text" value="${cart.fk_pnum}"/>
-												<input type="text" value="${cart.fk_pdetailnum}"/>
+												<input type="hidden" value="${cart.fk_pnum}"/>
+												<input type="hidden" value="${cart.fk_pdetailnum}"/>
 											</li>
 											<li class="xans-record-" value="${cart.fk_pdetailnum}">[옵션: ${cart.pdetailvo.optionname}]<br />
 											
@@ -326,10 +327,10 @@ $(document).ready(function(){
 	                                            <ul class="xans-element- xans-order xans-order-optionlist"><li class="xans-record-">
 												<span>색상</span>
 	 											<select   id="product_option_id1" class="ProductOption0" name="${cart.pdetailvo.pdetailnum}color">
-	 											<option value="">- [필수] 옵션을 선택해 주세요 -</option>
-	 											<c:forEach items="" var="color">
-	 											<option value="${cart.pdetailvo.pdetailnum}">${cart.pdetailvo.optionname}</option>
-	 											</c:forEach>
+		 											<option value="">- [필수] 옵션을 선택해 주세요 -</option>
+			 											<c:forEach items="" var="color">
+			 												<option value="${cart.pdetailvo.pdetailnum}">${cart.pdetailvo.optionname}</option>
+		 												</c:forEach>
 	 											
 												</select>
 												</li>
@@ -469,10 +470,10 @@ $(document).ready(function(){
 											</a>
 											<input type="hidden" value="${wish.wnum}"/>
 										</li>
-										<li class="xans-record-" value=""><br />
-										
-										<a onclick="option_change()"
-										id="option_change" class="btn_option" style="width: 80px; margin-top: 3px;">옵션변경</a>
+										<c:if test="${wish.fk_pdetailnum !=0}">
+											<li class="xans-record-" value="${wish.fk_pdetailnum}">[옵션: ${wish.pdetailvo.optionname}]<br />
+										</c:if>	
+										<a onclick="option_change()" id="option_change" class="btn_option" style="width: 80px; margin-top: 3px;">옵션변경</a>
 													
 													
 					<!-- 옵션변경 레이어 -->
@@ -489,7 +490,7 @@ $(document).ready(function(){
                                             <ul class="xans-element- xans-order xans-order-optionlist"><li class="xans-record-">
 											<span>색상</span>
  											<select   id="product_option_id1" class="ProductOption0" name="${wish.pdetailvo.pdetailnum}color">
- 											<option value="null">- [필수] 옵션을 선택해 주세요 -</option>
+ 											<option value="">- [필수] 옵션을 선택해 주세요 -</option>
  											<c:if test="${cart.color_list != null}">
  											<c:forEach items="${cart.color_list}" var="color">
  											<option value="${color}">${color}</option>
@@ -542,7 +543,7 @@ $(document).ready(function(){
 
 	</div>
 
-<%--
+
 		<!-- 레이어 팝업 만들기  -->
 		<div id="wishlistlayer" class="addoption ec-base-layer3" style="position: absolute !important;"> 
 			<div class="header">
@@ -562,7 +563,7 @@ $(document).ready(function(){
     	</div>
 		</div>
 		<!-- 레이어 팝업 만들기  -->	
---%>
+
 
 		<div class="useInfo"><h3 >이용안내</h3>
 			<div class="inner" >
