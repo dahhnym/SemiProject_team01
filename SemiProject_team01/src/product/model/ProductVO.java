@@ -19,23 +19,6 @@ public class ProductVO {
 	private CategoryVO categvo; // 카테고리VO 
 	private SpecVO spvo;        // 스펙VO 
   
-  public ProductVO() { }
-	
-	public ProductVO(int pnum, String pname, int fk_cnum, String pcompany, String pimage1, String pimage2,
-			int price, int saleprice, int fk_snum, String pcontent, int point) {
-	
-		this.pnum = pnum;
-		this.pname = pname;
-		this.fk_cnum = fk_cnum;
-		this.pcompany = pcompany;
-		this.pimage1 = pimage1;
-		this.pimage2 = pimage2;
-		this.price = price;
-		this.saleprice = saleprice;
-		this.fk_snum = fk_snum;
-		this.pcontent = pcontent;
-		this.point = point;
-	}
 	
 	public CategoryVO getCategvo() {
 		return categvo;
