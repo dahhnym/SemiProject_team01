@@ -47,9 +47,9 @@ $(document).ready(function(){
 
 // Function Declaration
 function displayNEW(start) { 
-
+	console.log('displayNEW(start) : ' + start);
   $.ajax({
-     url:"/SemiProject_team01/product/prodDisplayJSON.up", 
+     url:"<%=ctxPath%>/product/prodDisplayJSON.to", 
   //   type:"GET",
      data:{"sname":"NEW"
          ,"start":start
