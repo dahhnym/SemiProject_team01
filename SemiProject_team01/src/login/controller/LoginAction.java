@@ -47,7 +47,7 @@ public class LoginAction extends AbstractController {
 						
 					} else if(loginuser.getPwdCycleMonth()>=6) {	// 비밀번호가 변경된지 6개월 이상됐다면
 					//	super.setRedirect(false);
-						super.setViewPage("/WEB-INF/login/changePwd1.jsp");
+						super.setViewPage("/WEB-INF/login/changePwd.jsp");
 					} else {						
 						String message = "로그인 성공";
 						String loc = "javascript:history.back(-2)";  // 로그인 페이지 전으로 다시 이동              ==> *정정사항

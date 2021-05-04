@@ -1,18 +1,11 @@
-(function ($) {
+
     $(function () {
-        $('.table-expandable').each(function () {
+        $('table.table-expandable').each(function () {
             var table = $(this);
-            table.children('thead').children('tr').append('<th></th>');
-            table.children('tbody').children('tr').filter(':odd').hide();
-            table.children('tbody').children('tr').filter(':even').click(function () {
+            table.children('tbody').children('tr.tr_content').hide(); // 테이블의 내용 숨기기
+            table.children('tbody').children('tr.tr_title').click(function () { //타이틀 클릭시 작동하는 이벤트
                 var element = $(this);
                 element.next('tr').toggle('slow');
-                element.find(".table-expandable-arrow").toggleClass("up");
-            });
-            table.children('tbody').children('tr').filter(':even').each(function () {
-                var element = $(this);
-                element.append('<td><div class="table-expandable-arrow"></div></td>');
             });
         });
     });
-})(jQuery); 

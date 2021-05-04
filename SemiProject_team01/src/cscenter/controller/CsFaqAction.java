@@ -9,29 +9,26 @@ import org.json.*;
 
 import common.controller.AbstractController;
 import cscenter.model.*;
+import my.util.MyUtil;
 
-public class csFaqAction extends AbstractController {
+public class CsFaqAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+		
 		//카테고리 번호 알아오기
 		super.getFaqCategoryList(request);		
 		String fcname = request.getParameter("fcname");
-		String str = "";
 		
-				
-		InterFaqboardDAO fadao = new FaqboardDAO();
 		Map<String, String> paraMap = new HashMap<>();
 		
-		if(!"전체보기".equals(fcname)) {
-			str = " where fcname = ? ";
-		}
-		paraMap.put("str", str);
+		InterFaqboardDAO fadao = new FaqboardDAO();
+		
 		paraMap.put("fcname", fcname);
 		
 		List<FaqboardVO> faqlist = fadao.selectbyfaq(paraMap);
-		//int totalPage = fadao.selectTotalPage(paraMap);
+		
 		
 		JSONArray jsonArr = new JSONArray();
 		
@@ -54,7 +51,7 @@ public class csFaqAction extends AbstractController {
 			}// end of for ------------
 			
 		String json = jsonArr.toString();
-		System.out.println("json : " + json);
+		//System.out.println("json : " + json);
 		
 		request.setAttribute("json", json);
 		

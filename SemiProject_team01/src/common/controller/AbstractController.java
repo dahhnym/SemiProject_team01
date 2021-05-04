@@ -6,7 +6,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+
+import product.model.InterProductDAO;
+import product.model.ProductDAO;
 import cscenter.model.*;
+
 
 public abstract class AbstractController implements InterCommand {
 
@@ -52,14 +56,25 @@ public abstract class AbstractController implements InterCommand {
 		this.viewPage = viewPage;
 	}
 	
-	////////////////////////////////////////////////////////////////
+
 	// ***** 제품목록(Category)을 보여줄 메소드 생성하기 ***** //
+	// VO를 사용하지 않고 Map 으로 처리해보겠습니다.
+	public void getCategoryList(HttpServletRequest request)throws SQLException{
+			
+		InterProductDAO pdao = new ProductDAO();
+		List<HashMap<String,String>> categoryList = pdao.getCategory();
+		
+		request.setAttribute("categoryList", categoryList);
+
+	////////////////////////////////////////////////////////////////
+	// ***** FAQ목록(Category)을 보여줄 메소드 생성하기 ***** //
 	// VO를 사용하지 않고 Map 으로 처리해보겠습니다.
 	public void getFaqCategoryList(HttpServletRequest request) throws SQLException {
 	InterFaqboardDAO fbdao = new FaqboardDAO();
 	List<HashMap<String, String>> faqcategoryList = fbdao.getFaqCategoryList();
 	
 	request.setAttribute("faqcategoryList", faqcategoryList);
+
 	}
 	
 }
