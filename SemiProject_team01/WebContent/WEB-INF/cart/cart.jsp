@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% String ctxPath=request.getContextPath(); %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <jsp:include page="../header.jsp"/>
 
@@ -59,40 +61,57 @@ $(document).ready(function(){
 	});
 	
 	
-	// 장바구니 비우기 
-	$("a#deleteCart").click(function(){
-		var deleteOk = confirm("장바구니를 비우시겠습니까?");
-		if(deleteOk==true){
-			// 확인버튼을 누른다면 
-			location.href="";
+	
+	// 장바구니 전체 클릭 
+	$("input#prodAllCheck").click(function(){
+		var allCheck = $(this).is(":checked");
+		
+		if (allCheck == false){
+			$("input[name=product_check]").prop("checked",false);
 		}
 		else{
-			// 비우기 취소
-			return;
+			$("input[name=product_check]").prop("checked",true);
 		}
 	});
 	
-	// 제품의 재고량보다 많으면 경고창 뜨게함
-	$("a#update_qty").click(function(){
-		
-		var qty = $("input#prod_qty").val();
-		
-		// qty가 재고수보다 많으면 alert 뜨게 해야한다.
-	});
 	
 	
-	// 위시리스트 옵션선택 창 외부영역에서 클릭시 창 닫힘
-	$(document).mouseup(function (e) {
+	// === 체크박스 전체 선택/전체 해제 === //
+	$("input#prodAllCheck").click(function(){		
+		var bool = $(this).prop("checked");
+		$("input:checkbox[name=product_check]").prop("checked", bool);
+	}); // end of $("input:checkbox[id=checkall]").click(function(){})-------
+	
+	
+	$("input:checkbox[name=product_check]").click(function(){
+		
+		var bool = $(this).prop("checked");
+		
+		if(bool){
+			
+			var flag=false;
+			
+			$("input:checkbox[name=product_check]").each(function(index, item){
+				
+				var bChecked = $(item).prop("checked");
+				
+				if(!bChecked){
+					flag=true;
+					return false; 
+				}
+				
+			}); // end of $("input:checkbox[name=person]").each(function(index, item){})---------
 
-		var container = $("div#wishlistlayer");
+			if(!flag){		
+                $("input#prodAllCheck").prop("checked",true);
+			}
+		}
+		else{
+			$("input#prodAllCheck").prop("checked",false);
+		}
 		
-		if (!container.is(e.target) && container.has(e.target).length === 0){
-		
-		container.css("display","none");
-		
-		}	
-		
-	});
+	});// end of $("input:checkbox[name=person]").click(function(){})-----------------
+	
 
 	$("input#submit").click(function(){
 		var frm = document.myFrm;
@@ -103,25 +122,112 @@ $(document).ready(function(){
 	
 }); // end of $(document).ready(function(){})-------
 
-
-function option_change(pro_code,pro_name,pro_detail_code,pro_imagefilename,pro_price,pro_quantity){
-	var option_layer =  $('#option_modify_layer_0'+pro_detail_code);
-	
-	$('.optionModify').hide();
-	option_layer.show();
-	
-}
-
-function update_qty(){
 	
 	
-}
-
-function moveOrderCart(){
-$("div#wishlistlayer").show();
-	
-}
-
+		// 장바구니 개별 삭제하기 
+		function deleteCartOne(cartnum){		
+			var $target = $(event.target);
+			var pname = $target.parent().parent().find(".cname").text();
+			console.log(pname);
+			var bool = confirm("장바구니에서 "+pname+" 상품을  삭제하시겠습니까?");
+			
+			if(bool){
+				$.ajax({
+					url:"<%= ctxPath%>/cart/deleteCartOne.to",
+					type: "post",
+					data: {"userid":"${sessionScope.loginuser.userid}","cartnum":cartnum},
+					dataType: "json",
+					success:function(json){
+							alert(json.msg);
+							location.href="javascript:history.go(0);"; // 새로고침해주기
+					},
+					 error: function(request, status, error){
+				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				     }  
+				});
+				
+			}
+			else{
+				return false;
+			}
+		}
+		
+		// 위시리스트 개별 삭제하기
+		
+		function deleteWishOne(wnum){		
+			var $target = $(event.target);
+			var wname = $target.parent().parent().find(".wname").text();
+			console.log(wname);
+			var bool = confirm("위시리스트에서 "+wname+" 상품을  삭제하시겠습니까?");
+			
+			if(bool){
+				$.ajax({
+					url:"<%= ctxPath%>/cart/deleteWishOne.to",
+					type: "post",
+					data: {"userid":"${sessionScope.loginuser.userid}", "wnum":wnum},
+					dataType: "json",
+					success:function(json){
+							alert(json.msg);
+							location.href="javascript:history.go(0);"; // 새로고침해주기
+					},
+					 error: function(request, status, error){
+				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				     }  
+				});
+				
+			}
+			else{
+				return false;
+			}
+		}
+		
+		
+		
+		// 장바구니에서 위시리스트로 이동
+		function moveToWish(cartnum, fk_pnum, fk_pdetailnum){		
+			var $target = $(event.target);
+			var pname = $target.parent().parent().find(".cname").text();
+			console.log(pname);
+			console.log(fk_pnum);
+			console.log(cartnum);
+			console.log(fk_pdetailnum);
+			var bool = confirm("장바구니에서 "+pname+" 상품을 위시리스트에 담으시겠습니까?");
+			
+			if(bool){
+				$.ajax({
+					url:"<%= ctxPath%>/cart/moveToWish.to",
+					type: "post",
+					data: {"userid" : "${sessionScope.loginuser.userid}"
+						  ,"cartnum" : cartnum
+						  ,"fk_pnum" : fk_pnum
+						  ,"fk_pdetailnum" : fk_pdetailnum
+							},
+						  
+					dataType: "json",
+					success:function(json){
+						if(json.n == 1){
+							location.href="javascript:history.go(0);"; // 새로고침해주기
+						 }
+						 else{
+							 alert("위시리스트 담기에 실패했습니다.");
+						 }
+							
+					},
+					 error: function(request, status, error){
+				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				     }  
+				});
+				
+			}
+			else{
+				return false;
+			}
+		}
+		
+		
+		
+		
+		
 </script>
 
 
@@ -135,7 +241,7 @@ $("div#wishlistlayer").show();
 			<div class="information">
 				<div class="decription">
 					<div class="member">
-						<p>${loginuser.name}님은 [${loginuser.level}] 등급입니다.</p>
+						<p>${sessionScope.loginuser.name}님은 [${sessionScope.loginuser.level}] 등급입니다.</p>
 						<a href="">적립금:</a>
 					</div>
 				</div>
@@ -160,7 +266,7 @@ $("div#wishlistlayer").show();
 				<thead>
 					<tr>
 						<th scope="col">
-							<input type="checkbox" id="prodAllcheck" />
+							<input type="checkbox" id="prodAllCheck" />
 						</th>
 					    <th scope="col">이미지</th>
 					    <th scope="col">상품정보</th>
@@ -173,101 +279,111 @@ $("div#wishlistlayer").show();
 				    </tr>
 				</thead>
 				
-				<tbody>
-					<c:forEach items="${cartlist}" var="cart">
-							
-								<tr class="xans-record-">
-									<td scope="col"><input type="checkbox" id="basket_chk_id_0"
-										name="product_check" value="${cart.cart_pro_detail_code}" onclick="ChangeTotalPrice()" /></td>
-									<td scope="col" class="thumb">
-									<a href="">
-										<img src=""/>
-									</a></td>
-									<td scope="col" class="product" style="text-align: left;">
-									<ul class="xans-element- xans-order xans-order-optionall option" style="margin-top: 15px;">
-										<li>
-											<a href="/product/detail.html?product_no=28871&cate_no=82">
-												<strong class="name">${cart.pro_name}토트백</strong>	
-											</a>
-										</li>
-										<li class="xans-record-" value="">[옵션: ${cart.cart_pro_color }]<br />
-										
-										<a onclick="option_change(${cart.cart_pro_code},'${cart.pro_name}',${cart.cart_pro_detail_code},
-												'${cart.pro_imagefilename}',${cart.cart_pro_price},${cart.cart_pro_quantity})"
-										id="option_change" class="btn_option" style="width: 80px; margin-top: 3px;">옵션변경</a>
-							
-					<!-- 옵션변경 레이어 -->
-				 			<div class="optionModify ec-base-layer2" id="option_modify_layer_0${cart.cart_pro_detail_code}" style="position: absolute !important;">
-                                    <div class="header">
-                                        <h3  style="color: white !important;">옵션변경</h3>
-                                    </div>
-                                    <div class="content">
-                                        <ul class="prdInfo">
-											<li>${cart.pro_name }</li>
-                                        </ul>
-									<div class="prdModify">
-                                            <h4>상품옵션</h4>
-                                            <ul class="xans-element- xans-order xans-order-optionlist"><li class="xans-record-">
-											<span>색상</span>
- 											<select   id="product_option_id1" class="ProductOption0" name="${cart.cart_pro_detail_code}color">
- 											<option value="null">- [필수] 옵션을 선택해 주세요 -</option>
- 											<c:if test="${cart.color_list != null}">
- 											<c:forEach items="${cart.color_list}" var="color">
- 											<option value="${color}">${color}</option>
- 											</c:forEach>
- 											</c:if>
-											</select>
+				
+					<c:if test="${empty requestScope.cartList}">
+						<tbody>
+							<tr>
+								<td colspan="9" height="150px;"><span style="color: black;">장바구니에 담긴 상품이 없습니다.</span></td>
+							</tr>
+						</tbody>
+					</c:if>
+					
+					<c:if test="${not empty requestScope.cartList}">
+						<tbody>
+						<c:forEach items="${requestScope.cartList}" var="cart" varStatus="status">
+									<tr class="xans-record-">
+										<td scope="col"><input type="checkbox" id="basket_chk_id_0"
+											name="product_check" value="${cart.fk_pnum}" onclick="ChangeTotalPrice()" /></td>
+										<td scope="col" class="thumb">
+										<a href="">
+											<img src="<%=ctxPath%>/images/${cart.pvo.pimage1}"/>
+										</a></td>
+										<td scope="col" class="product" style="text-align: left;">
+										<ul class="xans-element- xans-order xans-order-optionall option" style="margin-top: 15px;">
+											<li>
+												<a href="/product/detail.html?product_no=28871&cate_no=82">
+													<strong class="cname">${cart.pvo.pname}</strong>	
+												</a>
+												<input type="hidden" value="${cart.cartnum}"/>
+												<input type="text" value="${cart.fk_pnum}"/>
+												<input type="text" value="${cart.fk_pdetailnum}"/>
 											</li>
-										</ul>
-									</div>
-                                    </div>
-                                    <div class="ec-base-button">
-                                        <a href="#none" class="btn_small" onclick="optionsChange('추가',${cart.cart_pro_code},${cart.cart_pro_detail_code},${cart.cart_pro_price},${cart.cart_pro_quantity})" >
-                                       		추가</a>
-                                        <a href="#none" class="btn_small" onclick="optionsChange('변경',${cart.cart_pro_code},${cart.cart_pro_detail_code},${cart.cart_pro_price},${cart.cart_pro_quantity})">
-                                        	변경</a>
-                                    </div>
-                                    <a href="#none" class="close" onclick="$('div.optionModify').hide();"><img src="//img.echosting.cafe24.com/skin/base/common/btn_close.gif" alt="닫기"/></a>
-									</div>
-					<!-- 옵션변경 레이어 -->
-																
-										
-										
-													 
-											</li>
-										</ul></td>
-									<td scope="col" class="price">
-										<div class="">
-											<strong><fmt:formatNumber value="${cart.cart_pro_price}" type="number"/> 원</strong>
-										</div>
-									</td>
-									<td scope="col" >
-  										<input id="prod_qty" name="value" style="width: 25px; height: 20px;"/>
-  										<a id="update_qty" class="btn_option" style="width:50px;" >변경</a>
-									</td>
-									<td scope="col" class="mileage">-</td>
-									<td scope="col">
-										<span>2,500원</span>
+											<li class="xans-record-" value="${cart.fk_pdetailnum}">[옵션: ${cart.pdetailvo.optionname}]<br />
 											
-											<%-- 100,000원 이상일 때 배송비 무료 (조건 따로 줄것)--%>
-									
-									</td>
-									<td scope="col" class="total">
-										<strong><fmt:formatNumber value="${cart.cart_pro_price * cart.cart_pro_quantity}" type="number" /> 원</strong>
-									</td>
-									<td scope="col" class="button">
-											<a id="prod_order" class="btn_option">주문하기</a><br>
-									    	<a id="prodtowish" class="btn_option">위시리스트담기</a><br>
-									    	<a id="proddelete" class="btn_option" style="margin-bottom: 5px;">삭제</a>
-									
-									</td>
-								</tr>
-								</c:forEach>
+											<a onclick="option_change();" id="option_change" class="btn_option" style="width: 80px; margin-top: 3px;">옵션변경</a>
+							
+						<!-- 옵션변경 레이어 -->
+					 			<div class="optionModify ec-base-layer2" id="option_modify_layer_0" style="position: absolute !important;">
+	                                    <div class="header">
+	                                        <h3  style="color: white !important;">옵션변경</h3>
+	                                    </div>
+	                                    <div class="content">
+	                                        <ul class="prdInfo">
+												<li>${cart.pvo.pname}</li>
+	                                        </ul>
+										<div class="prdModify">
+	                                            <h4>상품옵션</h4>
+	                                            <ul class="xans-element- xans-order xans-order-optionlist"><li class="xans-record-">
+												<span>색상</span>
+	 											<select   id="product_option_id1" class="ProductOption0" name="${cart.pdetailvo.pdetailnum}color">
+	 											<option value="">- [필수] 옵션을 선택해 주세요 -</option>
+	 											<c:forEach items="" var="color">
+	 											<option value="${cart.pdetailvo.pdetailnum}">${cart.pdetailvo.optionname}</option>
+	 											</c:forEach>
+	 											
+												</select>
+												</li>
+											</ul>
+										</div>
+	                                    </div>
+	                                    <div class="ec-base-button">
+	                                        <a href="#none" class="btn_small" onclick="optionsChange('추가')" >
+	                                       		추가</a>
+	                                        <a href="#none" class="btn_small" onclick="optionsChange('변경')">
+	                                        	변경</a>
+	                                    </div>
+	                                    <a href="#none" class="close" onclick="$('div.optionModify').hide();"><img src="//img.echosting.cafe24.com/skin/base/common/btn_close.gif" alt="닫기"/></a>
+										</div>
+						<!-- 옵션변경 레이어 -->
+																
+											
+											
+														 
+												</li>
+											</ul></td>
+										<td scope="col" class="price">
+											<div class="">
+												<strong><fmt:formatNumber value="${cart.cprice}" type="number"/> 원</strong>
+											</div>
+										</td>
+										<td scope="col" >
+	  										<input id="prod_qty" name="value" style="width: 25px; height: 20px;" value="${cart.oqty}"/>
+	  										<a id="update_qty" class="btn_option" style="width:50px;" >변경</a>
+										</td>
+										<td scope="col" class="mileage">-</td>
+										<td scope="col">
+											<span>2,500원</span>
+												
+												<%-- 100,000원 이상일 때 배송비 무료 (조건 따로 줄것)--%>
+										
+										</td>
+										<td scope="col" class="total">
+											<strong><fmt:formatNumber value="${cart.totalPrice}" type="number" /> 원</strong>
+										</td>
+										<td scope="col" class="button">
+												<a id="prod_order" class="btn_option">주문하기</a><br>
+										    	<a id="prodtowish" class="btn_option" onclick="moveToWish('${cart.cartnum}','${cart.fk_pnum}','${cart.fk_pdetailnum}')">위시리스트담기</a><br>
+										    	<a id="proddelete" class="btn_option" style="margin-bottom: 5px;" onclick="deleteCartOne('${cart.cartnum}')">삭제</a>
+										
+										</td>
+									</tr>
+									</c:forEach>
+								</c:if>
 							</tbody>
 				
 				
 			</table>
-			<a id="deleteCart" class="btn_option" style="width: 120px;">장바구니 비우기</a>
+			<a id="deleteCart" class="btn_option" style="width: 120px;" onclick="deleteAll()">장바구니 비우기</a>
 			<div class="displaynone">
 			
 			</div>
@@ -286,7 +402,7 @@ $("div#wishlistlayer").show();
 				</thead>
 				<tbody>
 					<tr class="cartprice">
-						<td scope="col" style="border-right: solid 1px #CCD1D1;">66,000원</td>
+						<td scope="col" style="border-right: solid 1px #CCD1D1;"><fmt:formatNumber value="${cart.cprice * cart.oqty}" type="number" />원</td>
 						<td scope="col" style="border-right: solid 1px #CCD1D1;">2,500원</td>
 						<td scope="col">68,500원</td>
 					</tr>
@@ -299,6 +415,7 @@ $("div#wishlistlayer").show();
 				<span class="btn_right"><a  id="shoppingcon" class="btnLarge" href="<%= request.getContextPath()%>/home.to">쇼핑계속하기 </a></span>
 			</div>
 		
+	
 			<div class="title">
 				<h2>위시리스트</h2>
 			</div>
@@ -325,8 +442,21 @@ $("div#wishlistlayer").show();
 				    </tr>
 				</thead>
 				
-				<tbody>
-					<tr>
+				
+					<c:if test="${empty requestScope.wishList}">
+					<tbody>
+						<tr>
+							<td colspan="7" height="150px;">
+								<span style="color: black;">위시리스트에 담긴 상품이 없습니다.</span></td>
+						</tr>
+						</tbody>
+					</c:if>
+						
+					
+					<c:if test="${not empty requestScope.wishList}">
+						<tbody>
+						<c:forEach items="${requestScope.wishList}" var="wish">
+						<tr>
 						<td scope="col" class="thumb">
 									<a href="">
 										<img src=""/>
@@ -335,30 +465,30 @@ $("div#wishlistlayer").show();
 									<ul class="xans-element- xans-order xans-order-optionall option"  style="margin-top: 15px;">
 										<li>
 											<a href="/product/detail.html?product_no=28871&cate_no=82">
-												<strong class="name">${cart.pro_name}토트백</strong>	
+												<strong class="wname">${wish.pvo.pname}</strong>	
 											</a>
+											<input type="hidden" value="${wish.wnum}"/>
 										</li>
 										<li class="xans-record-" value=""><br />
 										
-										<a onclick="option_change(${cart.cart_pro_code},'${cart.pro_name}',${cart.cart_pro_detail_code},
-												'${cart.pro_imagefilename}',${cart.cart_pro_price},${cart.cart_pro_quantity})"
+										<a onclick="option_change()"
 										id="option_change" class="btn_option" style="width: 80px; margin-top: 3px;">옵션변경</a>
 													
 													
 					<!-- 옵션변경 레이어 -->
-				 			<div class="optionModify ec-base-layer2" id="option_modify_layer_0${cart.cart_pro_detail_code}" style="position: absolute !important;">
+				 			<div class="optionModify ec-base-layer2" id="option_modify_layer_0${wish.pdetailvo.pdetailnum}" style="position: absolute !important;">
                                     <div class="header" >
                                         <h3  style="color: white !important;">옵션변경</h3>
                                     </div>
                                     <div class="content">
                                         <ul class="prdInfo">
-											<li>${cart.pro_name }</li>
+											<li>${wish.pvo.pname}</li>
                                         </ul>
 									<div class="prdModify">
                                             <h4>상품옵션</h4>
                                             <ul class="xans-element- xans-order xans-order-optionlist"><li class="xans-record-">
 											<span>색상</span>
- 											<select   id="product_option_id1" class="ProductOption0" name="${cart.cart_pro_detail_code}color">
+ 											<select   id="product_option_id1" class="ProductOption0" name="${wish.pdetailvo.pdetailnum}color">
  											<option value="null">- [필수] 옵션을 선택해 주세요 -</option>
  											<c:if test="${cart.color_list != null}">
  											<c:forEach items="${cart.color_list}" var="color">
@@ -371,9 +501,9 @@ $("div#wishlistlayer").show();
 									</div>
                                     </div>
                                     <div class="ec-base-button">
-                                        <a href="#none" class="btn_small" onclick="optionsChange('추가',${cart.cart_pro_code},${cart.cart_pro_detail_code},${cart.cart_pro_price},${cart.cart_pro_quantity})">
+                                        <a href="#none" class="btn_small" onclick="optionsChange('추가',${wish.pvo.pnum},${wish.pdetailvo.pdetailnum},${wish.pvo.saleprice},${wish.oqty})">
                                        		추가</a>
-                                        <a href="#none" class="btn_small" onclick="optionsChange('변경',${cart.cart_pro_code},${cart.cart_pro_detail_code},${cart.cart_pro_price},${cart.cart_pro_quantity})">
+                                        <a href="#none" class="btn_small" onclick="optionsChange('변경',${wish.pvo.pnum},${wish.pdetailvo.pdetailnum},${wish.pvo.saleprice},${wish.oqty})">
                                         	변경</a>
                                     </div>
                                      <a href="#none" class="close" onclick="$('div.optionModify').hide();"><img src="//img.echosting.cafe24.com/skin/base/common/btn_close.gif" alt="닫기"/></a>
@@ -384,7 +514,7 @@ $("div#wishlistlayer").show();
 										</ul></td>
 									<td scope="col" class="price">
 										<div class="">
-											<strong><fmt:formatNumber value="${cart.cart_pro_price}" type="number"/> 원</strong>
+											<strong><fmt:formatNumber value="${wish.pvo.saleprice}" type="number"/> 원</strong>
 										</div>
 									</td>
 									<td scope="col" class="mileage">-</td>
@@ -392,15 +522,18 @@ $("div#wishlistlayer").show();
 										<span>2,500원</span>
 									</td>
 									<td scope="col" class="total">
-										<strong><fmt:formatNumber value="${cart.cart_pro_price * cart.cart_pro_quantity}" type="number" /> 원</strong>
+										<strong><fmt:formatNumber value="${wish.pvo.saleprice}" type="number" /> 원</strong>
 									</td>
 				    	<td scope="col" class="button">
 							<a id="prod_order" class="btn_option" onclick="moveOrderCart();" >주문하기</a><br>
 					    	<a id="prodtowish" class="btn_option" onclick="moveOrderCart();" >장바구니담기</a><br>
-					    	<a id="proddelete" class="btn_option" >삭제</a>
+					    	<a id="proddelete" class="btn_option" onclick="deleteWishOne('${wish.wnum}')" >삭제</a>
 								
 					    </td>
-					</tr>
+					     </tr>
+					    </c:forEach>
+					</c:if>
+					
 					
 					
 				</tbody>
@@ -409,7 +542,7 @@ $("div#wishlistlayer").show();
 
 	</div>
 
-
+<%--
 		<!-- 레이어 팝업 만들기  -->
 		<div id="wishlistlayer" class="addoption ec-base-layer3" style="position: absolute !important;"> 
 			<div class="header">
@@ -429,7 +562,7 @@ $("div#wishlistlayer").show();
     	</div>
 		</div>
 		<!-- 레이어 팝업 만들기  -->	
-
+--%>
 
 		<div class="useInfo"><h3 >이용안내</h3>
 			<div class="inner" >
