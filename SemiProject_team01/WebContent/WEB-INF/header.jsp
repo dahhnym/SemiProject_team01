@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <% String ctxPath=request.getContextPath(); %>
 <!DOCTYPE html>
 <html>
@@ -42,8 +43,11 @@ $(document).ready(function(){
 	    navbar.classList.remove("sticky");
 	  }
 	}
+
+	console.log("${sessionScope.loginuser}");
 	
 });
+
 
 
 </script>
@@ -53,11 +57,19 @@ $(document).ready(function(){
 
 <div id="navbar-fixed">
   <div id="top-nav-container" class="content-width">
+ 	  <i class="fas fa-search"></i>
 	  <a href="<%=ctxPath%>/cscenter/csHome.to">고객센터</a>
 	  <a href="<%=ctxPath%>/cart/cart.to">장바구니</a>
 	  <a href="<%=ctxPath%>/member/memberAccount.to">마이페이지</a>
-	  <a href="<%=ctxPath%>/login/login.to">로그인</a>
+	  <c:choose>
+   		<c:when test="${empty sessionScope.loginuser}"><a href="<%=ctxPath%>/login/login.to">로그인</a></c:when>
+   		<c:when test="${not empty sessionScope.loginuser}"><a href="<%=ctxPath%>/home.to">로그아웃</a></c:when>
+	  </c:choose> <!-- 로그아웃해도 기존 페이지에 머무르기 추가 -->
 	  <a href="<%=ctxPath%>/member/memberRegister.to">회원가입</a>
+	  <c:if test="${sessionScope.loginuser.userid eq 'admin'}">	<!-- 관리자 로그인 시 보이는 관리자 전용 페이지 이동 아이콘 -->	
+	  	<a id="admin" href="#"><i class="fas fa-user-cog"></i></a>	
+	  </c:if>
+	  
   </div>
 </div>
 

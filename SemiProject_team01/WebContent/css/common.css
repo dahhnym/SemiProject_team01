@@ -102,6 +102,10 @@ a.navmenu {
   padding-top: 60px;
 }
 
+a#admin {
+	float: left;
+}
+
 
 /* 기존 header css */
 
