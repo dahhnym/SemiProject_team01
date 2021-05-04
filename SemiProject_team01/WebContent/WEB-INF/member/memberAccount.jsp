@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% String ctxPath=request.getContextPath(); %>
-<jsp:include page="../header.jsp"></jsp:include>
+<jsp:include page="../header.jsp"/>
 
 
 <link rel="stylesheet" href="<%=ctxPath%>/css/Ohdayoon.css"/>
@@ -83,7 +83,7 @@
   	<div class="info">
       <div id="table">
          <div class="row">
-            <a class="cell col1" href="<%= request.getContextPath() %>/cart/cart.to" ><span>포인트</span></a>
+            <a class="cell col1"  href="<%= request.getContextPath() %>/cart/cart.to" ><span>포인트</span></a>
             <span class="cell col2" style="color: #00ace6">110P</span>
             <a class="cell col3" href="<%= request.getContextPath() %>/orderList.to"  >회원정보</a>
             <span class="cell col4"> <img src="<%=request.getContextPath()%>/images/human.png" /></span>
@@ -98,7 +98,7 @@
          <div class="row" >
             <a class="cell col1" href="<%= request.getContextPath() %>/cscenter/csHome.to" style="border-bottom: 0px;"><span>Q&#38;A</span></a>
             <span class="cell col2" style="border-bottom: 0px;"> <img src="<%=request.getContextPath()%>/images/speechbubble.png" /></span>
-            <a class="cell col3" href="<%= request.getContextPath() %>/orderList.to"  style="border-bottom: 0px;"><span>REVIEW</span></a>
+            <a class="cell col3" href="<%= request.getContextPath() %>/reviewList.to"  style="border-bottom: 0px;"><span>REVIEW</span></a>
             <span class="cell col4" style="border-bottom: 0px;"> <img  src="<%=request.getContextPath()%>/images/review.png" /></span>
          </div>
 

@@ -1,5 +1,7 @@
 package product.model;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -219,6 +222,38 @@ public class ProductDAO implements InterProductDAO {
 	      }
 	      
 	      return m;   
+	}
+
+	
+	// 페이징처리를 위해서 주문상세 내역에 대한 총 페이지 개수 알아오기(select)
+	@Override
+	public int selectTotalPage(Map<String, String> paraMap) throws SQLException {
+
+		int totalPage = 0;
+		
+		try {
+			 conn = ds.getConnection();
+			 
+			 String sql ="select odrdetailno " + 
+			 			"from tbl_odrdetail " + 
+			 			"where fk_userid = '?' and odrdetailno != (select fk_odrdetailno from tbl_review where fk_userid = '?')";
+			 
+			 			
+			 pstmt = conn.prepareStatement(sql);
+			 pstmt.setString(1, paraMap.get("loginuser") );
+			 pstmt.setString(2, paraMap.get("loginuser") );
+			 
+			 rs = pstmt.executeQuery();
+			 
+			 rs.next();
+			 
+			 totalPage = rs.getInt(1);
+		
+		} finally {
+			close();
+		}
+		
+		return totalPage;
 	}
 
 	
