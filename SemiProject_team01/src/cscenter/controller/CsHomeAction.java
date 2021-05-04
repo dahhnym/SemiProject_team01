@@ -80,7 +80,7 @@ public class CsHomeAction extends AbstractController {
 		
 		while( !(loop > blockSize || pageNo > totalPage) ) {
 			if( pageNo == Integer.parseInt(currentShowPageNo) ) {
-			pageBar += "&nbsp;<span style = 'border:solid 1px gray; color:magenta; padding:2px 4px;'>"+pageNo+"</span>&nbsp;";
+			pageBar += "&nbsp;<span style = 'padding:2px 4px;'>"+pageNo+"</span>&nbsp;";
 			} else {
 			pageBar += "&nbsp;<a href='csHome.to?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"'>"+pageNo+"</a>&nbsp;"; 
 			}
