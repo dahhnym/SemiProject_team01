@@ -18,6 +18,15 @@ public interface InterMemberDAO {
 	// 비밀번호 변경하기
 	int changePwd(String userid, String newPwd) throws SQLException;
 
+	// 휴면상태 변경하기
+	int changeIdle(String userid) throws SQLException;
+
+	// 아이디 찾기
+	String findUserid(String name, String email) throws SQLException;
+
+	// 비밀번호 찾기
+	int findPwd(Map<String, String> paraMap) throws SQLException;
+
 
 
 }

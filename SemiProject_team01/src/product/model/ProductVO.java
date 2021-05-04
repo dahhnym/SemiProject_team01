@@ -18,6 +18,7 @@ public class ProductVO {
 	// 자식테이블(tbl_product)에 부모테이블인 category와 spec 테이블이 필요하다
 	private CategoryVO categvo; // 카테고리VO 
 	private SpecVO spvo;        // 스펙VO 
+  
 	
 	public CategoryVO getCategvo() {
 		return categvo;
@@ -95,3 +96,4 @@ public class ProductVO {
 	
 	
 }
+

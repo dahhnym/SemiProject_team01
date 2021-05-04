@@ -1,15 +1,10 @@
 package product.model;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -18,17 +13,14 @@ import javax.sql.DataSource;
 
 
 
-
 public class ProductDAO implements InterProductDAO {
-
 	
 	private DataSource ds;
-	// DataSource ds 는 아파치톰캣이 제공하는 DBCP(DB Connection Pool) 이다.
-	
+
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
-	
+
 	// 생성자
 	public ProductDAO() {
 		try {
@@ -40,6 +32,7 @@ public class ProductDAO implements InterProductDAO {
 		}
 	}
 	
+
 	// 사용한 자원을 반납하는 close() 메소드 생성하기 
 	   private void close() {
 	      try {
@@ -51,8 +44,8 @@ public class ProductDAO implements InterProductDAO {
 	      }
 	   }
 
-	
-	// 카테고리 select 해오기
+
+ // tbl_category 테이블에서 카테고리 대분류 번호(cnum), 카테고리코드(code), 카테고리명(cname)을 조회해오기 
 	@Override
 	public List<HashMap<String, String>> getCategory() throws SQLException {
 		List<HashMap<String, String>> categoryList = new ArrayList<>(); 
@@ -116,14 +109,15 @@ public class ProductDAO implements InterProductDAO {
 		      return specList;
 	}
 
-	// 제품번호 채번 해오기
+	      
+
+  
+
+  // 제품번호 채번 해오기
 	@Override
 	public int getPnumOfProduct() throws SQLException{
-		int pnum = 0;
-	      
-	      try {
-	          conn = ds.getConnection();
-	          
+		    int pnum = 0;
+		    try {
 	          String sql = " select seq_tbl_product_pnum.nextval AS PNUM " +
 	                     " from dual ";
 	                  // seq_tbl_product_pnum: 시퀀스명
@@ -223,9 +217,59 @@ public class ProductDAO implements InterProductDAO {
 	      
 	      return m;   
 	}
-
 	
-	// 페이징처리를 위해서 주문상세 내역에 대한 총 페이지 개수 알아오기(select)
+	// 신상품 select 해오기
+		@Override
+		public List<product.model.ProductVO> selectNEWonly(Map<String, String> paraMap) throws SQLException {
+			List<ProductVO> prodList = new ArrayList<>();
+		      
+		      try {
+		          conn = ds.getConnection();
+		          
+		          String sql = "select pnum, pname, pimage1, price, saleprice\n"+
+		        		  		"from\n"+
+		        		  		"(\n"+
+		        		  		"select row_number() over(order by pnum asc) AS RNO \n"+
+		        		  		"      , pnum, pname, pcompany, pimage1, price, saleprice, S.sname\n"+
+		        		  		" from tbl_product P \n"+
+		        		  		" JOIN tbl_category C \n"+
+		        		  		" ON P.fk_cnum = C.cnum \n"+
+		        		  		" JOIN tbl_spec S \n"+
+		        		  		" ON P.fk_snum = S.snum\n"+
+		        		  		" where S.sname = ? \n"+
+		        		  		") V\n"+
+		        		  		"where RNO between ? and ?\n"+
+		        		  		"order by pnum desc";
+		          
+		          pstmt = conn.prepareStatement(sql);
+		          pstmt.setString(1, paraMap.get("sname"));
+		          pstmt.setString(2, paraMap.get("start"));
+		          pstmt.setString(3, paraMap.get("end"));
+		          
+		          rs = pstmt.executeQuery();
+		          
+		          while( rs.next() ) {
+		             
+		             ProductVO pvo = new ProductVO();
+		             
+		             pvo.setPnum(rs.getInt(1));     // 제품번호
+		             pvo.setPname(rs.getString(2)); // 제품명
+		             pvo.setPimage1(rs.getString(3));   // 제품이미지1   이미지파일명
+		             pvo.setPrice(rs.getInt(4));        // 제품 정가
+		             pvo.setSaleprice(rs.getInt(5));    // 제품 판매가
+		               
+		             
+		             prodList.add(pvo);
+		          }// end of while-----------------------------------------
+		          
+		      } finally {
+		         close();
+		      }      
+		      
+		      return prodList;
+		}
+  
+  // 페이징처리를 위해서 주문상세 내역에 대한 총 페이지 개수 알아오기(select)
 	@Override
 	public int selectTotalPage(Map<String, String> paraMap) throws SQLException {
 
@@ -255,9 +299,9 @@ public class ProductDAO implements InterProductDAO {
 		
 		return totalPage;
 	}
+  
+  
+  
 
-	
-	   
-	
-	
 }
+

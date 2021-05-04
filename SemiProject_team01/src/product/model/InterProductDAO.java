@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface InterProductDAO {
 
+
 	// 카테고리 select 해오기
 	List<HashMap<String, String>> getCategory() throws SQLException;
 
@@ -25,8 +26,11 @@ public interface InterProductDAO {
 	// 추가 제품 이미지만큼 이미지 테이블에 insert 하기
 	int product_imagefile_Insert(int pnum, String attachFileName) throws SQLException;
 
-	// 페이징처리를 위해서 주문상세 내역에 대한 총 페이지 개수 알아오기(select)
+	// 신상품 select 해오기
+	List<ProductVO> selectNEWonly(Map<String, String> paraMap) throws SQLException;
+
+  // 페이징처리를 위해서 주문상세 내역에 대한 총 페이지 개수 알아오기(select)
 	int selectTotalPage(Map<String, String> paraMap) throws SQLException;
-
-
+  
+  
 }

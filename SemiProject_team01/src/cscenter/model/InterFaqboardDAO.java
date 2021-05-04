@@ -13,4 +13,8 @@ public interface InterFaqboardDAO {
 
 	List<FaqboardVO> selectbyfaq(Map<String, String> paraMap) throws SQLException;
 
+	int selectTotalPage(Map<String, String> paraMap) throws SQLException;
+
+	List<FaqboardVO> selectPagingFaq(Map<String, String> paraMap) throws SQLException;
+
 }
