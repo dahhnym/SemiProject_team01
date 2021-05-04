@@ -174,15 +174,99 @@
     	text-align: center;
     }
     
-    td.qasort {
-    	width: 100px;
-    	border: solid 1px red;
+    td.qasortno {
+    	width: 150px;
+    	height: 60px;
+    	border-top: solid 2px black;
+    	border-bottom: solid 1px gray;
+    	font-weight: bold;
+    	text-align: center;
+    }
+    
+    td.qasortac {
+    	width: 150px;
+    	height: 60px;
+    	border-top: solid 2px black;
+    	border-bottom: solid 1px gray;
+    	font-weight: bold;
+    	text-align: center;
+    }
+    
+    td.qasorttitle {
+    	width: 350px;
+    	height: 60px;
+    	border-top: solid 2px black;
+    	border-bottom: solid 1px gray;
+    	font-weight: bold;
+    	text-align: center;
+    }
+    
+    td.qasortwriter {
+    	width: 150px;
+    	height: 60px;
+    	border-top: solid 2px black;
+    	border-bottom: solid 1px gray;
+    	font-weight: bold;
+    	text-align: center;
+    }
+    
+    td.qasortdate {
+    	width: 250px;
+    	height: 60px;
+    	border-top: solid 2px black;
+    	border-top: solid 2px black;
+    	border-bottom: solid 1px gray;
+    	font-weight: bold;
+    	text-align: center;
+    }
+    
+    td.qasorttdno {
+    	width: 150px;
+    	height: 60px;
+    	border-bottom: solid 1px gray;
+    	text-align: center;
+    }
+    
+    td.qasorttdac {
+    	width: 150px;
+    	height: 60px;
+    	border-bottom: solid 1px gray;
+    	text-align: center;
+    }
+    
+    td.qasorttdtitle {
+    	width: 350px;
+    	height: 60px;
+    	border-bottom: solid 1px gray;
+    	text-align: left;
+    }
+    
+    td.qasorttdwriter {
+    	width: 150px;
+    	height: 60px;
+    	border-bottom: solid 1px gray;
+    	text-align: center;
+    }
+    
+    td.qasorttddate {
+    	width: 250px;
+    	height: 60px;
+    	border-bottom: solid 1px gray;
     	text-align: center;
     }
     
     span.qasorttext{
     	font-size: 20px;
     }
+    
+    span.rvch {
+    	font-size: 20px;
+    	margin-top: 20px;
+    	margin-left: 30px;
+    	
+	}
+    
+    
     
     
 
@@ -193,7 +277,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -210,11 +294,32 @@
         .addClass( "overflow" );
  
     $( "#salutation" ).selectmenu();
+    
+    
   } );
+  
+  	
+ </script>
+ 
+ <script type="text/javascript">
+ $( function() {
+	 $("button#btn-basket").click(function(){
+	  		alert("장바구니에 등록되었습니다.");
+	  	});
+	  	
+	  	$("button#btn-wishlist").click(function(){
+	  		alert("위시리스트에 등록되었습니다.");
+	  	});
+	  	
+	  	$("button#btn-buynow").click(function(){
+	  		alert("구매페이지로 이동하게 할것");
+	  	});
+ });
  </script>
 
 
 	<div id="info">
+	<br>
 		<nav id="info-list">
 			<ul>
 				<li>반복문 추가해서 들어온 순서대로 쓰일수 있도록함</li>	
@@ -230,7 +335,7 @@
 			  </ol>
 			
 			  <!-- Wrapper for slides -->
-			  <div class="carousel-inner">
+			  <div class="carousel-inner" style="z-index: -1;">
 			    <div class="item active">
 			      <img src="<%=ctxPath%>/images/pic01.jpg" style="width:100%; height:100%">
 			    </div>
@@ -257,7 +362,7 @@
 			
 			
 		</div>
-		<div id="order">
+		<div id="order" style="z-index: -1;">
 			<span id="itemname">제품명</span>
 			<br><br>
 			<hr style="background:#fff; height:5px; color:#fff; display:block;">
@@ -270,7 +375,7 @@
  
 				<form action="#">
 				 
-				  <fieldset>
+				  <fieldset >
 				    <select name="옵션1" id="option1">
 				      <option selected="selected" id="choption">옵션을 선택하세요</option>
 				      <option id="choption">예시옵션1</option>
@@ -300,19 +405,19 @@
 			<br><br><br>
 			<hr style="background:#fff; height:5px; color:#fff; display:block;">
 			<br><br><br>
-			<div id="button-container">
+			<div id="button-container" >
 				<div class="container" id="basket">      
-				  <button type="button" class="btn btn-primary"><span id="texttest">장바구니</span></button>
+				  <button type="button" class="btn btn-primary" id="btn-basket"><span id="texttest">장바구니</span></button>
 				</div>
 				
 				<div class="container" id="wish">      
-				  <button type="button" class="btn btn-primary"><span id="texttest">위시리스트</span></button>
+				  <button type="button" class="btn btn-primary" id="btn-wishlist"><span id="texttest">위시리스트</span></button>
 				</div>
 			</div>
 			<br><br><br><br><br>
 			<div>
 				<div class="container" id="buynow">     
-				  <button type="button" class="btn btn-success"><span id="texttest">바로구매</span></button>
+				  <button type="button" class="btn btn-success" id="btn-buynow"><span id="texttest">바로구매</span></button>
 				</div>
 			</div>
 			
@@ -357,34 +462,74 @@
 		  </ul>
 		
 		  <div class="tab-content">
-		    <div id="home" class="tab-pane fade in active">
-		      <img src="/images/pic01.jpg">
+		    <div id="home" class="tab-pane fade in active" style="padding-top: 20px; padding-left: 90px;">
+		     <img src="<%=ctxPath%>/images/pic01.jpg" style="width:90%; height:90%">
 		    </div>
 		    <div id="menu1" class="tab-pane fade">
-		      <h3>Menu 1</h3>
-		      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+		      <h2>상품리뷰</h2>
+		      <div style="background-color: #f8f9fb; height: 60px; padding: 12px 0 5px 21px;">
+		      <span class="rvch">최신순</span><span class="rvch">평점높은순</span><span class="rvch">평점낮은순</span>
+		      </div>
 		    </div>
-		    <div id="menu2" class="tab-pane fade">
-		      <table>
+		    <div id="menu2" class="tab-pane fade"  >
+		    <br>
+		      <table style="margin-left: auto; margin-right: auto;">
 		      	<tr>
-		      		<td class="qasort"><span class="qasorttext">No</span></td>
-		      		<td class="qasort"><span class="qasorttext">답변상태</span></td>
-		      		<td class="qasort"><span class="qasorttext">제목</span></td>
-		      		<td class="qasort"><span class="qasorttext">작성자</span></td>
-		      		<td class="qasort"><span class="qasorttext">작성일</span></td>
+		      		<td class="qasortno"><span class="qasorttext">No</span></td>
+		      		<td class="qasortac"><span class="qasorttext">답변상태</span></td>
+		      		<td class="qasorttitle"><span class="qasorttext">제목</span></td>
+		      		<td class="qasortwriter"><span class="qasorttext">작성자</span></td>
+		      		<td class="qasortdate"><span class="qasorttext">작성일</span></td>
 		      	</tr>
+		      	<tr>
+		      		<td class="qasorttdno"><span class="qasorttext">1</span></td>
+		      		<td class="qasorttdac"><span class="qasorttext">답변대기중</span></td>
+		      		<td class="qasorttdtitle"><span class="qasorttext">배송관련 문의 드립니다.</span></td>
+		      		<td class="qasorttdwriter"><span class="qasorttext">sdf***</span></td>
+		      		<td class="qasorttddate"><span class="qasorttext">2021-05-02</span></td>
+		      	</tr>
+		      	<tr>
+		      		<td class="qasorttdno"><span class="qasorttext">2</span></td>
+		      		<td class="qasorttdac"><span class="qasorttext">답변대기중</span></td>
+		      		<td class="qasorttdtitle"><span class="qasorttext">반품관련 문의 드립니다.</span></td>
+		      		<td class="qasorttdwriter"><span class="qasorttext">sef***</span></td>
+		      		<td class="qasorttddate"><span class="qasorttext">2021-05-01</span></td>
+		      	</tr>
+		      	<tr>
+		      		<td class="qasorttdno"><span class="qasorttext">3</span></td>
+		      		<td class="qasorttdac"><span class="qasorttext">답변완료</span></td>
+		      		<td class="qasorttdtitle"><span class="qasorttext">교환관련 문의 드립니다.</span></td>
+		      		<td class="qasorttdwriter"><span class="qasorttext">wef***</span></td>
+		      		<td class="qasorttddate"><span class="qasorttext">2021-04-30</span></td>
+		      	</tr>
+		      	<tr>
+		      		<td class="qasorttdno"><span class="qasorttext">4</span></td>
+		      		<td class="qasorttdac"><span class="qasorttext">답변완료</span></td>
+		      		<td class="qasorttdtitle"><span class="qasorttext">반품관련 문의 드립니다.</span></td>
+		      		<td class="qasorttdwriter"><span class="qasorttext">xod***</span></td>
+		      		<td class="qasorttddate"><span class="qasorttext">2021-04-29</span></td>
+		      	</tr>
+		      	<tr>
+		      		<td class="qasorttdno"><span class="qasorttext">5</span></td>
+		      		<td class="qasorttdac"><span class="qasorttext">답변완료</span></td>
+		      		<td class="qasorttdtitle"><span class="qasorttext">교환관련 문의 드립니다.</span></td>
+		      		<td class="qasorttdwriter"><span class="qasorttext">wos***</span></td>
+		      		<td class="qasorttddate"><span class="qasorttext">2021-04-28</span></td>
+		      	</tr>
+		      	
 		      
 		      </table>
+		      
 		    </div>
 		    <div id="menu3" class="tab-pane fade">
-		      <div class="well">
-			      교환/반품 제한사항 
-				ㆍ주문/제작 상품의 경우, 상품의 제작이 이미 진행된 경우
-				ㆍ상품 포장을 개봉하여 사용 또는 설치 완료되어 상품의 가치가 훼손된 경우 (단, 내용 확인을 위한 포장 개봉의 경우는 예외)
-				ㆍ고객의 사용, 시간경과, 일부 소비에 의하여 상품의 가치가 현저히 감소한 경우
-				ㆍ세트상품 일부 사용, 구성품을 분실하였거나 취급 부주의로 인한 파손/고장/오염으로 재판매 불가한 경우
-				ㆍ모니터 해상도의 차이로 인해 색상이나 이미지가 실제와 달라, 고객이 단순 변심으로 교환/반품을 무료로 요청하는 경우
-				ㆍ제조사의 사정 (신모델 출시 등) 및 부품 가격 변동 등에 의해 무료 교환/반품으로 요청하는 경우
+		      <div class="well" style="font-size: 15pt;">
+			      교환/반품 제한사항 <br/>
+				ㆍ주문/제작 상품의 경우, 상품의 제작이 이미 진행된 경우<br/>
+				ㆍ상품 포장을 개봉하여 사용 또는 설치 완료되어 상품의 가치가 훼손된 경우 (단, 내용 확인을 위한 포장 개봉의 경우는 예외)<br/>
+				ㆍ고객의 사용, 시간경과, 일부 소비에 의하여 상품의 가치가 현저히 감소한 경우<br/>
+				ㆍ세트상품 일부 사용, 구성품을 분실하였거나 취급 부주의로 인한 파손/고장/오염으로 재판매 불가한 경우<br/>
+				ㆍ모니터 해상도의 차이로 인해 색상이나 이미지가 실제와 달라, 고객이 단순 변심으로 교환/반품을 무료로 요청하는 경우<br/>
+				ㆍ제조사의 사정 (신모델 출시 등) 및 부품 가격 변동 등에 의해 무료 교환/반품으로 요청하는 경우<br/>
 		      </div>
 		    </div>
 		  </div>
