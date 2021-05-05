@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import cscenter.model.*;
 import my.util.MyUtil;
+import product.model.*;
 
 
 public abstract class AbstractController implements InterCommand {
