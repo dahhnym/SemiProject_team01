@@ -17,7 +17,24 @@ public class MoveToWishAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-				  
+		String method = request.getMethod();
+		
+		if(!"POST".equalsIgnoreCase(method)) {
+			
+		         
+		         String message = "비정상적인 경로를 통해 들어왔습니다.!!";
+		         String loc = "javascript:history.back()";
+		         
+		         request.setAttribute("message", message);
+		         request.setAttribute("loc", loc);
+		         
+		         super.setViewPage("/WEB-INF/msg.jsp");
+			
+		}
+		
+		else {
+			
+		
 		  String userid = request.getParameter("userid");
 		  String cartnum = request.getParameter("cartnum");
 		  String fk_pnum = request.getParameter("fk_pnum");
@@ -56,7 +73,7 @@ public class MoveToWishAction extends AbstractController {
 			
 		//	super.setRedirect(false);
 			super.setViewPage("/WEB-INF/jsonview.jsp");
-		  
+		}  
 	}
 
 }

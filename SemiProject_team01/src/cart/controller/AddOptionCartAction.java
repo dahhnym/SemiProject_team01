@@ -1,7 +1,5 @@
 package cart.controller;
 
-import java.sql.SQLException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,7 +9,7 @@ import cart.model.CartDAO;
 import cart.model.InterCartDAO;
 import common.controller.AbstractController;
 
-public class DeleteWishOneAction extends AbstractController {
+public class AddOptionCartAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -29,47 +27,32 @@ public class DeleteWishOneAction extends AbstractController {
 	         
 	         super.setViewPage("/WEB-INF/msg.jsp");
 		
-		}
+	}
 	
-		else {
+	else {
 		
-		
-		
-	
-		String wnum = request.getParameter("wnum");
-		
+		String pdetailnum = request.getParameter("pdetailnum");
 		String userid = request.getParameter("userid");
+		String fk_pnum = request.getParameter("fk_pnum");
 		
 		InterCartDAO cdao = new CartDAO();
 		
-		int n = 0;
+		// 옵션 추가하기 
+		int n = cdao.addOptionCart(pdetailnum,userid,fk_pnum);
+	
+
+	      JSONObject jsobj = new JSONObject();
+			
+			jsobj.put("n", n);
+			 
+			String json = jsobj.toString(); // 문자열 형태로 변환해줌
+			 
+			request.setAttribute("json", json);
 		
-		try {
-			n=cdao.deleteWishOne(userid, wnum);
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
+			super.setRedirect(false);
+			super.setViewPage("/WEB-INF/jsonview.jsp");
 		
 		
-		String msg = "";
-	      
-	      if(n==1) {
-	         msg = "해당 제품을 위시리스트에서 삭제하였습니다.";
-	      }
-	      else {
-	         msg = "상품 삭제를 실패했습니다.";
-	      }
-		
-	      JSONObject jsonObj = new JSONObject();
-	      jsonObj.put("msg", msg);
-	      
-	      String json = jsonObj.toString(); 
-		
-	      request.setAttribute("json", json);
-	      
-	      super.setRedirect(false);
-	      super.setViewPage("/WEB-INF/jsonview.jsp");
 		}
 	}
-
 }

@@ -119,13 +119,13 @@ public class CartVO {
 		this.mvo = mvo;
 	}
 	
-	
+	/*
 	
 	// *** 제품의 총판매가(실제판매가 * 주문량) 구해오기 ***
 		public void setTotalPrice(int oqty) {   
 			// int oqty 이 주문량이다.
 		
-			totalPrice = cprice* oqty; // 판매당시의 제품판매가 * 주문량
+			totalPrice = pvo.getSaleprice()* oqty; // 판매당시의 제품판매가 * 주문량
 			
 		}
 		
@@ -133,7 +133,7 @@ public class CartVO {
 			return totalPrice;
 		}
 
-
+*/
 		public int getCprice() {
 			return cprice;
 		}
