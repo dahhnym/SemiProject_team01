@@ -5,14 +5,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
 
-public class CsBoardWriteAction extends AbstractController {
+public class CsBoardViewAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
 		
-		
-		
-		super.setViewPage("/WEB-INF/cscenter/CsBoardWrite.jsp");		
+		super.setViewPage("/WEB-INF/cscenter/CsBoardView.jsp");
 	}
 
 }

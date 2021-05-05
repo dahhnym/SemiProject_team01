@@ -65,6 +65,7 @@ $(document).ready(function(){
    		<c:when test="${empty sessionScope.loginuser}"><a href="<%=ctxPath%>/login/login.to">로그인</a></c:when>
    		<c:when test="${not empty sessionScope.loginuser}"><a href="<%=ctxPath%>/login/logout.to">로그아웃</a></c:when>
 	  </c:choose> <!-- 로그아웃해도 기존 페이지에 머무르기 추가 -->
+
 	  <a href="<%=ctxPath%>/member/memberRegister.to">회원가입</a>
 	  <c:if test="${sessionScope.loginuser.userid eq 'admin'}">	<!-- 관리자 로그인 시 보이는 관리자 전용 페이지 이동 아이콘 -->	
 	  	<a id="admin" href="<%=ctxPath%>/admin/home.to"><i class="fas fa-user-cog"></i></a>	

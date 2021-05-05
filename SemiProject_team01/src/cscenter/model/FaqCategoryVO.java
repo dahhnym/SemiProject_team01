@@ -1,14 +1,15 @@
 package cscenter.model;
 
-public class faqCategoryVO {
+public class FaqCategoryVO {
+	//부모
 	private int fcNo;
 	private String fcname;
 	private String fccode;
 	
 
-	public faqCategoryVO() { }
+	public FaqCategoryVO() { }
 	
-	public faqCategoryVO(int fcNo, String fcname, String fccode) {
+	public FaqCategoryVO(int fcNo, String fcname, String fccode) {
 		this.fcNo = fcNo;
 		this.fcname = fcname;
 		this.fccode = fccode;

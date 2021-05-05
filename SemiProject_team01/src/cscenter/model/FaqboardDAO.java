@@ -1,15 +1,11 @@
 package cscenter.model;
 
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.sql.*;
 import java.util.*;
 
 import javax.naming.*;
 import javax.sql.DataSource;
-
-import member.model.MemberVO;
 
 public class FaqboardDAO implements InterFaqboardDAO {
 	
@@ -102,7 +98,7 @@ public class FaqboardDAO implements InterFaqboardDAO {
 	           while(rs.next()) {
 	        	   FaqboardVO faqvo = new FaqboardVO();
 	        	   
-	        	   faqCategoryVO fcvo = new faqCategoryVO();	        	   
+	        	   FaqCategoryVO fcvo = new FaqCategoryVO();	        	   
 	        	   fcvo.setFcname(rs.getString(1));
 	        	   fcvo.setFccode(rs.getString(2));
 	        	   faqvo.setFcvo(fcvo);
@@ -155,7 +151,7 @@ public class FaqboardDAO implements InterFaqboardDAO {
 	          
 	          conn = ds.getConnection();
 	          
-	          String sql =  "select fcname, fccode, faqNo, faqtitle, faqcontent "+
+	          String sql =  "select fcname, faqNo, faqtitle, faqcontent "+
 				        		  " from "+
 				        		  " ( "+
 				        		  "     select rownum as rno, fcname, fccode, faqNo, faqtitle, faqcontent, fk_fcNo "+
@@ -185,18 +181,17 @@ public class FaqboardDAO implements InterFaqboardDAO {
 	          
 	          while(rs.next()) {
 	        	  
-	        	  FaqboardVO fvo = new FaqboardVO();
-	        	  faqCategoryVO fcvo = new faqCategoryVO();
+	        	  FaqboardVO boardvo = new FaqboardVO(); //자식
+	        	  FaqCategoryVO fcvo = new FaqCategoryVO(); //부모 
 	        	  
 	        	  fcvo.setFcname(rs.getString(1));
-	        	  fcvo.setFccode(rs.getString(2));
-	        	  fvo.setFcvo(fcvo);
+	        	  boardvo.setFcvo(fcvo); //자식클래스에 부모의 분류이름 넣음
 	        	  
-	        	  fvo.setFaqNo(rs.getInt(3));
-	        	  fvo.setFaqtitle(rs.getString(4));
-	        	  fvo.setFaqcontent(rs.getString(5));
+	        	  boardvo.setFaqNo(rs.getInt(2));
+	        	  boardvo.setFaqtitle(rs.getString(3));
+	        	  boardvo.setFaqcontent(rs.getString(4));
 	        	  
-	        	  faqList.add(fvo);
+	        	  faqList.add(boardvo); //리스트에 넣어줌
 	        	  
 	          }// end of while --------------------
 			
@@ -205,6 +200,38 @@ public class FaqboardDAO implements InterFaqboardDAO {
 		}
 		
 		return faqList;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getBoardCategoryList() throws SQLException {
+		List<HashMap<String, String>> boardcategoryList = new ArrayList<>(); 
+	      
+	      try {
+				  conn = ds.getConnection();
+				  
+				  String sql = " select fcNo, fcname, fccode "+
+									 " from tbl_faqcategory "+
+									 " order by fcNo asc ";
+				            
+				 pstmt = conn.prepareStatement(sql);
+				 
+				 rs = pstmt.executeQuery();
+				         
+				 while(rs.next()) {
+					 
+				    HashMap<String, String> map = new HashMap<>();
+				    map.put("fcNo", rs.getString(1));
+					map.put("fcname", rs.getString(2));
+					map.put("fccode", rs.getString(3));
+				    
+					boardcategoryList.add(map);
+				 }// end of while(rs.next())----------------------------------
+				 
+	      } finally {
+	         close();
+	      }   
+	      
+	      return boardcategoryList;
 	}
 
 

@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+div.container_b {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+div.div_a > a {
+	color:#555;
+	font-size: 18pt;
+}
+
+a:hover {
+	color:#999;
+}
+input.boardpwd {
+	width: 50%;
+}

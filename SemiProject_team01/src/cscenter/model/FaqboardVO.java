@@ -1,19 +1,20 @@
 package cscenter.model;
 
 public class FaqboardVO {
-
+	//자식
 	private int faqNo;
 	private String faqtitle;
 	private String faqcontent;
 	private int fk_fcNo;
 	
-	private faqCategoryVO fcvo;
+	//부모 클래스
+	private FaqCategoryVO fcvo;
 	
-	public faqCategoryVO getFcvo() {
+	public FaqCategoryVO getFcvo() {
 		return fcvo;
 	}
 
-	public void setFcvo(faqCategoryVO fcvo) {
+	public void setFcvo(FaqCategoryVO fcvo) {
 		this.fcvo = fcvo;
 	}
 
