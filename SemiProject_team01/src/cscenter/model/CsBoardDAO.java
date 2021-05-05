@@ -1,0 +1,132 @@
+package cscenter.model;
+
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.naming.*;
+import javax.sql.DataSource;
+
+import util.security.Sha256;
+
+public class CsBoardDAO implements InterCsBoardDAO {
+	private DataSource ds; // DataSource ds 는 아파치톰캣이 제공하는 DBCP(DB Connection Pool) 이다.
+	private Connection conn;
+	private PreparedStatement pstmt;
+	private ResultSet rs;
+	
+	public CsBoardDAO() {
+		try {
+			Context initContext = new InitialContext();
+		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
+		    ds = (DataSource)envContext.lookup("jdbc/semioracle");
+		}catch (NamingException e){
+			e.printStackTrace();
+		}
+	}
+	
+	private void close() {
+	      try {
+	         if(rs != null)    {rs.close();    rs=null;}
+	         if(pstmt != null) {pstmt.close(); pstmt=null;}
+	         if(conn != null)  {conn.close();  conn=null;}
+	      } catch(SQLException e) {
+	         e.printStackTrace();
+	      }
+	   }
+
+	@Override
+	public int registerBoard(CsBoardVO board) throws SQLException {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = "insert into tbl_csBoard(boardno, boardtitle, boardcontent, boardpwd, boardfile, fk_userid, fk_smallcateno) "     
+							+ "values(seq_csboard_boardno.nextval,?, ?, ?, ?, ?, ?)"; 
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, board.getBoardtitle());
+			pstmt.setString(2, board.getBoardcontent());
+			pstmt.setString(3, Sha256.encrypt(board.getBoardpwd())); // 암호를 SHA256 알고리즘으로 단방향 암호화 시킨다. 
+			pstmt.setString(4, board.getBoardfile());
+			pstmt.setString(5, board.getFk_userid() );
+			pstmt.setString(6, board.getFk_smallcateno());
+			
+	        
+	        n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
+
+	@Override
+	public int selectSmallCateCnt(String fk_bigcateno) throws SQLException {
+		
+		int n = 0;
+		try {
+			conn = ds.getConnection();
+			
+			String sql =  " select count(*) "+
+								" from tbl_bigcategory JOIN tbl_smallcategory "+
+								" ON  bigcateno = fk_bigcateno " +
+								" where fk_bigcateno = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, fk_bigcateno);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				n = rs.getInt(1);
+			}
+			
+			
+		}finally {
+			close();
+		}
+		return n;
+	}
+
+	@Override
+	public List<CsBoardVO> GetSmallCategoryList(String fk_bigcateno) throws SQLException {
+		List<CsBoardVO> boardList = new ArrayList<>();
+	      try {
+		           conn = ds.getConnection();
+		           
+		           String sql = " select smallcateno, smallcatename " + 
+						           	  " from tbl_smallcategory " + 
+						           	  " where fk_bigcateno = ? ";
+		           
+		           
+		           pstmt = conn.prepareStatement(sql);
+		           pstmt.setString(1, fk_bigcateno);
+		           
+		           rs = pstmt.executeQuery();
+		           
+		           while(rs.next()) {
+		        	   CsBoardVO boardvo = new CsBoardVO();
+		        	   CsBoardSmallCatetoryVO smallvo = new CsBoardSmallCatetoryVO();
+		        	   
+		        	   
+		        	   smallvo.setSmallcateno(rs.getInt(1));       	   
+		        	   smallvo.setSmallcatename(rs.getString(2));
+		        	   boardvo.setCbscvo(smallvo);
+		        	   boardList.add(boardvo);
+	           }// end of while----------------
+	           
+	      } finally {
+	         close();
+	      }
+	      return boardList;
+	}
+
+	
+
+
+
+}

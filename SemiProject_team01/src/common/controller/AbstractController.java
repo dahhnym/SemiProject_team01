@@ -65,6 +65,8 @@ public abstract class AbstractController implements InterCommand {
 		List<HashMap<String,String>> categoryList = pdao.getCategory();
 		
 		request.setAttribute("categoryList", categoryList);
+	}
+	
 
 	////////////////////////////////////////////////////////////////
 	// ***** FAQ목록(Category)을 보여줄 메소드 생성하기 ***** //
@@ -76,5 +78,8 @@ public abstract class AbstractController implements InterCommand {
 	request.setAttribute("faqcategoryList", faqcategoryList);
 
 	}
+
+		
+
 	
 }

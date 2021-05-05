@@ -56,7 +56,7 @@ $(document).ready(function(){
 	  <a href="<%=ctxPath%>/cscenter/csHome.to">고객센터</a>
 	  <a href="<%=ctxPath%>/cart/cart.to">장바구니</a>
 	  <a href="<%=ctxPath%>/member/memberAccount.to">마이페이지</a>
-	  <a href="javascript:void(0)">로그인</a>
+	  <a href="<%=ctxPath%>/login/login.to">로그인</a>
 	  <a href="<%=ctxPath%>/member/memberRegister.to">회원가입</a>
   </div>
 </div>
