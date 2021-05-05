@@ -4,6 +4,8 @@
 
 <jsp:include page="header.jsp"/>
 <link rel="stylesheet" href="<%=ctxPath%>/css/kimdanim.css" />
+
+
 <script type="text/javascript">
 
 var lenNEW = 8;
@@ -47,7 +49,6 @@ $(document).ready(function(){
 
 // Function Declaration
 function displayNEW(start) { 
-	console.log('displayNEW(start) : ' + start);
   $.ajax({
      url:"<%=ctxPath%>/product/prodDisplayJSON.to", 
   //   type:"GET",
@@ -105,7 +106,6 @@ function displayNEW(start) {
   
 }// end of function displayNEW( ){}-----------------------------
 	
-	
 
 <%-- 제품 이미지 클릭시 제품 상세 페이지 이동--%>
 function goProdDetail(imgs) {
@@ -129,7 +129,7 @@ function goProdDetail(imgs) {
     <li data-target="#demo" data-slide-to="2"></li>
   </ul>
   
-  <!-- The slideshow -->
+  <!-- The slideshow    -->
   <div class="carousel-inner">
     	<div class="carousel-item active clickable">
 	      <img class="clickable" src="<%=ctxPath%>/images/ad1.jpg" alt="ad1" width="100%" height="500" onclick="goProdDetail(this)">
@@ -155,7 +155,102 @@ function goProdDetail(imgs) {
 <!-- 인기상품 이미지 슬라이드 -->	
 <div class="hr-sect itemtitle">Best Seller</div>
 
-<div style="height: 300px; border: solid 1px navy; margin-bottom: 100px;">신상품 multi item carousel 삽입</div>
+<div class="slide-container">
+      	<div class="container-fluid">
+      		<div id="carousel-example" class="carousel slide" data-ride="carousel">
+      			<div class="carousel-inner row w-75 mx-auto" role="listbox">
+   					<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-4 active slideImg">
+					<img src="/SemiProject_team01/images/w-backpack1.jpg" class="img-fluid mx-auto d-block" alt="img1">
+          			<div id="prodInfo">
+           				<ul>
+           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
+           					<li><label class="prodInfoList">정가</label>12,000원</li>
+           					<li><label class="prodInfoList">할인가</label>10,000원</li>
+           				</ul>
+					</div>
+				</div>
+				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-4 slideImg">
+					<img src="/SemiProject_team01/images/w-backpack3.jpg" class="img-fluid mx-auto d-block" alt="img2">
+					<div id="prodInfo">
+           				<ul>
+           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
+           					<li><label class="prodInfoList">정가</label>12,000원</li>
+           					<li><label class="prodInfoList">할인가</label>10,000원</li>
+           				</ul>
+					</div>
+				</div>
+				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
+					<img src="/SemiProject_team01/images/w-backpack5.jpg" class="img-fluid mx-auto d-block" alt="img3">
+					<div id="prodInfo">
+           				<ul>
+           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
+           					<li><label class="prodInfoList">정가</label>12,000원</li>
+           					<li><label class="prodInfoList">할인가</label>10,000원</li>
+           				</ul>
+					</div>
+				</div>
+				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
+					<img src="/SemiProject_team01/images/w-backpack7.jpg" class="img-fluid mx-auto d-block" alt="img4">
+					<div id="prodInfo">
+           				<ul>
+           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
+           					<li><label class="prodInfoList">정가</label>12,000원</li>
+           					<li><label class="prodInfoList">할인가</label>10,000원</li>
+           				</ul>
+					</div>
+				</div>
+				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
+					<img src="/SemiProject_team01/images/w-backpack9.jpg" class="img-fluid mx-auto d-block" alt="img5">
+					<div id="prodInfo">
+           				<ul>
+           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
+           					<li><label class="prodInfoList">정가</label>12,000원</li>
+           					<li><label class="prodInfoList">할인가</label>10,000원</li>
+           				</ul>
+					</div>
+				</div>
+				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
+					<img src="/SemiProject_team01/images/w-backpack11.jpg" class="img-fluid mx-auto d-block" alt="img6">
+					<div id="prodInfo">
+           				<ul>
+           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
+           					<li><label class="prodInfoList">정가</label>12,000원</li>
+           					<li><label class="prodInfoList">할인가</label>10,000원</li>
+           				</ul>
+					</div>
+				</div>
+				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
+					<img src="/SemiProject_team01/images/w-backpack13.jpg" class="img-fluid mx-auto d-block" alt="img7">
+					<div id="prodInfo">
+           				<ul>
+           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
+           					<li><label class="prodInfoList">정가</label>12,000원</li>
+           					<li><label class="prodInfoList">할인가</label>10,000원</li>
+           				</ul>
+					</div>
+				</div>
+				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
+					<img src="/SemiProject_team01/images/w-backpack15.jpg" class="img-fluid mx-auto d-block" alt="img8">
+					<div id="prodInfo">
+           				<ul>
+           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
+           					<li><label class="prodInfoList">정가</label>12,000원</li>
+           					<li><label class="prodInfoList">할인가</label>10,000원</li>
+           				</ul>
+					</div>
+				</div>
+      			</div>
+      			<a class="carousel-control-prev" href="#carousel-example" role="button" data-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="sr-only">Previous</span>
+			</a>
+			<a class="carousel-control-next" href="#carousel-example" role="button" data-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="sr-only">Next</span>
+			</a>
+      		</div>
+      	</div>
+      </div>
 
 
 
@@ -210,6 +305,7 @@ function goProdDetail(imgs) {
  
 
 </div> <!-- content-container End -->
+
 
 
 
