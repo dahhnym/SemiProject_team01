@@ -6,7 +6,6 @@
 <style type="text/css">
 
 #content-container {
-	border: solid 1px gray;
 	width: 70%;
 	margin-left: auto;
 	margin-right: auto;
@@ -17,7 +16,7 @@
 	width: 60%;
 	margin-left:auto;
 	margin-right: auto;
-	margin-top: 200px;
+	margin-top: 250px;
 }
 
 
@@ -69,7 +68,7 @@ span{
 				<span><a class="menuname" href="#">사용자관리</a></span>
 				</td>
 				<td class="thead-padding menu-head">
-				<a href="#"><img class="menuIcon" src="<%=ctxPath%>/images/productmanagement.png"/></a>
+				<a href="<%=ctxPath%>/admin/productManagement.to"><img class="menuIcon" src="<%=ctxPath%>/images/productmanagement.png"/></a>
 				<span><a class="menuname" href="<%=ctxPath%>/admin/productManagement.to">상품관리</a></span>
 				</td>
 				<td class="thead-padding menu-head">
