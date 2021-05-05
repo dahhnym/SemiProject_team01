@@ -70,7 +70,7 @@ span{
 				</td>
 				<td class="thead-padding menu-head">
 				<a href="#"><img class="menuIcon" src="<%=ctxPath%>/images/productmanagement.png"/></a>
-				<span><a class="menuname" href="#">상품관리</a></span>
+				<span><a class="menuname" href="<%=ctxPath%>/admin/productManagement.to">상품관리</a></span>
 				</td>
 				<td class="thead-padding menu-head">
 				<a href="#"><img class="menuIcon" src="<%=ctxPath%>/images/ordermanagement.png"/></a>
