@@ -45,75 +45,6 @@ public class ProductDAO implements InterProductDAO {
 	   }
 
 
-	@Override
-	public List<ProductVO> selectBySpecName(Map<String, String> paraMap) {
-		
-		List<ProductVO> prodList = new ArrayList<>();
-	      
-	      try {
-	          conn = ds.getConnection();
-	          
-	          String sql = "select pnum, pname, code, pcompany, pimage1, pimage2, price, saleprice, sname, pcontent, point "+
-	                     "from  "+
-	                     "( "+
-	                     "  select row_number() over(order by pnum desc) AS RNO "+
-	                     "       , pnum, pname, C.code, pcompany, pimage1, pimage2, pqty, price, saleprice, S.sname, pcontent, point "+
-	                     "      , to_char(pinputdate, 'yyyy-mm-dd') as pinputdate "+
-	                     " from tbl_product P "+
-	                     " JOIN tbl_category C "+
-	                     " ON P.fk_cnum = C.cnum "+
-	                     " JOIN tbl_spec S "+
-	                     " ON P.fk_snum = S.snum "+
-	                     " where S.sname = ? "+
-	                     " ) V "+
-	                     "where RNO between ? and ? ";
-	          
-	          pstmt = conn.prepareStatement(sql);
-	          pstmt.setString(1, paraMap.get("sname"));
-	          pstmt.setString(2, paraMap.get("start"));
-	          pstmt.setString(3, paraMap.get("end"));
-	          
-	          rs = pstmt.executeQuery();
-	          
-	          while( rs.next() ) {
-	             
-	             ProductVO pvo = new ProductVO();
-	             
-	             pvo.setPnum(rs.getInt(1));     // 제품번호
-	             pvo.setPname(rs.getString(2)); // 제품명
-	             
-	             CategoryVO categvo = new CategoryVO(); 
-	             categvo.setCode(rs.getString(3)); 
-	             
-	             pvo.setCategvo(categvo);           // 카테고리코드 
-	             pvo.setPcompany(rs.getString(4));  // 제조회사명
-	             pvo.setPimage1(rs.getString(5));   // 제품이미지1   이미지파일명
-	             pvo.setPimage2(rs.getString(6));   // 제품이미지2   이미지파일명
-	             pvo.setPrice(rs.getInt(7));        // 제품 정가
-	             pvo.setSaleprice(rs.getInt(8));    // 제품 판매가(할인해서 팔 것이므로)
-	               
-	             SpecVO spvo = new SpecVO(); 
-	             spvo.setSname(rs.getString(9)); 
-	             
-	             pvo.setSpvo(spvo); // 스펙 
-	               
-	             pvo.setPcontent(rs.getString(10));     // 제품설명 
-	             pvo.setPoint(rs.getInt(11));         // 포인트 점수                                                 
-	             
-	             prodList.add(pvo);
-	          }// end of while-----------------------------------------
-	          
-	      } catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-	         close();
-	      }      
-	      
-	      return prodList;
-	}
-
-	
  // tbl_category 테이블에서 카테고리 대분류 번호(cnum), 카테고리코드(code), 카테고리명(cname)을 조회해오기 
 	@Override
 	public List<HashMap<String, String>> getCategory() throws SQLException {
@@ -180,34 +111,13 @@ public class ProductDAO implements InterProductDAO {
 
 	      
 
-  @Override
-	public int totalPspecCount(String fk_snum) throws SQLException {
-		int totalCount = 0;
-     try {
-	          conn = ds.getConnection();
-	          String sql = "select count(*) "+
-	                     "from tbl_product "+
-	                     "where fk_snum = ? ";
-	          
-	          pstmt = conn.prepareStatement(sql);
-	          pstmt.setString(1, fk_snum);
-	          
-	          rs = pstmt.executeQuery();
-	          
-	          rs.next();
-	          
-	          totalCount = rs.getInt(1);
-	          
-	      } finally {
-	         close();
-	      }      
-	      return totalCount;
-	}
+  
 
   // 제품번호 채번 해오기
 	@Override
 	public int getPnumOfProduct() throws SQLException{
-		    int pnum = 0;  
+		    int pnum = 0;
+		    try {
 	          String sql = " select seq_tbl_product_pnum.nextval AS PNUM " +
 	                     " from dual ";
 	                  // seq_tbl_product_pnum: 시퀀스명
@@ -307,5 +217,91 @@ public class ProductDAO implements InterProductDAO {
 	      
 	      return m;   
 	}
+	
+	// 신상품 select 해오기
+		@Override
+		public List<product.model.ProductVO> selectNEWonly(Map<String, String> paraMap) throws SQLException {
+			List<ProductVO> prodList = new ArrayList<>();
+		      
+		      try {
+		          conn = ds.getConnection();
+		          
+		          String sql = "select pnum, pname, pimage1, price, saleprice\n"+
+		        		  		"from\n"+
+		        		  		"(\n"+
+		        		  		"select row_number() over(order by pnum asc) AS RNO \n"+
+		        		  		"      , pnum, pname, pcompany, pimage1, price, saleprice, S.sname\n"+
+		        		  		" from tbl_product P \n"+
+		        		  		" JOIN tbl_category C \n"+
+		        		  		" ON P.fk_cnum = C.cnum \n"+
+		        		  		" JOIN tbl_spec S \n"+
+		        		  		" ON P.fk_snum = S.snum\n"+
+		        		  		" where S.sname = ? \n"+
+		        		  		") V\n"+
+		        		  		"where RNO between ? and ?\n"+
+		        		  		"order by pnum desc";
+		          
+		          pstmt = conn.prepareStatement(sql);
+		          pstmt.setString(1, paraMap.get("sname"));
+		          pstmt.setString(2, paraMap.get("start"));
+		          pstmt.setString(3, paraMap.get("end"));
+		          
+		          rs = pstmt.executeQuery();
+		          
+		          while( rs.next() ) {
+		             
+		             ProductVO pvo = new ProductVO();
+		             
+		             pvo.setPnum(rs.getInt(1));     // 제품번호
+		             pvo.setPname(rs.getString(2)); // 제품명
+		             pvo.setPimage1(rs.getString(3));   // 제품이미지1   이미지파일명
+		             pvo.setPrice(rs.getInt(4));        // 제품 정가
+		             pvo.setSaleprice(rs.getInt(5));    // 제품 판매가
+		               
+		             
+		             prodList.add(pvo);
+		          }// end of while-----------------------------------------
+		          
+		      } finally {
+		         close();
+		      }      
+		      
+		      return prodList;
+		}
+  
+  // 페이징처리를 위해서 주문상세 내역에 대한 총 페이지 개수 알아오기(select)
+	@Override
+	public int selectTotalPage(Map<String, String> paraMap) throws SQLException {
+
+		int totalPage = 0;
+		
+		try {
+			 conn = ds.getConnection();
+			 
+			 String sql ="select odrdetailno " + 
+			 			"from tbl_odrdetail " + 
+			 			"where fk_userid = '?' and odrdetailno != (select fk_odrdetailno from tbl_review where fk_userid = '?')";
+			 
+			 			
+			 pstmt = conn.prepareStatement(sql);
+			 pstmt.setString(1, paraMap.get("loginuser") );
+			 pstmt.setString(2, paraMap.get("loginuser") );
+			 
+			 rs = pstmt.executeQuery();
+			 
+			 rs.next();
+			 
+			 totalPage = rs.getInt(1);
+		
+		} finally {
+			close();
+		}
+		
+		return totalPage;
+	}
+  
+  
+  
 
 }
+
