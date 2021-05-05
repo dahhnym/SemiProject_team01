@@ -14,9 +14,9 @@ public class ListAction extends AbstractController {
 		// ***** 제품목록(Category)을 보여줄 메소드 생성하기 ***** //
 		super.getCategoryList(request);
 		
-		InterProductDAO pdao = new ProductDAO();
+		InterProductDAO2 pdao2 = new ProductDAO2();
 		
-		int totalHitCount = pdao.totalPspecCount("1");
+		int totalHitCount = pdao2.totalPspecCount("1");
 		
 		request.setAttribute("totalListCount", totalHitCount);
 		super.setRedirect(false);

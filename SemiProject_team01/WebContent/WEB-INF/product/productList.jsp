@@ -88,9 +88,9 @@ $(document).ready(function(){
 	                          // start가 33 이라면  33~36 까지 상품 4개를 보여준다.(마지막 상품) 
 	      
 	      $.ajax({
-	         url:"/SemiProject_team01/product/mallDisplayJSON.up", 
+	         url:"/SemiProject_team01/product/mallDisplayJSON.to", 
 	      //   type:"GET",
-	         data:{"sname":"BEST"
+	         data:{"sname":"HIT"
 	             ,"start":start  // "1"   "9"   "17"   "25"   "33"
 	             ,"len":lenHIT}, //  8     8     8      8      8
 	         dataType:"JSON",
@@ -134,7 +134,7 @@ $(document).ready(function(){
 	                  
 	            	   html +=  "<div class='moreProdInfo'>"+
 			                       "<ul style='list-style-type: none; border: solid 0px red; padding :0px; width :220px;'>"+
-			                          "<li style='border: solid 0px red; padding-bottom: 10px;'><a href='/SemiProject_team01/product/prodView.up?pnum="+item.pnum+"'><img width='120px;' height='130px' src='/SemiProject_team01/images/"+item.pimage1+"'/></a></li>"+
+			                          "<li style='border: solid 0px red; padding-bottom: 10px;'><a href='/SemiProject_team01/product/prodView.to?pnum="+item.pnum+"'><img width='120px;' height='130px' src='/SemiProject_team01/images/"+item.pimage1+"'/></a></li>"+
 			                          "<li>"+item.pname+"</li>"+
 			                          "<li>"+(item.saleprice).toLocaleString('en')+"<span> 원</span></li>"+
 			                        "</ul>"+

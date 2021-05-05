@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     
 <% String ctxPath = request.getContextPath(); %>
 <jsp:include page="../header.jsp" />
@@ -295,79 +296,216 @@
  
     $( "#salutation" ).selectmenu();
     
+    goCommentListView();  // 제품 구매후기를 보여주는 것.
+    
+ 	// **** 제품후기 쓰기(로그인만 하면 누구나 작성할 수 있는 것) **** // 
+	   $("button.btnCommentOK").click(function(){
+		   
+		   if(${empty sessionScope.loginuser}) {
+			   alert("제품사용 후기를 작성하시려면 먼저 로그인 하셔야 합니다.");
+			   return;
+		   }
+		   
+		   var commentContents = $("textarea#commentContents").val().trim();
+		   
+		   if(commentContents == "") {
+			   alert("제품후기 내용을 입력하세요!!");
+			   return; 
+		   }
+		   
+		   // jQuery에서 사용하는 것으로써,
+		   // form태그의 선택자.serialize(); 을 해주면 form 태그내의 모든 값들을 name값을 키값으로 만들어서 보내준다. 
+		   var queryString = $("form[name=commentFrm]").serialize();
+		   // console.log(queryString);
+		   // contents=very%20Good&fk_userid=seoyh&fk_pnum=57
+		   // %20 은 공백이다.
+		 
+		   $.ajax({
+			   url:"<%= request.getContextPath()%>/product/commentRegister.to",
+			   type:"post",
+			   data:queryString,
+			   dataType:"json",
+			   success:function(json){ // {"n":1} 또는 {"n":-1} 또는  {"n":0}
+				   if(json.n == 1) {
+					   // 제품후기 등록(insert)이 성공했으므로 제품후기글을 새로이 보여줘야(select) 한다.
+					   goCommentListView(); // 제품후기글을 보여주는 함수 호출하기 
+				   }
+				   else if(json.n == -1)  {
+					   // 동일한 제품에 대하여 동일한 회원이 제품후기를 2번 쓰려고 경우 unique 제약에 위배됨 
+					// alert("이미 후기를 작성하셨습니다.\n작성하시려면 기존의 제품후기를\n삭제하시고 다시 쓰세요.");
+					   swal("이미 후기를 작성하셨습니다.\n작성하시려면 기존의 제품후기를\n삭제하시고 다시 쓰세요.");
+				   }
+				   else  {
+					   // 제품후기 등록(insert)이 실패한 경우 
+					   alert("제품후기 글쓰기가 실패했습니다.");
+				   }
+				   
+				   $("textarea#commentContents").val("").focus();
+			   },
+	  		   error: function(request, status, error){
+	 			   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	 		   }
+		   });
+		   
+	   }); 
+    
     
   } );
+  
+  function goCart(pnum) {
+	  
+	if( ${empty sessionScope.loginuser}) {
+		alert("장바구니에 등록하려면 먼저 로그인해야합니다!!");
+		return;
+	}
+	
+	$.ajax({
+		url:"<%= request.getContextPath()%>/product/cartAdd.to",
+		   type:"post",
+		   data:{"userid":"${sessionScope.loginuser.userid}"
+			    ,"pnum":pnum},
+		   dataType:"json",
+		   success:function(json){
+			   swal(json.msg);
+		   },
+		   error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		   }
+	});
+	
+	function goWish(pnum) {
+		  
+		if( ${empty sessionScope.loginuser}) {
+			alert("위시리스트에 등록하려면 먼저 로그인해야합니다!!");
+			return;
+		}
+		
+		$.ajax({
+			url:"<%= request.getContextPath()%>/product/wishAdd.to",
+			   type:"post",
+			   data:{"userid":"${sessionScope.loginuser.userid}"
+				    ,"pnum":pnum},
+			   dataType:"json",
+			   success:function(json){
+				   swal(json.msg);
+			   },
+			   error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			   }
+		});
+  }
+	
+	// 특정 제품의 제품후기글들을 보여주는 함수
+	   function goCommentListView() {
+		   
+		  $.ajax({
+			  url:"<%= request.getContextPath()%>/product/commentList.to",
+			  type:"GET",
+			  data:{"fk_pnum":"${requestScope.pvo.pnum}"},
+			  dataType:"json",
+			  success:function(json){
+				 /*
+				    [{"contents":"제품후기내용물","name":"작성자이름","writeDate":"작성일자","userid":"사용자아이디","review_seq":제품후기글번호}
+				    ,{"contents":"제품후기내용물","name":"작성자이름","writeDate":"작성일자","userid":"사용자아이디","review_seq":제품후기글번호} 
+				    ]  
+				 */ 
+				 var html = "";
+				 
+				 if(json.length > 0) {
+					 $.each(json, function(index, item){
+						 var writeuserid = item.userid;
+						 var loginuserid = "${sessionScope.loginuser.userid}";
+						 
+						 html +=  "<div> <span class='markColor'>▶</span> "+item.contents+"</div>"
+				               +  "<div class='customDisplay'>"+item.name+"</div>"      
+				               +  "<div class='customDisplay'>"+item.writeDate+"</div>";
+				               
+				         if( loginuserid == "" ) {
+				        	 html += "<div class='customDisplay spacediv'>&nbsp;</div>";
+				         }     
+				         else if( loginuserid != "" && writeuserid != loginuserid ) {
+				        	 html += "<div class='customDisplay spacediv'>&nbsp;</div>";
+				         }
+				         else if( loginuserid != "" && writeuserid == loginuserid ) {
+				        	 html += "<div class='customDisplay spacediv commentDel' onclick='delMyReview("+item.review_seq+")'>후기삭제</div>"; 
+				         }
+						 
+					 });
+				 } // end of if ----------------------------------------
+				 
+				 else {
+					 html += "<div>등록된 상품후기가 없습니다.</div>";
+				 }// end of else ---------------------------------------
+				 
+				 $("div#viewComments").html(html);
+				 
+				// == "div#sideinfo" 의 height 값 설정해주기 == 
+				var contentHeight =	$("div#content").height();
+				//	alert(contentHeight);
+				$("div#sideinfo").height(contentHeight);
+				 
+			  },
+			  error: function(request, status, error){
+				   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			  }
+		  });
+		   
+	   }// end of function goCommentListView() {}------------------------------
+	   
+	   
+	   // 특정 제품의 제품후기를 삭제하는 함수
+	   function delMyReview(review_seq) {
+		   
+		   var bool = confirm("정말로 제품후기를 삭제하시겠습니까?");
+	   //  console.log("bool => " + bool); // bool => true , bool => false
+	   
+	       if(bool) {
+	    	   $.ajax({
+	    		   url:"<%= request.getContextPath()%>/product/commentDel.to",
+	    		   type:"post",
+	    		   data:{"review_seq":review_seq},
+	    		   dataType:"json",
+	    		   success:function(json){ // {"n":1} 또는 {"n":0}
+	    			   if(json.n == 1) {
+	    				   alert("제품후기 삭제가 성공되었습니다.");
+	    				   goCommentListView();
+	    			   }
+	    			   else {
+	    				   alert("제품후기 삭제가 실패했습니다.");
+	    			   }
+	    		   },
+	    		   error: function(request, status, error){
+	    			   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	    		  }
+	    	   });
+	       }
+		   
+	   }// end of function delMyReview(review_seq) {}--------------------------
   
   	
  </script>
  
- <script type="text/javascript">
- $( function() {
-	 $("button#btn-basket").click(function(){
-	  		alert("장바구니에 등록되었습니다.");
-	  	});
-	  	
-	  	$("button#btn-wishlist").click(function(){
-	  		alert("위시리스트에 등록되었습니다.");
-	  	});
-	  	
-	  	$("button#btn-buynow").click(function(){
-	  		alert("구매페이지로 이동하게 할것");
-	  	});
- });
- </script>
 
 
 	<div id="info">
+	
 	<br>
 		<nav id="info-list">
 			<ul>
-				<li>반복문 추가해서 들어온 순서대로 쓰일수 있도록함</li>	
+				<li></li>	
 			</ul>
 		</nav>
 		<div id="imagebox">
-			<div id="myCarousel" class="carousel slide" data-ride="carousel">
-			  <!-- Indicators -->
-			  <ol class="carousel-indicators">
-			    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-			    <li data-target="#myCarousel" data-slide-to="1"></li>
-			    <li data-target="#myCarousel" data-slide-to="2"></li>
-			  </ol>
-			
-			  <!-- Wrapper for slides -->
-			  <div class="carousel-inner" style="z-index: -1;">
-			    <div class="item active">
-			      <img src="<%=ctxPath%>/images/pic01.jpg" style="width:100%; height:100%">
-			    </div>
-			
-			    <div class="item">
-			      <img src="<%=ctxPath%>/images/pic02.jpg" style="width:100%; height:100%">
-			    </div> 
-			
-			    <div class="item">
-			      <img src="<%=ctxPath%>/images/pic03.jpg" style="width:100%; height:100%">
-			    </div>
-			  </div>
-			
-			  <!-- Left and right controls -->
-			  <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-			    <span class="glyphicon glyphicon-chevron-left"></span>
-			    <span class="sr-only">Previous</span>
-			  </a>
-			  <a class="right carousel-control" href="#myCarousel" data-slide="next">
-			    <span class="glyphicon glyphicon-chevron-right"></span>
-			    <span class="sr-only">Next</span>
-			  </a>
+			<div id="myCarousel">
+				<img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width: 100%; height: 100%;" />
 			</div>
-			
-			
 		</div>
-		<div id="order" style="z-index: -1;">
-			<span id="itemname">제품명</span>
+		<div id="order">
+			<span id="itemname">${requestScope.pvo2.pname}</span>
 			<br><br>
 			<hr style="background:#fff; height:5px; color:#fff; display:block;">
 			<br>
-			<span id="sale">10%<span id="normalprice">10000원</span></span><span id="price">9000원</span>
+			<span id="sale">10%<span id="normalprice">${requestScope.pvo2.price}원</span></span><span id="price">${requestScope.pvo2.saleprice}원</span>
 			<br><br><br>
 			<hr style="background:#fff; height:5px; color:#fff; display:block;">
 			<br><br><br>
@@ -377,27 +515,10 @@
 				 
 				  <fieldset >
 				    <select name="옵션1" id="option1">
-				      <option selected="selected" id="choption">옵션을 선택하세요</option>
-				      <option id="choption">예시옵션1</option>
-				      <option id="choption">예시옵션2</option>
-				      <option id="choption">예시옵션3</option>
-				      <option id="choption">예시옵션4</option>
-				    </select>
-				   </fieldset>
-				  </form>
-			</div>
-			<br><br><br>
-			<div class="demo">
- 
-				<form action="#">
-				 
-				  <fieldset>
-				    <select name="옵션1" id="option1">
-				      <option selected="selected" id="choption">옵션을 선택하세요</option>
-				      <option id="choption">예시옵션1</option>
-				      <option id="choption">예시옵션2</option>
-				      <option id="choption">예시옵션3</option>
-				      <option id="choption">예시옵션4</option>
+				      <option selected="selected" id="choption">색상선택</option>
+				      <c:forEach items="" var="option">
+				      	<%-- <option value="${requestScope.option.option}">${requestScope.option.option}</option> --%>
+				      </c:forEach>
 				    </select>
 				   </fieldset>
 				  </form>
@@ -407,17 +528,20 @@
 			<br><br><br>
 			<div id="button-container" >
 				<div class="container" id="basket">      
-				  <button type="button" class="btn btn-primary" id="btn-basket"><span id="texttest">장바구니</span></button>
+				  <button type="button" class="btn btn-primary" id="btn-basket" onClick="goCart('${requestScope.pvo2.pnum}');"><span id="texttest">장바구니</span></button>
+				  
 				</div>
 				
 				<div class="container" id="wish">      
-				  <button type="button" class="btn btn-primary" id="btn-wishlist"><span id="texttest">위시리스트</span></button>
+				  <button type="button" class="btn btn-primary" id="btn-wishlist" onClick="goWish('${requestScope.pvo2.pnum}');"><span id="texttest">위시리스트</span></button>
+				 
 				</div>
 			</div>
 			<br><br><br><br><br>
 			<div>
 				<div class="container" id="buynow">     
-				  <button type="button" class="btn btn-success" id="btn-buynow"><span id="texttest">바로구매</span></button>
+				  <button type="button" class="btn btn-success" id="btn-buynow" onClick="goBuy('${requestScope.pvo2.pnum}');"><span id="texttest">바로구매</span></button>
+			
 				</div>
 			</div>
 			
@@ -426,28 +550,28 @@
 		<div id="bestproductdiv">
 			<table>
 				<tr>
-					<td><img src="<%=ctxPath%>/images/pic01.jpg" style="width:130px; height:150px; margin-left:75px;"></image></td>
-					<td><img src="<%=ctxPath%>/images/pic02.jpg" style="width:130px; height:150px; margin-left:75px;"></image></td>
-					<td><img src="<%=ctxPath%>/images/pic03.jpg" style="width:130px; height:150px; margin-left:75px;"></image></td>
-					<td><img src="<%=ctxPath%>/images/pic01.jpg" style="width:130px; height:150px; margin-left:75px;"></image></td>
-					<td><img src="<%=ctxPath%>/images/pic02.jpg" style="width:130px; height:150px; margin-left:75px;"></image></td>
-					<td><img src="<%=ctxPath%>/images/pic03.jpg" style="width:130px; height:150px; margin-left:75px;"></image></td>
+				    <td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"></image></td>
+					<td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"></image></td>
+					<td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"></image></td>
+					<td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"></image></td>
+					<td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"></image></td>
+					<td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"></image></td>
 				</tr>
 				<tr>
-					<td style="padding-left: 100px;"><span id="tbltextname">상품명1</span></td>
-					<td style="padding-left: 100px;"><span id="tbltextname">상품명2</span></td>
-					<td style="padding-left: 100px;"><span id="tbltextname">상품명3</span></td>
-					<td style="padding-left: 100px;"><span id="tbltextname">상품명4</span></td>
-					<td style="padding-left: 100px;"><span id="tbltextname">상품명5</span></td>
-					<td style="padding-left: 100px;"><span id="tbltextname">상품명6</span></td>
+					<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
+					<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
+					<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
+					<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
+					<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
+					<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
 				</tr>
 				<tr>
-					<td style="padding-left: 100px;"><span id="tblbestprice">10000원</span></td>
-					<td style="padding-left: 100px;"><span id="tblbestprice">11000원</span></td>
-					<td style="padding-left: 100px;"><span id="tblbestprice">12000원</span></td>
-					<td style="padding-left: 100px;"><span id="tblbestprice">13000원</span></td>
-					<td style="padding-left: 100px;"><span id="tblbestprice">14000원</span></td>
-					<td style="padding-left: 100px;"><span id="tblbestprice">15000원</span></td>
+					<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
+					<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
+					<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
+					<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
+					<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
+					<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
 				</tr>
 			</table>
 		</div>
@@ -463,14 +587,24 @@
 		
 		  <div class="tab-content">
 		    <div id="home" class="tab-pane fade in active" style="padding-top: 20px; padding-left: 90px;">
-		     <img src="<%=ctxPath%>/images/pic01.jpg" style="width:90%; height:90%">
+		     <img src="/SemiProject_team01/images/${requestScope.pvo2.pimage2}" style="width:90%; height:90%"><br>
 		    </div>
 		    <div id="menu1" class="tab-pane fade">
 		      <h2>상품리뷰</h2>
-		      <div style="background-color: #f8f9fb; height: 60px; padding: 12px 0 5px 21px;">
-		      <span class="rvch">최신순</span><span class="rvch">평점높은순</span><span class="rvch">평점낮은순</span>
-		      </div>
-		    </div>
+		      <div id="viewComments">
+    				<%-- 여기가 제품사용 후기 내용이 들어오는 곳이다. --%>
+			    </div> 
+			    <form name="commentFrm">
+			    	<div>
+			    		<textarea cols="85" class="customHeight" name="contents" id="commentContents"></textarea>
+			    	</div>
+			    	<div>
+			    		<button type="button" class="customHeight btnCommentOK">후기등록</button>
+			    	</div>
+			    	<input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}" />
+			    	<input type="hidden" name="fk_pnum" value="${requestScope.pvo.pnum}" />
+			    </form>
+			    </div>
 		    <div id="menu2" class="tab-pane fade"  >
 		    <br>
 		      <table style="margin-left: auto; margin-right: auto;">
