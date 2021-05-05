@@ -132,7 +132,7 @@ function goProdDetail(imgs) {
   <!-- The slideshow    -->
   <div class="carousel-inner">
     	<div class="carousel-item active clickable">
-	      <img class="clickable" src="<%=ctxPath%>/images/ad1.jpg" alt="ad1" width="100%" height="500" onclick="goProdDetail(this)">
+	      <img class="clickable" src="<%=ctxPath%>/images/ad1.jpg" alt="ad1" width="100%" height="500" onclick="location.href='<%=ctxPath%>/List.to'">
 	    </div>
 	    <div class="carousel-item clickable">
 	      <img class="clickable" src="<%=ctxPath%>/images/ad2.jpg" alt="ad2" width="100%" height="500" onclick="goProdDetail(this)">
@@ -255,7 +255,7 @@ function goProdDetail(imgs) {
 
 
 <!-- 신상품 이미지 Carousel -->
-<div id="demo" class="carousel slide" data-ride="carousel">
+<div id="demo" class="carousel slide" data-ride="carousel" style="margin-top: 100px">
 
   <!-- Indicators -->
   <ul class="carousel-indicators">

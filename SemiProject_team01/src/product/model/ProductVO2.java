@@ -1,7 +1,7 @@
 package product.model;
 
 
-public class ProductVO {
+public class ProductVO2 {
 
 	
 	private int pnum;         // 제품번호(Primary Key)
@@ -9,9 +9,7 @@ public class ProductVO {
 	private int fk_cnum;      // 카테고리코드(Foreign Key)의 시퀀스번호 참조
 	private String pcompany;  // 제조회사명
 	private String pimage1;   // 제품이미지1   이미지파일명
-	private String pimage2;   // 제품이미지2   이미지파일명
-	private int pqty;		  // 제품 수량
-	private int saleqty;	  // 제품 판매량
+	private String pimage2;   // 제품이미지2   이미지파일명 
 	private int price;        // 제품 정가
 	private int saleprice;    // 제품 판매가(할인해서 팔 것이므로)
 	private int fk_snum;      // 'NEW', 'BEST', 'SALE' 에 대한 스펙번호인 시퀀스번호를 참조
@@ -94,20 +92,7 @@ public class ProductVO {
 	public void setPcontent(String pcontent) {
 		this.pcontent = pcontent;
 	}
-	public int getPqty() {
-		return pqty;
-	}
-	public void setPqty(int pqty) {
-		this.pqty = pqty;
-	}
-	public int getSaleqty() {
-		return saleqty;
-	}
-	public void setSaleqty(int saleqty) {
-		this.saleqty = saleqty;
-	}
 	
 	
 	
 }
-

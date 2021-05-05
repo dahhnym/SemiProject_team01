@@ -40,7 +40,7 @@
 	 	padding: 5px 0px;
 	 
 	 }
-	 input#reset{
+	 input#reset, input#back{
 	 	display : inline-block; 
  		width: 110px;
 	 	heiht: 50px;
@@ -50,6 +50,7 @@
 	 	font-size: 15pt;
 		padding: 5px 0px;
 	 }
+	 
 	 
 
 </style>
@@ -305,7 +306,7 @@ function checkForDuplicates() {
 	<div class="contents" >
 		
 		<div style="text-align: center; margin-bottom: 100px">
-			<h2>제품 등록</h2>
+			<h2>상품 등록</h2>
 		</div>
 	
 		<form name="registerFrm">
@@ -396,22 +397,15 @@ function checkForDuplicates() {
 			    </tr>
 
 				<tr style="height: 70px;">
-				      <td colspan="2" align="center" style="border-left: hidden; border-bottom: hidden; border-right: hidden;">
+				      <td colspan="2" align="center"> <!-- style="border-left: hidden; border-bottom: hidden; border-right: hidden;" -->
 				          <input type="button" value="제품등록" id="btnRegister"  /> 
 				          &nbsp;
-				          <input type="reset" value="취소" id="reset" />   
+				          <input type="reset" value="취소" id="reset" />
+				          &nbsp;
+				          <input id="back" type="button" value="뒤로" onclick="location.href='<%=ctxPath%>/admin/productManagement.to'" />   
 				      </td>
 			   </tr>
-			
-			
 			</table>
-		
-		
-		
-	
-		
-		
-		
 		
 		
 		</form>

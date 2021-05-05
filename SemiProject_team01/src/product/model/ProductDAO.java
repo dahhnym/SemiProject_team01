@@ -542,5 +542,154 @@ public class ProductDAO implements InterProductDAO {
 			return wtrvListNo;
 		}
 
+		// 페이징처리를 위해서 전 제품에 대한 총페이지 개수 알아오기(select) 
+		@Override
+		public int selectProdTotalPage(Map<String, String> paraMap) throws SQLException {
+			int totalPage = 0;
+			
+			try {
+				conn = ds.getConnection();
+
+				String sql = " select ceil( count(*)/? ) "
+						   + " from tbl_product";
+				
+				// ======검색어가 있는경우 시작 =========== 
+				String colname = paraMap.get("searchType");
+				String searchWord = paraMap.get("searchWord");
+
+				
+				if( searchWord != null && !searchWord.trim().isEmpty()) {
+				// 검색어를 아예 안 쓰거나 공백(space)만 입력한 것이 아닌 검색어를 입력한 경우
+					sql += " and "+colname+" like '%'||?||'%' ";
+					// 위치홀더는 데이터값에만 사용됨. 테이블명이나 컬럼명에는 위치홀더를 사용할 수 없다.
+				}
+				// ======검색어가 있는경우 끝 ===========
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, paraMap.get("sizePerPage"));
+
+				if( searchWord != null && !searchWord.trim().isEmpty()) {
+					// 검색어를 아예 안 쓰거나 공백(space)만 입력한 것이 아닌 검색어를 입력한 경우
+					pstmt.setString(2, searchWord);
+				}
+				
+				rs = pstmt.executeQuery();
+				
+				rs.next();
+				
+				totalPage = rs.getInt(1);	// 첫번째 컬럼값을 totalPage에 넣어준다
+											// 회원 5명씩 보여준다면 페이지수는 ceil( count(*)/5 ) ==> 42
+				
+			} finally {
+				close();
+			}
+			
+			
+			return totalPage;
+		}
+
+		// 제품 목록 출력하기 위해 제품 테이블에서 select 해오기
+		@Override
+		public List<ProductVO> getProductInfo(Map<String, String> paraMap) throws SQLException {
+			
+			List<ProductVO> prodList = new ArrayList<>();
+			
+			try {
+				conn = ds.getConnection();
+
+				String sql = "select pnum, cname, sname, pname, pcompany, price, saleprice, pqty, saleqty\n"+
+							 "from\n"+
+							 "(\n"+
+							 "select row_number() over(order by pnum asc) AS RNO \n"+
+							 "      , pnum, cname, sname, pname, pcompany, price, saleprice\n"+
+							 " from tbl_product P \n"+
+							 " JOIN tbl_spec S \n"+
+							 " ON P.fk_snum = S.snum\n"+
+							 " JOIN tbl_category C\n"+
+							 " ON P.fk_cnum=C.cnum\n"+
+							 ") V\n"+
+							 "JOIN\n"+
+							 "(\n"+
+							 "select fk_pnum, sum(pqty) as pqty, sum(saleqty) as saleqty\n"+
+							 "from tbl_proddetail\n"+
+							 "group by fk_pnum\n"+
+							 ") D\n"+
+							 "ON V.pnum = D.fk_pnum\n"+
+							 "where RNO between ? and ?\n"+
+							 "order by pnum desc";
+				
+				/*
+				// ======검색어가 있는경우 시작 =========== 
+				String colname = paraMap.get("searchType");
+				String searchWord = paraMap.get("searchWord");
+
+				
+				if( searchWord != null && !searchWord.trim().isEmpty()) {
+				// 검색어를 아예 안 쓰거나 공백(space)만 입력한 것이 아닌 검색어를 입력한 경우
+					sql += " and "+colname+" like '%'||?||'%' ";
+					// 위치홀더는 데이터값에만 사용됨. 테이블명이나 컬럼명에는 위치홀더를 사용할 수 없다.
+				}
+				// ======검색어가 있는경우 끝 ===========
+				
+				sql += "    order by registerday desc\n"+
+					   "    ) V\n"+
+					   ") T\n"+
+					   "where rno between ? and ?";
+				*/
+				
+				int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+				int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage"));
+				
+				pstmt = conn.prepareStatement(sql);
+
+				pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+				pstmt.setInt(2, (currentShowPageNo * sizePerPage));
+				/*
+				if( searchWord != null && !searchWord.trim().isEmpty()) {
+					// 검색어를 아예 안 쓰거나 공백(space)만 입력한 것이 아닌 검색어를 입력한 경우
+					pstmt.setString(1, searchWord);
+					pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+					pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+				} else {
+					pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+					pstmt.setInt(2, (currentShowPageNo * sizePerPage));
+				}
+				*/
+
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					
+					ProductVO pvo = new ProductVO();
+					pvo.setPnum(rs.getInt(1));
+					
+					CategoryVO categvo = new CategoryVO();
+					categvo.setCname(rs.getString(2));
+					pvo.setCategvo(categvo);
+					
+					SpecVO spvo = new SpecVO();
+					spvo.setSname(rs.getString(3));
+					pvo.setSpvo(spvo);
+					
+					pvo.setPname(rs.getString(4));
+					pvo.setPcompany(rs.getString(5));
+					pvo.setPrice(rs.getInt(6));
+					pvo.setSaleprice(rs.getInt(7));
+					pvo.setPqty(rs.getInt(8));
+					pvo.setSaleqty(rs.getInt(9));
+					
+					prodList.add(pvo);
+					
+				}//end of while(rs.next())------------------------------------------------
+				
+			} finally {
+				close();
+			}
+			
+			return prodList;
+		
+		
+		}
+
 }
 

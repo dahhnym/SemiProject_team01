@@ -49,4 +49,10 @@ public interface InterProductDAO {
 	// 작성한 리뷰 갯수 세오기
 	int wtrvListNo(String userid) throws SQLException;
 
+	// 페이징처리를 위해서 전 제품에 대한 총페이지 개수 알아오기(select) 
+	int selectProdTotalPage(Map<String, String> paraMap) throws SQLException;
+
+	// 제품 목록 출력하기 위해 제품 테이블에서 select 해오기
+	List<ProductVO> getProductInfo(Map<String, String> paraMap) throws SQLException;
+
 }
