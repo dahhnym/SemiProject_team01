@@ -42,7 +42,7 @@ margin:9px 3px;
 font-size: 12pt;
 }
 
-a.btn_option{
+button.btn_option{
 	display: inline-block;
 	border: solid 1px #CCD1D1;
 	cursor: pointer;
@@ -51,21 +51,11 @@ a.btn_option{
 	font-size: 10pt;
 	width: 107px;
 	text-align: center;
+	background-color: #fff;
 }
 
 
-a.btnLarge{
-	display: inline-block;
-	width: 160px;
-	height: 50px;
-	border-radius: 0px;
-	font-weight: bold;
-	cursor: pointer;
-	text-align: center;
-	padding: 10px 10px;
-	text-decoration: none;
-	opacity: 1;
-}
+
 
 
 a#allorder{
