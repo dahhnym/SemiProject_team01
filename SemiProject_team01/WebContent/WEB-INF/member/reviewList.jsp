@@ -101,26 +101,19 @@
         	<tr>
         		<th style="width:20%;">이미지</th>
         		<th>상품정보 및 옵션</th>
-        		<th style="width:15%;">후기작성</th>
+        		<th style="width:15%;">리뷰작성</th>
         	</tr>
         </thead>
         
         <tbody>
-        	<c:forEach var="prod" items="${requestScope.orderList}">
+       	 	<c:if test="${pdrvListNo eq 0}">
+				<tr><td colspan="3">현재 작성 가능한 리뷰가 없습니다.</td></tr>
+			</c:if>
+        	<c:forEach var="rv" items="${requestScope.reviewList}">
         	    <tr class="orderInfo">
-        			<td class="userid">${mvo.userid}</td>
-        			<td>${mvo.name}</td>
-        			<td>${mvo.email}</td>
-        			<td>
-        			   <c:choose>
-        			      <c:when test="${mvo.gender eq '1'}">
-        			      	남
-        			      </c:when>
-        			      <c:otherwise>
-        			               여
-        			      </c:otherwise>
-        			   </c:choose>
-        			</td>
+        			<td><img src="<%=ctxPath%>/images/${rv.pimage1}"/></td>
+        			<td>${rv.pname}<br>${rv.optionname}</td>
+        			<td><input type="button" value="리뷰쓰기"></td>
         	    </tr>
         	</c:forEach>
         </tbody>
@@ -134,38 +127,28 @@
 	
 	<!-- 탭2 메뉴 내용 시작 -->
 	<div id="tab-2" class="tab-content">
-	
-	<br>
-	<br>
-	<h4 class="left">주문 상품 정보</h4>
-	<br>
-	
-	<table id="prodInfo">
-		<thead align="center">
-			<tr id="prodInfo">
-				<th>주문일자<br>[주문번호]</th>
-				<th>이미지</th>
-				<th width="30%">상품정보</th>
-				<th>수량</th>
-				<th>상품구매금액</th>
-				<th>주문처리상태</th>
-				<th>교환/환불</th>
-			</tr>
-		</thead>
-		
-		<tbody align="center">
-			<tr id="prodInfo">
-				<td>2021-04-17<br><a href="">[주문번호링크]</a></td>
-				<td><a href="">이미지 연결</a></td>
-				<td align="left"><a href="">[상품정보]링크걸기</a><br>[옵션:컬러]</td>
-				<td>1</td>
-				<td>30,000원</td>
-				<td>진행중</td>
-				<td>교환</td>
-			</tr>
-		</tbody>
-	</table>
-  
+	    <table id="reviewTbl" class="table table-bordered" style="width: 100%; margin-top: 20px;">
+        <thead>
+        <tr><th colspan="4" style="border:none;">${pdrvListNo}개의 리뷰를 작성하였습니다</th></tr>	
+        	<tr>
+        		<th style="width:20%;">이미지</th>
+        		<th>상품정보 및 옵션</th>
+        		<th>별점</th>
+        		<th style="width:15%;">리뷰 작성날짜</th>
+        	</tr>
+        </thead>
+        
+        <tbody>		
+						
+        	<c:forEach var="pdrv" items="${requestScope.pdrvList}">        	
+        	    <tr class="orderInfo">
+        			<td><img src="<%=ctxPath%>/images/${pdrv.pimage1}"/></td>
+        			<td>${pdrv.pname}</td>
+        			<td><input type="button" value="후기쓰기"></td>
+        	    </tr>
+        	</c:forEach>
+        </tbody>
+    </table>    
   	</div> <!-- 탭2 메뉴 내용 끝 -->
 	
 <!-- 탭 메뉴 내용 끝 -->

@@ -1,5 +1,7 @@
 package product.model;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +12,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import member.model.MemberVO;
 
 
 
@@ -268,6 +272,64 @@ public class ProductDAO implements InterProductDAO {
 		      
 		      return prodList;
 		}
+		
+		
+		// *** 페이징 처리를 한 모든  또는 검색한 회원 목록 보여주기 *** //
+		@Override
+		public List<ProductVO> selectPagingReview(Map<String, String> paraMap) throws SQLException {
+			
+			List<ProductVO> ReviewList = new ArrayList<>();
+			
+			try {
+				 conn = ds.getConnection();
+				 
+				 String sql = "select rno, pname, pimage1, optionname\n" + 
+				 		"from \n" + 
+				 		"(\n" + 
+				 		"    select rownum AS rno, pimage1, pname, optionname\n" + 
+				 		"    from \n" + 
+				 		"    (\n" + 
+				 		"        select pimage1, pname, optionname \n" + 
+				 		"        from tbl_product A join tbl_proddetail B\n" + 
+				 		"        on A.pnum=B.fk_pnum\n" + 
+				 		"        where pnum = (select fk_pnum\n" + 
+				 		"        from tbl_odrdetail\n" + 
+				 		"        where fk_userid = ? and odrdetailno != (select fk_odrdetailno from tbl_review where fk_userid = ?))\n" + 
+				 		"    )C\n" + 
+				 		")\n" + 
+				 		" where fk_userid = 'user' and odrdetailno != (select fk_odrdetailno from tbl_review where fk_userid = 'user'))\n" ; 
+				 	//	"where rno between ? and ?";
+				 
+				 
+				 int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+				 int sizePerPage = 	Integer.parseInt(paraMap.get("sizePerPage"));	 
+				 
+				 pstmt = conn.prepareStatement(sql);
+				 
+				 pstmt.setString(1, paraMap.get("userid") );
+				 pstmt.setString(2, paraMap.get("userid") );
+				
+		//		 pstmt.setInt(3, (currentShowPageNo * sizePerPage) - (sizePerPage - 1) ); // 공식
+		//		 pstmt.setInt(4, (currentShowPageNo * sizePerPage) ); // 공식 	 
+				 			 
+				 rs = pstmt.executeQuery();
+				 
+				 while(rs.next()) {
+					 
+					 ProductVO pvo = new ProductVO();
+					 pvo.setPname(rs.getString(1));
+					 pvo.setPname(rs.getString(2));
+					 pvo.setPname(rs.getString(3));
+					 
+					 ReviewList.add(pvo);
+				 }// end of while(rs.next())---------------------------------------
+				
+			} finally {
+				close();
+			}
+			
+			return ReviewList;
+		}
   
   // 페이징처리를 위해서 주문상세 내역에 대한 총 페이지 개수 알아오기(select)
 	@Override
@@ -280,28 +342,205 @@ public class ProductDAO implements InterProductDAO {
 			 
 			 String sql ="select odrdetailno " + 
 			 			"from tbl_odrdetail " + 
-			 			"where fk_userid = '?' and odrdetailno != (select fk_odrdetailno from tbl_review where fk_userid = '?')";
+			 			"where fk_userid = ? and odrdetailno != (select fk_odrdetailno from tbl_review where fk_userid = ?)";
 			 
 			 			
 			 pstmt = conn.prepareStatement(sql);
-			 pstmt.setString(1, paraMap.get("loginuser") );
-			 pstmt.setString(2, paraMap.get("loginuser") );
+			 pstmt.setString(1, paraMap.get("userid") );
+			 pstmt.setString(2, paraMap.get("userid") );
 			 
 			 rs = pstmt.executeQuery();
 			 
 			 rs.next();
 			 
 			 totalPage = rs.getInt(1);
-		
+		} catch (SQLException e){
+			System.out.println("뭐임");
 		} finally {
 			close();
 		}
 		
 		return totalPage;
 	}
-  
-  
-  
+
+
+	// 보류중인 리뷰 보여주기
+	@Override
+	public List<ProductVO> pendingReview(String userid) throws SQLException {
+		
+		List<ProductVO> pdrvList = new ArrayList<>();
+		
+		try {
+			 conn = ds.getConnection();
+			 
+			 String sql = "select rno, pname, pimage1, optionname\n" + 
+			 		"from " + 
+			 		"(" + 
+			 		"    select rownum AS rno, pimage1, pname, optionname\n" + 
+			 		"    from \n" + 
+			 		"    (\n" + 
+			 		"        select pimage1, pname, optionname \n" + 
+			 		"        from tbl_product A join tbl_proddetail B\n" + 
+			 		"        on A.pnum=B.fk_pnum\n" + 
+			 		"        where pnum = (select fk_pnum\n" + 
+			 		"        from tbl_odrdetail\n" + 
+			 		"        where fk_userid = ? and odrdetailno != (select fk_odrdetailno from tbl_review where fk_userid = ?))\n" + 
+			 		"    )C\n" + 
+			 		")\n";
+			 pstmt = conn.prepareStatement(sql);
+			 
+			 pstmt.setString(1,userid);
+			 pstmt.setString(2,userid);
+			
+			 rs = pstmt.executeQuery();
+			 
+			 
+			 
+			 while(rs.next()) {
+				 
+				 ProductVO pvo = new ProductVO();
+				 pvo.setPname(rs.getString(1));
+				 pvo.setPimage1(rs.getString(2));
+				 
+				 pdrvList.add(pvo);
+			 }// end of while(rs.next())---------------------------------------
+
+			 
+		} finally {
+			close();
+		}
+		
+		return pdrvList;
+	}
+
+
+	// 보류중인 리뷰 갯수 세오기
+	@Override
+	public int pdrvListNo(String userid) throws SQLException {
+		int pdrvListNo = 0;
+		try {
+			 conn = ds.getConnection();
+			 
+			 String sql="select count(*)\n" + 
+			 		"from(\n" + 
+			 		"select rno, pname, pimage1, optionname\n" + 
+			 		"from \n" + 
+			 		"(\n" + 
+			 		"    select rownum AS rno, pimage1, pname, optionname\n" + 
+			 		"    from \n" + 
+			 		"    (\n" + 
+			 		"        select pimage1, pname, optionname \n" + 
+			 		"        from tbl_product A join tbl_proddetail B\n" + 
+			 		"        on A.pnum=B.fk_pnum\n" + 
+			 		"        where pnum = (select fk_pnum\n" + 
+			 		"        from tbl_odrdetail\n" + 
+			 		"        where fk_userid = ? and odrdetailno != (select fk_odrdetailno from tbl_review where fk_userid = ? ))\n" + 
+			 		"    )C\n" + 
+			 		")\n" + 
+			 		")";
+			 pstmt = conn.prepareStatement(sql);
+
+			 pstmt.setString(1,userid);
+			 pstmt.setString(2,userid);
+			 
+			 rs = pstmt.executeQuery();
+			 rs.next();
+			 pdrvListNo=rs.getInt(1);
+			 
+		} finally {
+			close();
+		}
+		return pdrvListNo;
+	}
+
+	// 작성한 리뷰 보여주기
+		@Override
+		public List<ProductVO> writtenReview(String userid) throws SQLException {
+			
+			List<ProductVO> wtrvList = new ArrayList<>();
+			
+			try {
+				 conn = ds.getConnection();
+				 
+				 String sql = "select rno, pname, pimage1, optionname\n" + 
+				 		"from " + 
+				 		"(" + 
+				 		"    select rownum AS rno, pimage1, pname, optionname\n" + 
+				 		"    from \n" + 
+				 		"    (\n" + 
+				 		"        select pimage1, pname, optionname \n" + 
+				 		"        from tbl_product A join tbl_proddetail B\n" + 
+				 		"        on A.pnum=B.fk_pnum\n" + 
+				 		"        where pnum = (select fk_pnum\n" + 
+				 		"        from tbl_odrdetail\n" + 
+				 		"        where fk_userid = ? and odrdetailno = (select fk_odrdetailno from tbl_review where fk_userid = ?))\n" + 
+				 		"    )C\n" + 
+				 		")\n";
+				 pstmt = conn.prepareStatement(sql);
+				 
+				 pstmt.setString(1,userid);
+				 pstmt.setString(2,userid);
+				
+				 rs = pstmt.executeQuery();
+				 
+				 
+				 
+				 while(rs.next()) {
+					 
+					 ProductVO pvo = new ProductVO();
+					 pvo.setPname(rs.getString(1));
+					 pvo.setPimage1(rs.getString(2));
+					 
+					 wtrvList.add(pvo);
+				 }// end of while(rs.next())---------------------------------------
+
+				 
+			} finally {
+				close();
+			}
+			
+			return wtrvList;
+		}
+
+
+		// 작성한 리뷰 갯수 세오기
+		@Override
+		public int wtrvListNo(String userid) throws SQLException {
+			int wtrvListNo = 0;
+			try {
+				 conn = ds.getConnection();
+				 
+				 String sql="select count(*)\n" + 
+				 		"from(\n" + 
+				 		"select rno, pname, pimage1, optionname\n" + 
+				 		"from \n" + 
+				 		"(\n" + 
+				 		"    select rownum AS rno, pimage1, pname, optionname\n" + 
+				 		"    from \n" + 
+				 		"    (\n" + 
+				 		"        select pimage1, pname, optionname \n" + 
+				 		"        from tbl_product A join tbl_proddetail B\n" + 
+				 		"        on A.pnum=B.fk_pnum\n" + 
+				 		"        where pnum = (select fk_pnum\n" + 
+				 		"        from tbl_odrdetail\n" + 
+				 		"        where fk_userid = ? and odrdetailno = (select fk_odrdetailno from tbl_review where fk_userid = ? ))\n" + 
+				 		"    )C\n" + 
+				 		")\n" + 
+				 		")";
+				 pstmt = conn.prepareStatement(sql);
+
+				 pstmt.setString(1,userid);
+				 pstmt.setString(2,userid);
+				 
+				 rs = pstmt.executeQuery();
+				 rs.next();
+				 wtrvListNo=rs.getInt(1);
+				 
+			} finally {
+				close();
+			}
+			return wtrvListNo;
+		}
 
 }
 

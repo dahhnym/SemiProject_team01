@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import member.model.MemberVO;
+
 public interface InterProductDAO {
 
 
@@ -29,8 +31,22 @@ public interface InterProductDAO {
 	// 신상품 select 해오기
 	List<ProductVO> selectNEWonly(Map<String, String> paraMap) throws SQLException;
 
-  // 페이징처리를 위해서 주문상세 내역에 대한 총 페이지 개수 알아오기(select)
+	// 페이징처리를 위해서 주문상세 내역에 대한 총 페이지 개수 알아오기(select) -실패
 	int selectTotalPage(Map<String, String> paraMap) throws SQLException;
+
+	// 페이징 처리를 한 채로 리뷰작성할 수 있는 주문 내역 보여주기 -실패
+	List<ProductVO> selectPagingReview(Map<String, String> paraMap) throws SQLException;
+
+	// 보류중인 리뷰 보여주기
+	List<ProductVO> pendingReview(String userid) throws SQLException;
+
+	// 보류중인 리뷰 갯수 세오기
+	int pdrvListNo(String userid) throws SQLException;
+
+	// 작성한 리뷰 보여주기
+	List<ProductVO> writtenReview(String userid) throws SQLException;
   
-  
+	// 작성한 리뷰 갯수 세오기
+	int wtrvListNo(String userid) throws SQLException;
+
 }
