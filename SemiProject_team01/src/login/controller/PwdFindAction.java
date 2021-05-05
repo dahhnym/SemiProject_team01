@@ -24,7 +24,7 @@ public class PwdFindAction extends AbstractController {
 			paraMap.put("email", email);
 			
 			InterMemberDAO mdao = new MemberDAO();
-			int n = mdao.findPwd(paraMap);
+			int n = mdao.checkAccount(paraMap);
 			
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("n", n);

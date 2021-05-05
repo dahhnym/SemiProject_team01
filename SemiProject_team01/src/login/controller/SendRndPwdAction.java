@@ -3,7 +3,6 @@ package login.controller;
 import java.util.*;
 import javax.servlet.http.*;
 import common.controller.AbstractController;
-import login.controller.GoogleMail;
 
 public class SendRndPwdAction extends AbstractController {
 
@@ -12,10 +11,11 @@ public class SendRndPwdAction extends AbstractController {
 		String method = request.getMethod();
 		
 		if("POST".equalsIgnoreCase(method)) {
+			String userid = request.getParameter("userid");
 			String email = request.getParameter("email");
 			
 			///////////////////////////////////////////////////////////////
-			// 랜덤 인증번호(영문자, 숫자 10자리) 생성
+			// 랜덤 임시비밀번호 (영문자, 숫자 10자리) 생성
 			Random rnd = new Random();
 			String rndPwd = "";	
 			
@@ -36,7 +36,7 @@ public class SendRndPwdAction extends AbstractController {
 			GoogleMail mail = new GoogleMail();
 			
 			try {
-				mail.sendmail(email, rndPwd);
+				mail.sendmail(email, rndPwd, userid);
 			
 				HttpSession session = request.getSession();
 				session.setAttribute("rndPwd", rndPwd);
@@ -48,8 +48,9 @@ public class SendRndPwdAction extends AbstractController {
 			}
 			
 			if(sendMailSuccess) {
+				System.out.println("보냄");
 			//	super.setRedirect(false);
-				super.setViewPage("/WEB-INF/login/pwdFind.jsp");				
+			//	super.setViewPage("/WEB-INF/login/rndChangePwd.jsp");				
 			} 			
 		}// end of if("POST".equalsIgnoreCase(method)) ------------------------------------		
 	

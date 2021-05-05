@@ -24,8 +24,8 @@ public interface InterMemberDAO {
 	// 아이디 찾기
 	String findUserid(String name, String email) throws SQLException;
 
-	// 비밀번호 찾기
-	int findPwd(Map<String, String> paraMap) throws SQLException;
+	// 비밀번호 찾기  ==> 회원계정이 있는지 확인
+	int checkAccount(Map<String, String> paraMap) throws SQLException;
 
 
 

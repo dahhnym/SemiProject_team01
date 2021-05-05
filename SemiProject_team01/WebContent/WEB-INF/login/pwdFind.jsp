@@ -32,7 +32,6 @@
 		$("button#pwdFind").click(function(){
 			goConfirm();
 			
-			console.log(bool);
 			if(bool) {	
 				findPwdCheck();
 			}	
@@ -127,13 +126,13 @@
 	}// end of function goConfirm() ----------------------------------------------------------
 
 	
+	var name = $("input#registerName").val().trim();
+	var userid = $("input#registerUserid").val().trim();
+	var email = $("input#registerEmailID").val().trim()+"@"+$("input#emailAddress").val().trim();
+	
+	
 	// 일치하는 회원계정 존재여부 확인함수	
-	function findPwdCheck() {
-		console.log("하하");
-		var name = $("input#registerName").val().trim();
-		var userid = $("input#registerUserid").val().trim();
-		var email = $("input#registerEmailID").val().trim()+"@"+$("input#emailAddress").val().trim();
-		
+	function findPwdCheck() {			
 		$.ajax({
 			url:"<%= ctxPath%>/login/pwdFind.to",
 			type: "post",
@@ -141,14 +140,9 @@
 			dataType:"json",	
 			success:function(json){
 				if(json.n==1) {		// 회원계정이 존재한다면
+					// sendRndPwd();
 					$("div#findPwd").show();
- 					$("div#findPwd").html("이메일로 임시 비밀번호를 발송했습니다.").css("color","green");
- 					
-					var frm = document.pwdFindFrm;
-					frm.action="sendRndPwd.to";
-					frm.method="POST";
-					frm.submit();	
- 					
+ 					$("div#findPwd").html("발송했습니다.").css("color","green");
  				} else { 	// 회원계정이 존재하지 않는다면
  					$("div#findPwd").show();
  					$("div#findPwd").html("일치하는 회원정보가 없습니다.").css("color","red");
@@ -157,8 +151,37 @@
 				error: function(request, status, error){
                 alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
         	}    				
-		}); // end of $.ajax ----------------------------------------------
-	}
+		}); 
+	}// end of function findPwdCheck()  ----------------------------------------------
+	
+	
+	// 임시비밀번호 메일 전송하기	
+	function sendRndPwd() {		
+		$.ajax({
+			url:"<%= ctxPath%>/login/sendRndPwd.to",
+			type: "post",
+			data:{"email":email, "userid":userid},
+			dataType:"json",	
+			success:function(json){
+				if(json) {		// 이메일 전송에 성공했다면
+					$("div#findPwd").show();
+					$("div#findPwd").html("이메일로 임시 비밀번호를 발송했습니다.").css("color","green");
+ 					/*
+						var frm = document.pwdFindFrm;
+						frm.action="sendRndPwd.to";
+						frm.method="POST";
+						frm.submit();	
+ 					*/
+ 				} else { 	// 이메일 전송에 실패했다면
+ 					$("div#findPwd").show();
+ 					$("div#findPwd").html("임시 비밀번호를 발송 실패했습니다.").css("color","red");
+ 				} 
+			},
+				error: function(request, status, error){
+                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        	}    				
+		}); 
+	}// end of function findPwdCheck()  ----------------------------------------------
 </script> 
 
 

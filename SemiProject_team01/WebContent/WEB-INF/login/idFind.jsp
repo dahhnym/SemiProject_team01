@@ -5,7 +5,7 @@
 <jsp:include page="../header.jsp" />
 <link rel="stylesheet" href="../css/login.css"/>
 
-<script type="text/javascript">		//*엔터키 정정사항
+<script type="text/javascript">		// *엔터키 정정사항
 	var bool = false;
 
 	$(function(){

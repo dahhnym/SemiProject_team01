@@ -254,9 +254,9 @@ public class MemberDAO implements InterMemberDAO {
 	}
 
 	
-	// 비밀번호 찾기
+	// 비밀번호 찾기  ==> 회원계정이 있는지 확인
 	@Override
-	public int findPwd(Map<String, String> paraMap) throws SQLException {
+	public int checkAccount(Map<String, String> paraMap) throws SQLException {
 		int n = 0;
 		
 		try {
