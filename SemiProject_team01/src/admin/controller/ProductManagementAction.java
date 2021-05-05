@@ -5,13 +5,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
 
-public class HomeAction extends AbstractController {
- 
+public class ProductManagementAction extends AbstractController {
+
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		//super.setRedirect(false);
-		super.setViewPage("/WEB-INF/admin/adminHome.jsp");
+		super.setViewPage("/WEB-INF/admin/productManagement.jsp");
+		
 		
 	}
 
