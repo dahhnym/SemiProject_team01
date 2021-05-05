@@ -1,6 +1,7 @@
 package member.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,9 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
+import member.model.MemberVO;
 import my.util.MyUtil;
 import product.model.InterProductDAO;
 import product.model.ProductDAO;
+import product.model.ProductVO;
 
 public class ReviewListAction extends AbstractController {
 
@@ -18,11 +21,20 @@ public class ReviewListAction extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession();
 		
-		String loginuser =  (String) session.getAttribute("loginuser");
+		String userid = request.getParameter("userid");
 		
-		if( loginuser != null ) {
+		InterProductDAO pdao = new ProductDAO();
+		List<ProductVO> pdrvList = pdao.pendingReview(userid);
+		int pdrvListNo = pdao.pdrvListNo(userid);
+		request.setAttribute("pdrvList", pdrvList);
+		request.setAttribute("pdrvListNo", pdrvListNo);
+		
+		
+		List<ProductVO> wtrvList = pdao.writtenReview(userid);
+		request.setAttribute("wtrvList", wtrvList);
+	/*	if( loginuser != null ) {*/
 			// 회원 로그인 했을 경우
-			
+		/*	
 			InterProductDAO pdao = new ProductDAO();
 			
 			String currentShowPageNo = request.getParameter("currentShowPageNo");
@@ -32,7 +44,7 @@ public class ReviewListAction extends AbstractController {
 			// 한 페이지당 화면상에 보여줄 회원의 개수 : 5개로 고정!
 			
 			Map<String, String> paraMap = new HashMap<>();
-			paraMap.put("loginuser",loginuser);
+			paraMap.put("userid",userid);
 			paraMap.put("currentShowPageNo", currentShowPageNo);
 			// 현재 보려고 클릭한 페이지 번호
 			
@@ -51,7 +63,10 @@ public class ReviewListAction extends AbstractController {
 			// 토탈페이지수 보다 큰 값을 입력하여 장난친 경우를 1페이지로 가게끔 막아주는 것 끝.
             ///////////////////////////////////////////////////////////////
 			
+			List<ProductVO> reviewList = pdao.selectPagingReview(paraMap);
 			
+			request.setAttribute("reviewList", reviewList);
+			request.setAttribute("sizePerPage", sizePerPage);
 			
 			// **** ========= 페이지바 만들기 ========= **** //
 			
@@ -77,6 +92,10 @@ public class ReviewListAction extends AbstractController {
 				pageBar += "&nbsp;<a href='memberList.up?currentShowPageNo=1'>[맨처음]</a>&nbsp;";       
 				pageBar += "&nbsp;<a href='memberList.up?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"'>[이전]</a>&nbsp;";
 			}
+			if(pageNo==0) {
+				pageBar="아무것도 없음";
+			}
+				
 			
 			while( !(loop > blockSize || pageNo > totalPage) ) {
 				
@@ -108,7 +127,10 @@ public class ReviewListAction extends AbstractController {
 			}
 			 
 			request.setAttribute("pageBar", pageBar);
-			
+			*/
+		
+		
+		
 			////////////////////////////////////////////////////////////
 			// *** 현재 페이지를 돌아갈 페이지(goBackURL)로 주소 지정하기 *** //
 			String currentURL = MyUtil.getCurrentURL(request);
@@ -125,7 +147,7 @@ public class ReviewListAction extends AbstractController {
 			
 		//	super.setRedirect(false);
 			super.setViewPage("/WEB-INF/member/reviewList.jsp");
-		}
+	/*	}
 		else {
 			// 로그인을 안한 경우  
 			String message = "로그인을 먼저 해주세요.";
@@ -136,7 +158,7 @@ public class ReviewListAction extends AbstractController {
 			
 		//	super.setRedirect(false);
 			super.setViewPage("/WEB-INF/msg.jsp");
-		}
+		}*/
 
 	
 
