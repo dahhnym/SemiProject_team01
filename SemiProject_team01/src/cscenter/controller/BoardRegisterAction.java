@@ -42,7 +42,7 @@ public class BoardRegisterAction extends AbstractController {
 				
 				if(n == 1) {
 					 String message = "글 등록 완료"; 
-	        		 String loc = "javascript:history.back()";
+	        		 String loc = request.getContextPath() + "/cscenter/csBoardView.to";
 	        		 
 	        		 request.setAttribute("message", message); request.setAttribute("loc", loc);
 					 

@@ -38,5 +38,5 @@ public class FaqCategoryVO {
 
 	public void setFccode(String fccode) {
 		this.fccode = fccode;
-	}
+	} 
 }

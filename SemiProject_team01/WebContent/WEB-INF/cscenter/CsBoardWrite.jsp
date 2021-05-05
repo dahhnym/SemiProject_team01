@@ -57,6 +57,9 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 	});
 	
 	function goRegister() {
+		
+		$("input#fk_userid").val("${sessionScope.loginuser.userid}");
+		
 		var frm = document.boardForm;
         frm.action = "<%= request.getContextPath()%>/cscenter/boardRegister.to";      // submit 한 경우이니까... 경로이동시 action을 사용한다.
         frm.method = "post";
@@ -85,7 +88,7 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 				</div>
 				<div class="mb-3">
 					<label for="reg_id">작성자</label>&nbsp;&nbsp;
-					<input type="text" class="form-control" name="fk_userid" id="fk_userid" placeholder="세션아이디">
+					<input type="text" class="form-control" name="fk_userid" id="fk_userid" value = "${sessionScope.loginuser.name}" readonly>
 					<label for="reg_id">&nbsp;&nbsp;&nbsp;비밀번호( 숫자 6자 )</label>&nbsp;&nbsp;
 					<input type="password" class="form-control" name="boardpwd" id="boardpwd">&nbsp;&nbsp;
 					<span style="color:red;"class="error">비밀번호를 입력하세요</span>

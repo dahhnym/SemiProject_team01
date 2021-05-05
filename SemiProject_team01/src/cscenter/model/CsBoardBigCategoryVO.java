@@ -1,6 +1,6 @@
 package cscenter.model;
 
-public class CsBoardBigCatetoryVO {
+public class CsBoardBigCategoryVO {
 	//대분류 카테고리
 	
 	private int bigcateno;
