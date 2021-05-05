@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>    
 <% String ctxPath=request.getContextPath(); %>
 
 <jsp:include page="../header.jsp"/>
@@ -21,7 +22,7 @@
 	float: right;
 }
 
-#productTbl{
+#memberTbl{
 	margin-top: 65px;
 }
 
@@ -32,15 +33,6 @@
 	text-align: center;
 	font-size: 10pt;
 }
-
-th.first{width: 80px;}
-th.second{width: 105px;}
-th.third{ width:100px;}
-th.fourth{width:570px;}
-th.fifth{width:93px;}
-th.sixth{width:93px;}
-th.seventh{width:70px;}
-th.eighth{width:70px;}
 
 
 #pageBar{
@@ -58,8 +50,7 @@ th.eighth{width:70px;}
 }
 
 input#back{
-	margin-top: 20px;
-	display: block;
+ 	display : inline-block; 
 	width: 110px;
  	heiht: 50px;
  	background-color: #fff;
@@ -71,10 +62,16 @@ input#back{
  }
 
 
+
 </style>
 <script type="text/javascript">
 
 	$(document).ready(function(){
+		
+		if("${fn:trim(requestScope.searchWord)}" != ""){
+			$("select#searchType").val("${requestScope.searchType}");
+			$("input#searchWord").val("${requestScope.searchWord}");
+		}
 		
 		$("select#sizePerPage").bind("change", function(){
 			goSearch();
@@ -84,13 +81,19 @@ input#back{
 			$("select#sizePerPage").val("${requestScope.sizePerPage}");
 		}
 		
+		// 검색어에 엔터를 치면 검색이 되어지게 하기
+		$("input#searchWord").keyup(function(event){
+			if(event.keyCode == 13){
+				goSearch();
+			}
+		});
 		
-	});
+	}); // end of $(document).ready(function() ------------------
 
 	// Function declaration
 	function goSearch() {
-		var frm = document.productFrm;
-		frm.action = "productList.to";
+		var frm = document.memberFrm;
+		frm.action = "memberList.to";
 		frm.method = "GET";
 		frm.submit();
 	}
@@ -104,15 +107,14 @@ input#back{
 
 
 <div id="content-container">
-<h4 style="margin-top: 50px; margin-bottom: 20px;">::: 상품 목록 :::</h4>
+<h4 style="margin-top: 50px; margin-bottom: 20px;">::: 회원 목록 :::</h4>
 
-<!-- 높은가격순, 낮은가격순, 판매량순 등 카테고리 추가예정 -->
  <div id="frm-container">
-	<form name="productFrm">
+	<form name="memberFrm">
 		<select id="searchType" name="searchType">
-			<option value="pname">제품명</option>
-			<option value="pcompany">제조사</option>
-			<option value="cname">카테고리</option>
+			<option value="name">회원명</option>
+			<option value="userid">아이디</option>
+			<option value="email">이메일</option>
 		</select>
 		<input type="text" id="searchWord" name="searchWord" />
 		
@@ -133,31 +135,39 @@ input#back{
     </form>
 </div>
 
-    <table id="productTbl" class="table table-bordered">
+    <table id="memberTbl" class="table table-bordered">
         <thead id="thead">
         	<tr>
-        		<th class="first">제품번호</th>
-        		<th class="second">카테고리</th>
-        		<th class="third">제품스펙</th>
-        		<th class="fourth">제품명</th>
-        		<th class="fifth">정가</th>
-        		<th class="sixth">판매가</th>
-        		<th class="seventh">수량</th>
-        		<th class="eighth">판매량</th>
+        		<th class="first">아이디</th>
+        		<th class="second">회원명</th>
+        		<th class="third">연락처</th>
+        		<th class="fourth">회원등급</th>
+        		<th class="fifth">휴면상태</th>
+        		<th class="sixth">탈퇴유무</th>
         	</tr>
         </thead>
         
         <tbody>
-        	<c:forEach var="pvo" items="${requestScope.productList}">
-        	    <tr class="prodInfo">
-        			<td>${pvo.pnum}</td>
-        			<td>${pvo.categvo.cname}</td>
-        			<td>${pvo.spvo.sname}</td>
-        			<td>${pvo.pname}</td>
-        			<td>${pvo.price}</td>
-        			<td>${pvo.saleprice}</td>
-        			<td><span class="stock">${pvo.pqty}</span><!-- (입고량 - 판매량) 계산해서 넣을것 --></td>
-        			<td>${pvo.saleqty}</td>
+        	<c:forEach var="mvo" items="${requestScope.memberList}">
+        	    <tr class="memberInfo">
+        			<td>${mvo.userid}</td>
+        			<td>${mvo.name}</td>
+        			<td>${mvo.mobile}</td>
+        			<td>
+						<c:choose>
+							<c:when test="${mvo.level eq '1'}">실버</c:when>
+							<c:when test="${mvo.level eq '2'}">골드</c:when>
+							<c:otherwise>플래티넘</c:otherwise>
+						</c:choose>        			
+        			</td>
+        			<td>
+        				<c:if test="${mvo.idle eq '0'}"><span style="color: green;">활동중</span></c:if>
+        				<c:if test="${mvo.idle eq '1'}"><span style="color: red;">휴면중</span></c:if>
+        			</td>
+        			<td>
+        				<c:if test="${mvo.status eq '1'}"><span style="color: green;">가입중</span></c:if>
+        				<c:if test="${mvo.status eq '0'}"><span style="color: gray;">탈퇴</span></c:if>
+        			</td>
         	    </tr>
         	</c:forEach>
         </tbody>
@@ -167,11 +177,11 @@ input#back{
     	${requestScope.pageBar}
     </div>
     
-    
-	<input id="back" type="button" value="뒤로" onclick="location.href='<%=ctxPath%>/admin/home.to'" />
-	
-    
+	<input id="back" type="button" value="뒤로" onclick="location.href='<%=ctxPath%>/admin/home.to'" />   
+
+
 </div>
+
 
 
 

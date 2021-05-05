@@ -53,7 +53,7 @@ td.menu-head:hover a.menuname{
 }
 
 span{
-	padding-left: 15px;
+	padding-left: 20px;
 }
 
 
@@ -64,8 +64,8 @@ span{
 		<tbody>
 			<tr>
 				<td class="thead-padding menu-head">
-				<a href="#"><img class="menuIcon " src="<%=ctxPath%>/images/usermanagement.png"/></a>
-				<span><a class="menuname" href="#">사용자관리</a></span>
+				<a href="<%=ctxPath%>/admin/memberList.to"><img class="menuIcon " src="<%=ctxPath%>/images/usermanagement.png"/></a>
+				<span><a class="menuname" href="<%=ctxPath%>/admin/memberList.to">회원관리</a></span>
 				</td>
 				<td class="thead-padding menu-head">
 				<a href="<%=ctxPath%>/admin/productManagement.to"><img class="menuIcon" src="<%=ctxPath%>/images/productmanagement.png"/></a>
