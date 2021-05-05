@@ -45,6 +45,45 @@
    margin: 0px 100px 0px 100px;
  }
 
+
+/***** Multi item Carousel CSS *****/
+
+div.slide-container{
+	border: solid 1px gray;
+	background-color: #ccc;
+}
+
+.carousel-control-next, .carousel-control-prev { border: 0; }
+
+div.slideImg > img {
+	height: 200px;
+	
+}
+
+
+div#prodInfo > ul {
+	list-style-type: none;
+	padding-left: 0;
+	/* border: solid 1px blue; */
+}
+
+div#prodInfo > ul > li{
+	/* border: solid 1px red; */
+	height: 25px;
+}
+
+.prodInfoList{
+	padding-right: 5px;
+	margin-bottom: 0;
+}
+
+carousel-control-prev, carousel-control-next{
+	border: solid 1px gray;
+}
+
+
+
+
 /* 신상품 제품 목록 스크롤 페이징 처리 */
 div.moreProdInfo {
    display: inline-block; 

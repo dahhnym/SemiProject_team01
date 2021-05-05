@@ -17,8 +17,8 @@ public class CsHomeAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.getFaqCategoryList(request);
 		
+		super.getFaqCategoryList(request);
 		
 		String currentShowPageNo = request.getParameter("currentShowPageNo");
 		// currentShowPageNo 은 사용자가 보고자하는 페이지바의 페이지번호 이다.
@@ -41,12 +41,13 @@ public class CsHomeAction extends AbstractController {
 		}
 		
 		InterFaqboardDAO fadao = new FaqboardDAO();
+		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("currentShowPageNo", currentShowPageNo);
 		paraMap.put("sizePerPage", sizePerPage);
 		
 		int totalPage = fadao.selectTotalPage(paraMap);
-		System.out.println("totalPage" + totalPage);
+		
 		if( Integer.parseInt(currentShowPageNo)   > totalPage ) {
 			currentShowPageNo = "1";
 			paraMap.put("currentShowPageNo", currentShowPageNo);
@@ -56,7 +57,7 @@ public class CsHomeAction extends AbstractController {
 		 
 		List<FaqboardVO> faqList = fadao.selectPagingFaq(paraMap);
 		
-		request.setAttribute("faqList", faqList);
+		request.setAttribute("faqList", faqList); //리스트 뷰단으로 넘겨줌
 		request.setAttribute("sizePerPage", sizePerPage);
 		
 		String pageBar = "";

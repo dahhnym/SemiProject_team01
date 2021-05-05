@@ -88,7 +88,7 @@
 	    <c:forEach var="fvo" items="${requestScope.faqList}" varStatus="status" >
 	     <tr data-toggle="collapse" data-target="#main${status.count}">
 	        <td>${fvo.faqNo}</td>
-	        <td></td>
+	        <td>${fvo.fcvo.fcname}</td> <%-- 자식 클래스에서 부모 클래스를 private FaqCategoryVO fcvo; 라고 해뒀으니 fcvo.fcname --%>
 	        <td>${fvo.faqtitle}</td>
 	      </tr>
 	      <tr id="main${status.count}" class="collapse">
@@ -109,12 +109,11 @@
 	</div>
 </div>
 <br><br><br><br>
-
 <h2 align="center">문의 게시판</h2><br> 
   	<div align="center">
   	<table>
   		<tr>
-  			<td class="pd_right"><h3><a class="menu_cs" href="#">전체보기</a></h3></td>
+  			<td class="pd_right"><h3><a class="menu_cs" href="<%=request.getContextPath()%>/cscenter/csBoardView.to">전체보기</a></h3></td>
   			<td class="pd_right"><h3><a class="menu_cs" href="#">상품문의</a></h3></td>
   			<td class="pd_right"><h3><a class="menu_cs" href="#">배송전취소/변경</a></h3></td>
   			<td class="pd_right"><h3><a class="menu_cs" href="#">배송/교환/반품</a></h3></td>

@@ -17,4 +17,6 @@ public interface InterFaqboardDAO {
 
 	List<FaqboardVO> selectPagingFaq(Map<String, String> paraMap) throws SQLException;
 
+	List<HashMap<String, String>> getBoardCategoryList() throws SQLException;
+
 }
