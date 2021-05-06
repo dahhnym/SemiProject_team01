@@ -7,8 +7,8 @@ import javax.servlet.http.*;
 import common.controller.AbstractController;
 import member.model.InterMemberDAO;
 import member.model.*;
-
-
+ 
+ 
 public class LoginAction extends AbstractController {
 
 	@Override
