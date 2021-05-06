@@ -1,19 +1,19 @@
 package cscenter.model;
 
-public class CsBoardSmallCatetoryVO {
+public class CsBoardSmallCategoryVO {
 	//소분류 카테고리
 	
 	private int smallcateno;
 	private String smallcatename;
 	private int fk_bigcateno;
 	
-	private CsBoardBigCatetoryVO cbbcvo;
+	private CsBoardBigCategoryVO cbbcvo;
 	
-	public CsBoardBigCatetoryVO getCbbcvo() {
+	public CsBoardBigCategoryVO getCbbcvo() {
 		return cbbcvo;
 	}
 
-	public void setCbbcvo(CsBoardBigCatetoryVO cbbcvo) {
+	public void setCbbcvo(CsBoardBigCategoryVO cbbcvo) {
 		this.cbbcvo = cbbcvo;
 	}
 

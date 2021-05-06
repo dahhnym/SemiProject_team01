@@ -11,7 +11,7 @@ public class CsBoardVO {
 	private String fk_userid;
 	private String fk_smallcateno;
 	
-	private CsBoardSmallCatetoryVO cbscvo;
+	private CsBoardSmallCategoryVO cbscvo;
 	
 	
 	public CsBoardVO() {}
@@ -29,11 +29,11 @@ public class CsBoardVO {
 	}
 
 
-	public CsBoardSmallCatetoryVO getCbscvo() {
+	public CsBoardSmallCategoryVO getCbscvo() {
 		return cbscvo;
 	}
 
-	public void setCbscvo(CsBoardSmallCatetoryVO cbscvo) {
+	public void setCbscvo(CsBoardSmallCategoryVO cbscvo) {
 		this.cbscvo = cbscvo;
 	}
 
