@@ -282,5 +282,143 @@ public class MemberDAO implements InterMemberDAO {
 		return n;
 	}
 
+	// 페이징 처리를 위해 회원목록 총페이지수 알아오기
+	@Override
+	public int selectTotalPage(Map<String, String> paraMap) throws SQLException {
+
+		int totalPage = 0;
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = " select ceil( count(*)/? ) "
+					   + " from tbl_member"
+					   + " where userid != 'admin'";
+			
+			// ======검색어가 있는경우 시작 =========== 
+			String colname = paraMap.get("searchType");
+			String searchWord = paraMap.get("searchWord");
+
+			if("email".equals(colname)) {
+				//검색 대상이 email인 경우
+				searchWord = aes.encrypt(searchWord);
+			}
+			
+			if( searchWord != null && !searchWord.trim().isEmpty()) {
+			// 검색어를 아예 안 쓰거나 공백(space)만 입력한 것이 아닌 검색어를 입력한 경우
+				sql += " and "+colname+" like '%'||?||'%' ";
+				// 위치홀더는 데이터값에만 사용됨. 테이블명이나 컬럼명에는 위치홀더를 사용할 수 없다.
+			}
+			// ======검색어가 있는경우 끝 ===========
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("sizePerPage"));
+
+			if( searchWord != null && !searchWord.trim().isEmpty()) {
+				// 검색어를 아예 안 쓰거나 공백(space)만 입력한 것이 아닌 검색어를 입력한 경우
+				pstmt.setString(2, searchWord);
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			
+			totalPage = rs.getInt(1);	// 첫번째 컬럼값을 totalPage에 넣어준다
+										// 회원 5명씩 보여준다면 페이지수는 ceil( count(*)/5 ) ==> 42
+			
+		} catch (GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();	
+		} finally {
+			close();
+		}
+		
+		
+		return totalPage;
+	
+	}
+
+	// 페이징 처리를 한 모든 회원 또는 검색한 회원 목록 보여주기
+	@Override
+	public List<MemberVO> selectPagingMember(Map<String, String> paraMap) throws SQLException {
+		List<MemberVO> memberList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = "select userid, name, mobile, memberlevel, idle, status\n"+
+						 "from\n"+
+						 "(\n"+
+						 "    select rownum as rno, userid, name, mobile, memberlevel, idle, status\n"+
+						 "    from\n"+
+						 "    (\n"+
+						 "    select userid, name, mobile, fk_memberlevel as memberlevel, idle, status\n"+
+						 "    from tbl_member\n"+
+						 "    where userid != 'admin' ";
+			
+			// ======검색어가 있는경우 시작 =========== 
+			String colname = paraMap.get("searchType");
+			String searchWord = paraMap.get("searchWord");
+
+			if("email".equals(colname)) {
+				//검색 대상이 email인 경우
+				searchWord = aes.encrypt(searchWord);
+			}
+			
+			if( searchWord != null && !searchWord.trim().isEmpty()) {
+			// 검색어를 아예 안 쓰거나 공백(space)만 입력한 것이 아닌 검색어를 입력한 경우
+				sql += " and "+colname+" like '%'||?||'%' ";
+				// 위치홀더는 데이터값에만 사용됨. 테이블명이나 컬럼명에는 위치홀더를 사용할 수 없다.
+			}
+			// ======검색어가 있는경우 끝 ===========
+			
+			sql += "    order by registerday\n"+
+				   "    ) V\n"+
+				   ") T\n"+
+				   "where rno between ? and ?";
+			
+			
+			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+			int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage"));
+			
+			pstmt = conn.prepareStatement(sql);
+
+			
+			if( searchWord != null && !searchWord.trim().isEmpty()) {
+				// 검색어를 아예 안 쓰거나 공백(space)만 입력한 것이 아닌 검색어를 입력한 경우
+				pstmt.setString(1, searchWord);
+				pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+				pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+			} else {
+				pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+				pstmt.setInt(2, (currentShowPageNo * sizePerPage));
+			}
+			
+
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				MemberVO mvo = new MemberVO();
+				mvo.setUserid(rs.getString(1));
+				mvo.setName(rs.getString(2));
+				mvo.setMobile(aes.decrypt(rs.getString(3))); //복호화
+				mvo.setLevel(rs.getString(4));
+				mvo.setIdle(rs.getString(5));
+				mvo.setStatus(rs.getString(6));
+				
+				memberList.add(mvo);
+				
+			}//end of while(rs.next())------------------------------------------------
+			
+		} catch (GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return memberList;
+	}
+
+
 		
 }

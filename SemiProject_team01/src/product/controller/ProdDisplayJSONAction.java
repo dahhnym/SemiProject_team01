@@ -59,7 +59,7 @@ public class ProdDisplayJSONAction extends AbstractController {
 			
 			//super.setRedirect(false);
 			super.setViewPage("/WEB-INF/jsonview.jsp");
-			
+			 
 			
 		} else {	//DB에서 조회된 것이 없는 경우
 			
