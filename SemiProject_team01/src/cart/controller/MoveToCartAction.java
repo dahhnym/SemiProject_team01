@@ -1,7 +1,7 @@
 package cart.controller;
 
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,7 +12,7 @@ import cart.model.CartDAO;
 import cart.model.InterCartDAO;
 import common.controller.AbstractController;
 
-public class MoveToWishAction extends AbstractController {
+public class MoveToCartAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -36,16 +36,15 @@ public class MoveToWishAction extends AbstractController {
 			
 		
 		  String userid = request.getParameter("userid");
-		  String cartnum = request.getParameter("cartnum");
+		  String wnum = request.getParameter("wnum");
 		  String fk_pnum = request.getParameter("fk_pnum");
 		  String fk_pdetailnum = request.getParameter("fk_pdetailnum");
 
-		  
-	
+
 		  
 		  Map<String,String> paraMap = new HashMap<>();
 		  paraMap.put("userid", userid);
-		  paraMap.put("cartnum",cartnum);
+		  paraMap.put("wnum",wnum);
 		  paraMap.put("fk_pnum",fk_pnum);
 		  paraMap.put("fk_pdetailnum",fk_pdetailnum);
 
@@ -53,9 +52,9 @@ public class MoveToWishAction extends AbstractController {
 		  InterCartDAO cdao = new CartDAO();
 		  
 		  int n=0;
-		// 해당 상품을 장바구니에 삭제(delete)하고 위시리스트에 추가(insert)
+		// 해당 상품을 위시리스트에 삭제(delete)하고 장바구니에 추가(insert)
 		  try {
-			  n = cdao.deleteCartAddWish(paraMap);
+			  n = cdao.deleteWishAddCart(paraMap);
 
 		  }catch (Exception e) {
 			e.printStackTrace();
@@ -72,6 +71,7 @@ public class MoveToWishAction extends AbstractController {
 		//	super.setRedirect(false);
 			super.setViewPage("/WEB-INF/jsonview.jsp");
 		}  
+		
 	}
 
 }
