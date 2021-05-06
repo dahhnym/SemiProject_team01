@@ -20,6 +20,9 @@ public class ProductListAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		// 로그인 또는 로그아웃을 하면 시작페이지로 가는 것이 아니라 방금 보았던 그 페이지로 그대로 가기 위한 것임. 
+		super.goBackURL(request);
+		
 		// == 관리자(admin)로 로그인했을 때만 조회 가능하도록 하기 ==
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
