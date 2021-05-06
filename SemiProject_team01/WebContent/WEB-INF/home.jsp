@@ -160,24 +160,36 @@ function goProdDetail(imgs) {
       		<div id="carousel-example" class="carousel slide" data-ride="carousel">
       			<div class="carousel-inner row w-75 mx-auto" role="listbox">
    					<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-4 active slideImg">
-					<img src="/SemiProject_team01/images/w-backpack1.jpg" class="img-fluid mx-auto d-block" alt="img1">
-          			<div id="prodInfo">
-           				<ul>
-           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
-           					<li><label class="prodInfoList">정가</label>12,000원</li>
-           					<li><label class="prodInfoList">할인가</label>10,000원</li>
-           				</ul>
+   					<table>
+   						<tbody>
+   							<tr>
+   								<td>
+					  <div style="float: left; border: solid 1px blue;">
+						<img src="/SemiProject_team01/images/w-backpack1.jpg" class="img-fluid mx-auto d-block" alt="img1">
+	          			<div id="prodInfo">
+	           				<ul>
+	           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
+	           					<li><label class="prodInfoList">정가</label>12,000원</li>
+	           					<li><label class="prodInfoList">할인가</label>10,000원</li>
+	           				</ul>
+						</div>
+						</div>
+						</td>
+						<td>
+					  <div style="float: left; border: solid 1px blue;">
+						<img src="/SemiProject_team01/images/w-backpack3.jpg" class="img-fluid mx-auto d-block" alt="img2">
+						<div id="prodInfo">
+	           				<ul>
+	           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
+	           					<li><label class="prodInfoList">정가</label>12,000원</li>
+	           					<li><label class="prodInfoList">할인가</label>10,000원</li>
+	           				</ul>
+						</div>
 					</div>
-				</div>
-				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-4 slideImg">
-					<img src="/SemiProject_team01/images/w-backpack3.jpg" class="img-fluid mx-auto d-block" alt="img2">
-					<div id="prodInfo">
-           				<ul>
-           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
-           					<li><label class="prodInfoList">정가</label>12,000원</li>
-           					<li><label class="prodInfoList">할인가</label>10,000원</li>
-           				</ul>
-					</div>
+					</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
 					<img src="/SemiProject_team01/images/w-backpack5.jpg" class="img-fluid mx-auto d-block" alt="img3">
