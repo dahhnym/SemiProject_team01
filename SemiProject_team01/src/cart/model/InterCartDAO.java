@@ -46,6 +46,16 @@ public interface InterCartDAO {
 	// 수량 변경하기(update)
 	int updateOqty(String userid, String cartnum, String oqty, String fk_pdetailnum) throws SQLException;
 
+	// 해당 상품을 위시리스트에 삭제(delete)하고 장바구니에 추가(insert)
+	int deleteWishAddCart(Map<String, String> paraMap) throws SQLException;
+
+	
+	
+	int selectTotalPage(Map<String, String> paraMap) throws SQLException;
+
+	
+	List<WishListVO> selectPagingMember(Map<String, String> paraMap) throws SQLException;
+
 
 
 
