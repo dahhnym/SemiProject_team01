@@ -2,7 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<% String ctxPath = request.getContextPath(); %>    
+<% String ctxPath = request.getContextPath(); %>  
+<c:set var="sum" value="0"/>  
+<c:forEach items="${requestScope.cartList}" var="cart">
+	<c:set var="sum" value="${sum+(cart.pvo.saleprice*cart.oqty)}"/>
+</c:forEach>
 <jsp:include page="../header.jsp"/>
 <!DOCTYPE html>
 <html>
@@ -178,42 +182,28 @@ $(function(){
 			// 만약 보유포인트보다 큰 숫자 입력했으면 val()값 보유 적립금 금액으로 바꾸기	
 			$(this).val(havingPoint);
 		}
+		
+		else{
+			$('input#usePoint').val(usePoint);
+		}
+		
 	});
 	
+         
+    // 결제 총 금액 계산 *****************************
+    var sum = $('[name=sum]').val();
+    var delivery = $('[name=delivery]').val();
+    var usePoint = $('input#usePoint').val().trim();
+    var totalPrice = sum+delivery-usePoint;
+    $("input#totalPrice").val(totalPrice);
 	
-	
-
+ 
 	
 
          
          
          
-	// 선택 삭제하기 버튼 눌렀을 때*************************어케하는지 몰겠음*************************************
-	$("#deleteBtn").click(function(){
-		  var confirm_val = confirm("정말 삭제하시겠습니까?");
-		  
-		  if(confirm_val) {
-			   var checkArr = new Array();
-			   
-			   $("input[name=product]:checked").each(function(){
-			    	checkArr.push($(this).attr("data-cartNum"));
-			   });
-			    
-			   $.ajax({
-				   url:"<%= request.getContextPath()%>/order/orderDel.up",
-	     	 		 type:"post",
-	     	 		 data:{chbox:checkArr},
-	     	 		 dataType:"json",
-	     	 		 success:function(json){   
-					      location.href="order.to";
-	  	 		 	},
-	  	 		 	error: function(request, status, error){
-	  	              alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	  	           }
-			   });
-		  } 
-	 });
-
+	
 
 
 	// 결제방법 선택 시 선택 및 선택 외 버튼들 css변경해주기
@@ -226,6 +216,8 @@ $(function(){
 	
 	
 });
+
+
 
 
 
@@ -358,50 +350,40 @@ function goCheckOut(){
 }
 
 
-
-
-
-
-//=== 체크한 상품들 모두 비우기 (장바구니도 비워짐)=== //  ******************망한듯 위에도 제대로 나오는 거 있음********************
-
-function goDel(cartno) {
-	
-
-		var $target = $(event.target);
+//장바구니 개별 삭제하기 
+function goDel(cartnum) {		
+	var $target = $(event.target);
+	var pname = $target.parent().parent().find(".cname").text();
+//	console.log(pname);
+	var bool = confirm("주문목록에서 ["+pname+"] 상품을 삭제하시겠습니까?");
+//	alert(cartnum);
+	if(bool){
+		$.ajax({
+			url:"<%= ctxPath%>/cart/deleteCartOne.to",
+			type: "post",
+			data: {"userid":"${sessionScope.loginuser.userid}","cartnum":cartnum},
+			dataType: "json",
+			success:function(json){
+					alert(json.msg);
+					location.href="javascript:history.go(0);"; // 새로고침해주기
+			},
+			 error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		     }  
+		});
 		
-	
-	///// == 체크박스의 체크된 갯수(checked 속성이용) == /////
-       var checkCnt = $("input:checkbox[name=product]:checked").length;
-		
-	// 삭제할 상품이 하나도 없을 때
-       if(checkCnt < 1) {
-	          alert("삭제하실 제품을 선택하세요!!");
-	          return; //종료
-	       }
-       else{
-    	   var bool = confirm("주문목록에서 삭제하시겠습니까 ?");
-	       if(bool){
-	           for(var i=0; i<allCnt; i++){
-	     	 	  $.ajax({
-	     	 		 url:"<%= request.getContextPath()%>/order/orderDel.up",
-	     	 		 type:"post",
-	     	 		 data:{"cartno":cartno},
-	     	 		 dataType:"json",
-	     	 		 success:function(json){   
-					      location.href="order.to";
-    	 		 	},
-    	 		 error: function(request, status, error){
-    	              alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-    	           }
-    	 	  	}); //ajax
-	          } // for
-	       } // if
-    	   else{
-    	 	  alert("주문목록에서 제품 삭제를 취소하셨습니다.");
-    	   }
-      
-   }// end of function goOrder()----------------------
+	}
+	else{
+		return false;
+	}
 }
+
+
+
+
+
+
+
   
    </script>
 
@@ -421,7 +403,7 @@ function goDel(cartno) {
 	<table id="prodInfo">
 		<thead align="center">
 			<tr id="prodInfo">
-				<th><input type="checkbox" name="checkAll"/></th>
+				<th></th>
 				<th>이미지</th>
 				<th width="30%">상품정보</th>
 				<th>수량</th>
@@ -435,11 +417,13 @@ function goDel(cartno) {
 		
 			<c:forEach items="${requestScope.cartList}" var="cart" varStatus="status">
 				<tr id="prodInfo">
-					<th><input type="checkbox" id="pnum${status.index}" name="product" value="${cart.fk_pnum}" /></th>
+					<td><%-- 장바구니에서 해당 제품 삭제하기 --%> 
+		               <span class="del" style="cursor: pointer; font-size:11pt; text-decoration: underline;" onClick="goDel('${cart.cartnum}');">삭제</span>  
+		            </td>
 					<td><a href=""><img class="pimage1" src="<%=ctxPath%>/images/${cart.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
-					<td align="left"><a href="">${cart.pvo.pname}</a><br>[옵션: ${cart.pdetailvo.optionname}]</td>
+					<td align="left"><span class="cname"><a href="">${cart.pvo.pname}</a></span><br>[옵션: ${cart.pdetailvo.optionname}]</td>
 					<td>${cart.oqty}</td>
-					<td>${cart.pvo.saleprice}원</td>
+					<td><fmt:formatNumber value="${cart.pvo.saleprice}" type="number"/>원</td>
 					<td align="center">
 						<div id="pointbox">
 							<c:if test="${sessionScope.loginuser.level == 1}">
@@ -468,13 +452,39 @@ function goDel(cartno) {
 						</c:if>
 						
 					</td>
-					<td>[무료]</td>
-					<td><fmt:formatNumber value="${cart.pvo.totalPrice}" pattern="###,###" /></td>
+					<td>
+					<c:if test="${(sum) >= 50000}"> 
+							<span>[무료]</span>
+							<c:set var="delivery" value="0"/><input type="hidden" class="delivery" value="0"/>
+						</c:if>
+						<c:if test="${(sum) < 50000}">
+							<span>[조건]</span>
+							<fmt:formatNumber value="2500" type="number" />원<input type="hidden" class="delivery" value="2500"/>
+							<c:set var="delivery" value="2500"/>
+						</c:if>
+					</td>
+					<td>
+						<fmt:formatNumber value="${(cart.pvo.saleprice*cart.oqty)}" type="number" />
+						원
+					</td>
 					
 						</tr>
 			</c:forEach>
 			<tr>
-					<td id="sumtbl" colspan="8">상품구매금액 <fmt:formatNumber value="${requestScope.sumMap.SUMTOTALPRICE}" pattern="###,###" />원 + 배송비 원 = 합계 : <span id="sum">원</span></td>				
+					<td id="sumtbl" colspan="8">상품구매금액&nbsp;<fmt:formatNumber value="${sum}" type="number" />원
+									<input type="hidden" name="sum" value="${sum}"/> 
+					+&nbsp;배송비 
+						<c:if test="${(sum) >= 50000}"> 
+							<span>[무료]</span><c:set var="delivery" value="0"/><input type="hidden" class="delivery" value="0"/>
+						</c:if>
+						<c:if test="${(sum) < 50000}">
+							<fmt:formatNumber value="2500" type="number" />원<input type="hidden" class="delivery" value="2500"/>
+							<c:set var="delivery" value="2500"/>
+						</c:if>
+					 = 합계 : <span id="sum"><fmt:formatNumber value="${sum+delivery}" type="number" />원
+									<input type="hidden" class="totalprice" value="${sum+delivery}"/>
+							</span>
+					</td>				
 				</tr>
 		</tbody>
 	</table>	
@@ -484,7 +494,6 @@ function goDel(cartno) {
 	 
 	<div class="left" style="font-size:10pt;">
 	! 상품의 옵션 및 수량 변경은 상품 상세 혹은 장바구니에서 가능합니다.
-	<br>선택상품을 <input type="button" value="삭제하기" id="deleteBtn" style="border:none; font-size:9pt;"/>
 	</div>
 	<br><br>
 	
@@ -675,19 +684,37 @@ function goDel(cartno) {
 	<table style="width:100%;">
 		<tr>
 			<td style="text-align:left;">상품금액</td>
-			<td style="text-align:right;">30,000원</td>
+			<td style="text-align:right;">
+				<fmt:formatNumber value="${sum}" type="number" />원
+				<input type="hidden" name="sum" value="${sum}"/></td>
 		</tr>
 		<tr>
 			<td style="text-align:left;">배송비</td>
-			<td style="text-align:right;">원</td>
+			<td style="text-align:right;">
+				<c:if test="${(sum) >= 50000}"> 
+					<span>0</span>
+					<c:set var="delivery" value="0"/>
+					<input type="hidden" name="delivery" class="delivery" value="0"/>
+				</c:if>
+				<c:if test="${(sum) < 50000}">
+					<fmt:formatNumber value="2500" type="number" />
+					<input type="hidden" name="delivery" class="delivery" value="2500"/>
+					<c:set var="delivery" value="2500"/>
+				</c:if>원
+			</td>
 		</tr>
 		<tr>
 			<td style="text-align:left;">포인트 사용</td>
-			<td style="text-align:right;">원</td>
+			<td style="text-align:right;">
+			<input type="text" id="usePoint" style="border:none; text-align: right;" value="0"/>
+			P</td>
 		</tr>
 		<tr>
 			<td style="text-align:left; font-size:13pt; font-weight:bold;">최종 결제금액</td>
-			<td style="text-align:right; font-size:15pt; font-weight:bold;">30,000원</td>
+			<td style="text-align:right; font-size:15pt; font-weight:bold;"> 
+				<input style="border:none; text-align: right;" id="totalPrice"></input>원
+				<input type="hidden" class="totalprice" value="${sum+delivery}"/>
+			</td>
 		</tr>
 	</table>
 	<br><br>

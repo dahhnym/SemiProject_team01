@@ -6,11 +6,39 @@ import product.model.ProductVO;
 
 public class OrderVO {
 	
-	
 	private int odrcode; //주문코드
 	private	String fk_userid ; //회원아이디
 	private int	totalcost; // 주문총액
 	private	String orderdate; //주문일자 
+	private int	fk_odrstatusno; //주문처리상태
+	private	int fk_odrprgrssno; //주문진행상태
+	private	int invoicenum; //송장번호
+	private	String delidate ;//-배송완료일자
+	//------------- 주문자------------
+	private String odrname;// 주문자명
+	private	int odrmobile;//연락처
+	private	String odremail;//이메일
+	private	String odrpostcode;//우편번호
+	private	String odraddress;//주소
+	private	String odrdtaddress;//상세주소
+	private	String odrextddress ;//참고항목
+	//-----------------------------------------
+	private	int fk_paymentno;//결제수단번호
+	//----------------배송지 -------------------
+	private	String deliname  ;//받는사람
+	private	int delimobile;//연락처
+	private	String delipostcode;//우편번호
+	private	String deliaddress;//주소
+	private	String delidtaddress;//상세주소
+	private	String deliextddress;// 참고항목
+	private int	delimsg;// 배송메세지
+
+
+	private MemberVO mvo;
+	private ProductVO pvo;
+	
+	private int totalPrice; // 판매당시의 제품 판매가*주문량
+
 	public int getOdrcode() {
 		return odrcode;
 	}
@@ -195,32 +223,4 @@ public class OrderVO {
 		this.delimsg = delimsg;
 	}
 
-	private int	fk_odrstatusno; //주문처리상태
-	private	int fk_odrprgrssno; //주문진행상태
-	private	int invoicenum; //송장번호
-	private	String delidate ;//-배송완료일자
-	//------------- 주문자------------
-	private String odrname;// 주문자명
-	private	int odrmobile;//연락처
-	private	String odremail;//이메일
-	private	String odrpostcode;//우편번호
-	private	String odraddress;//주소
-	private	String odrdtaddress;//상세주소
-	private	String odrextddress ;//참고항목
-	//-----------------------------------------
-	private	int fk_paymentno;//-결제수단번호
-	//----------------배송지 -------------------
-	private	String deliname  ;//받는사람
-	private	int delimobile;//연락처
-	private	String delipostcode;//우편번호
-	private	String deliaddress;//주소
-	private	String delidtaddress;//상세주소
-	private	String deliextddress;// 참고항목
-	private int	delimsg;// 배송메세지
-
-
-	private MemberVO mvo;
-	private ProductVO pvo;
-	
-	private int totalPrice; // 판매당시의 제품 판매가*주문량
 }
