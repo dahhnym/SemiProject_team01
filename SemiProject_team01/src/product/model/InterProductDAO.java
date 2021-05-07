@@ -55,4 +55,15 @@ public interface InterProductDAO {
 	// 제품 목록 출력하기 위해 제품 테이블에서 select 해오기
 	List<ProductVO> getProductInfo(Map<String, String> paraMap) throws SQLException;
 
+	// 제품 카테고리 별로 불러오기
+	List<ProductVO> selectCateonly(Map<String, String> paraMap) throws SQLException;
+	
+	// 페이지바를 만들기 위해서 특정카테고리의 제품개수에 대한 총페이지수 알아오기(select)
+	int getTotalPage(String cnum) throws SQLException;
+
+	// 특정 제품 스펙의 카테고리별 제품 select 해오기
+	List<ProductVO> selectByBothSpecCateg(Map<String, String> paraMap) throws SQLException;
+
+	
+	
 }

@@ -19,7 +19,7 @@
 
 #content-container {
 	padding: 50px 100px 0 100px;
-	/* border: solid 1px gray; */
+	border: solid 1px gray;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -337,4 +337,51 @@ span.rvch {
  */
 
 
+/* 카테고리별 제품 목록 출력용 */
 
+div.prodInfo {
+   display: inline-block; 
+   margin: 0px 15px 1em 1em;
+   /* border: solid 1px blue; */
+   width: 21%;
+   height: 400px;
+   /* float: left; */
+}
+
+.prodInfo > ul {
+	padding-left: 0;
+	width: 100%;
+}
+
+
+.prodInfo{
+	margin-bottom: 0;
+	display: inline-block;
+}
+
+.infoliststyle{
+	text-align: center;
+	font-size: 11pt;
+}
+
+
+/* productListBySpec.jsp CSS */
+
+a.pagebar-style {
+	text-decoration: none;
+	color: black;
+}
+
+div#pagebar-div {
+	border: solid 1px gray;
+	text-align: center;
+	display: inline-block;
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div#proddiv{
+	/* border: solid 1px navy; */
+	padding-top:0;
+}
