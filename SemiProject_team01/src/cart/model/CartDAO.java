@@ -1,7 +1,5 @@
 package cart.model;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +13,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import member.model.MemberVO;
+
 import product.model.*;
 
 public class CartDAO implements InterCartDAO {
@@ -367,7 +365,7 @@ public class CartDAO implements InterCartDAO {
 	        	sql = " select pqty " + 
 					  " from tbl_proddetail " +  
 					  " where pdetailnum= ? ";
-
+	        	// 제품 수량알아오기
 				pstmt = conn.prepareStatement(sql);
 		        pstmt.setInt(1, Integer.parseInt(pdetailnum));
 	          
@@ -376,7 +374,7 @@ public class CartDAO implements InterCartDAO {
 		        if(rs.next()) {
 		        int pqty = rs.getInt(1);
 	        	if(pqty==0) {
-	        		n=0;
+	        		n=0; // 제품 수량이 0이면 결과값 0주기
 	        	}
 	        	else {
 		        	sql = " insert into tbl_cart(cartnum, fk_userid, fk_pnum, oqty,fk_pdetailnum) "
@@ -424,21 +422,37 @@ public class CartDAO implements InterCartDAO {
 	        	int pqty=rs.getInt(1);
 	        	
 	        	if(pqty==0) {
-	        		n=0;
+	        		n=-1;
 	        	}
 	        	else {
 		        	
+	        		sql = " select C.cartnum , D.pqty " + 
+							" from tbl_cart C join tbl_proddetail D " + 
+							" on C.fk_pdetailnum = D.pdetailnum " + 
+							" where C.fk_userid = ? and C.fk_pdetailnum= ? ";
+
+							pstmt = conn.prepareStatement(sql);
+					        pstmt.setString(1, userid);
+					        pstmt.setString(2, newpdetailnum);
+					        
+					        rs = pstmt.executeQuery();
+					        
+					        if(rs.next()) {
+					        	n=0;
+					        }
+					        else {
 		        	// 장바구니에 존재하지 않는 새로운 제품을 넣고자 하는 경우
-		        	sql = " update tbl_cart set fk_pdetailnum = ? "
-		                    + " where fk_userid = ? and fk_pdetailnum = ? ";
-		        
-		        	pstmt = conn.prepareStatement(sql);
-		        	pstmt.setInt(1, Integer.parseInt(newpdetailnum));
-		        	pstmt.setString(2, userid);
-		        	pstmt.setInt(3,Integer.parseInt(oldpdetailnum));
-	        	
-	        
-	        	n = pstmt.executeUpdate();
+					        	sql = " update tbl_cart set fk_pdetailnum = ? "
+					                    + " where fk_userid = ? and fk_pdetailnum = ? ";
+					        
+					        	pstmt = conn.prepareStatement(sql);
+					        	pstmt.setInt(1, Integer.parseInt(newpdetailnum));
+					        	pstmt.setString(2, userid);
+					        	pstmt.setInt(3,Integer.parseInt(oldpdetailnum));
+				        	
+					        
+					        	n = pstmt.executeUpdate();
+					        }
 	        	}
 	        }
 		}finally {
@@ -729,6 +743,114 @@ public class CartDAO implements InterCartDAO {
 
 			return wishPageList;
 		}
+
+	
+	// 주문번호 채번하기
+	@Override
+	public int getSeq_tbl_order() throws SQLException {
+		int seq = 0;
+	      
+	      try {
+	          conn = ds.getConnection();
+	          
+	          String sql = " select seq_order_odrcode.nextval AS seq "
+	                   + " from dual";
+	          
+	          pstmt = conn.prepareStatement(sql);
+	          
+	          rs = pstmt.executeQuery();
+	          
+	          rs.next();
+	          
+	          seq = rs.getInt("seq");
+	          
+	      } finally {
+	         close();
+	      }
+	      
+	      return seq;
+	}
+
+	
+	// 선택된 상품 주문 테이블에 insert 
+	@Override
+	public int orderAdd(Map<String, Object> paraMap) throws SQLException {
+		int isSuccess = 0;
+	    int n1=0, n2=0;
+	     
+	    try {
+	    	conn = ds.getConnection();
+	          
+	        conn.setAutoCommit(false); // 수동 커밋
+	        
+	     // 2. 주문 테이블에 채번해온 주문전표, 로그인한 사용자, 현재시각을 insert 하기(수동커밋처리)
+	        String sql = " insert into tbl_order(odrcode, fk_userid, totalcost,orderdate) "
+                    + " values(to_number(?), ?, ?,default) ";
+       
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, (String) paraMap.get("odrcode")); 
+	        pstmt.setString(2, (String)paraMap.get("userid"));
+	        pstmt.setInt(3, Integer.parseInt((String)paraMap.get("sumtotalPrice")));
+	        
+	        System.out.println("주문번호: "+(String) paraMap.get("odrcode"));
+	        n1 = pstmt.executeUpdate();
+	    
+	   
+	     // 3. 주문상세 테이블에 채번해온 주문전표, 제품번호, 주문량, 주문금액을 insert 하기(수동커밋처리)
+	        if(n1 == 1) {
+	        	
+	        	String[] pnumArr = (String[]) paraMap.get("pnumArr");
+				String[] oqtyArr = (String[]) paraMap.get("oqtyArr");
+				String[] pdetailnumArr = (String[]) paraMap.get("pdetailnumArr");
+				String[] totalPriceArr = (String[]) paraMap.get("totalPriceArr");
+				String[] optionnameArr = (String[]) paraMap.get("optionnameArr");
+	            
+	            
+	            int cnt = 0;
+	           
+	            for(int i=0; i<pnumArr.length; i++) {
+	               sql = " insert into tbl_odrdetail(odrdetailno,fk_userid , fk_pnum, fk_odrcode , fk_pdetailnum, odrqty , odrprice, optionname) "  
+	                  + " values(seq_orderdetail_odetailno.nextval, ?, to_number(?), to_number(?), to_number(?), to_number(?) , to_number(?), ?) ";
+	               
+	                pstmt = conn.prepareStatement(sql);
+	                
+	                pstmt.setString(1, (String)paraMap.get("userid"));
+	                pstmt.setString(2, pnumArr[i]);
+	                pstmt.setString(3, (String)paraMap.get("odrcode"));
+	                pstmt.setString(4, pdetailnumArr[i]);
+	                pstmt.setString(5, oqtyArr[i]);
+	                pstmt.setString(6, totalPriceArr[i]);
+	                pstmt.setString(7, optionnameArr[i]);
+	                
+	              
+	                pstmt.executeUpdate();
+	                cnt++;
+	               
+	            }// end of for----------------------
+	            
+	            	if(cnt == pnumArr.length) {
+		               n2=1;
+		            }
+		        
+		            
+	            
+	         }// end of if---------------------------          
+	            
+	        if(n1*n2>0) {
+	        
+	        	isSuccess = 1;
+	        }
+	   
+	    }catch (SQLException e) {
+	    	conn.rollback();
+            isSuccess = 0;
+	    
+	    }finally {
+			close();
+		}
+	    return isSuccess;
+	    
+	}
 
 
 

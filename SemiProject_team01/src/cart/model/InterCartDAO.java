@@ -56,6 +56,13 @@ public interface InterCartDAO {
 	
 	List<WishListVO> selectPagingMember(Map<String, String> paraMap) throws SQLException;
 
+	
+	// 주문번호 채번해오기
+	int getSeq_tbl_order() throws SQLException;
+
+	// 주문 테이블에 insert 
+	int orderAdd(Map<String, Object> paraMap) throws SQLException;
+
 
 
 

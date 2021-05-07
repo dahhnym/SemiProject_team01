@@ -1,9 +1,7 @@
 package cart.controller;
 
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +22,7 @@ public class CartAction extends AbstractController {
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		
 
-		if(loginuser !=null) {
+		if(loginuser !=null && !loginuser.getUserid().equals("admin")) {
 			
 			String userid = loginuser.getUserid();
 			
@@ -117,8 +115,21 @@ public class CartAction extends AbstractController {
 		
 		}
 		
-		else{
-			String message = "로그인을 해야 이용 가능한 페이지입 니다.";
+		else if(loginuser != null && loginuser.getUserid().equals("admin")){
+			
+			String message = "관리자는 이용할 수 없는 페이지입니다.";
+			String loc = request.getContextPath()+"/login/login.to";
+	         
+	         request.setAttribute("message", message);
+	         request.setAttribute("loc", loc);
+	         
+	      //   super.setRedirect(false);
+	         super.setViewPage("/WEB-INF/msg.jsp");
+			
+			
+		}
+		else  {
+			String message = "로그인 후 이용 가능합니다.";
 			String loc = request.getContextPath()+"/login/login.to";
 	         
 	         request.setAttribute("message", message);

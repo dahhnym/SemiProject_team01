@@ -20,6 +20,7 @@ public class OptionSelectAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+	
 		String fk_pnum = request.getParameter("fk_pnum");
 		
 		InterCartDAO cdao = new CartDAO();
@@ -57,5 +58,5 @@ public class OptionSelectAction extends AbstractController {
 		super.setRedirect(false);
 		super.setViewPage("/WEB-INF/jsonview.jsp");
 	}
-
+	
 }

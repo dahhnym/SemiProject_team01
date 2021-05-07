@@ -81,7 +81,7 @@ $(document).ready(function(){
 
 
 	// 장바구니 수량 변경하기
-	$("input.prodOqty").spinner({
+	$("input.oqty").spinner({
 		
 		spin:function(event,ui){
 			
@@ -94,37 +94,7 @@ $(document).ready(function(){
 	
 	
 	
-	$("input.prodOqty").bind("spinstop",function(){
-		
-		var index = $("input.prodOqty").index($(this));
-	//	alert(index);
-
-		var cartnum = $("input.cartnum").eq(index).val();
-	//	alert(cartnum);
-		var oqty = $("input.prodOqty").eq(index).val();
-	//	alert(oqty);
-		var fk_pdetailnum = $("input.fk_pdetailnum").eq(index).val();
-	//	alert($(this).val());
-		 $.ajax({
-				url:"<%= ctxPath%>/cart/updateOqtyCart.to",
-				type: "post",
-				data: {"userid":"${sessionScope.loginuser.userid}","cartnum":cartnum, "oqty": oqty,"fk_pdetailnum":fk_pdetailnum},
-				dataType: "json",
-				success:function(json){
-					if(json.n==1){
-						location.href="javascript:history.go(0);";
-					}
-					else if(json.n==0){ // 재고 수량이 변경할 수량보다 적을 경우
-						alert("상품의 수량이 재고수량 보다 많습니다.");
-						return;
-					}
-				},
-				 error: function(request, status, error){
-			            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-			     }  
-			});
-			
-	});
+	
 	
 	
 	// 장바구니 전체 클릭 
@@ -141,14 +111,15 @@ $(document).ready(function(){
 	
 	
 	
+	
 	// === 체크박스 전체 선택/전체 해제 === //
 	$("input#prodAllCheck").click(function(){		
 		var bool = $(this).prop("checked");
-		$("input:checkbox[name=product_check]").prop("checked", bool);
+		$("input:checkbox[name=pnum]").prop("checked", bool);
 	}); // end of $("input:checkbox[id=checkall]").click(function(){})-------
 	
 	
-	$("input:checkbox[name=product_check]").click(function(){
+	$("input:checkbox[name=pnum]").click(function(){
 		
 		var bool = $(this).prop("checked");
 		
@@ -156,7 +127,7 @@ $(document).ready(function(){
 			
 			var flag=false;
 			
-			$("input:checkbox[name=product_check]").each(function(index, item){
+			$("input:checkbox[name=pnum]").each(function(index, item){
 				
 				var bChecked = $(item).prop("checked");
 				
@@ -227,12 +198,12 @@ $(document).ready(function(){
 				  //		alert(pdetailnum);
 				  //		alert(fk_pnum);
 				  		
-				  		if(pdetailnum==0){
+				  		if(pdetailnum==""){
 				  			alert("추가할 옵션을 선택하세요");
-				  			return false;
+				  			return;
 				  		}
 				  	
-				  		
+				  		else{
 				  		$.ajax({
 				  			url:"<%= ctxPath%>/cart/addOptionCart.to",
 							type: "post",
@@ -244,14 +215,17 @@ $(document).ready(function(){
 									}
 									else if(json.n==0){
 										alert("재고수량이 없습니다.");
-										return false;
+										return;
+									}
+									else{
+										return;
 									}
 							},
 							 error: function(request, status, error){
 						            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 						     }  
 						});
-				  		
+				  		}
 				  	});
 				  	
 				  	
@@ -263,15 +237,17 @@ $(document).ready(function(){
 				  	//	alert(pdetailnum);
 				  	//	alert(fk_pnum);
 				  		
-				  		if(newpdetailnum==0){
+				  		if(newpdetailnum==""){
 				  			alert("추가할 옵션을 선택하세요");
-				  			return false;
+				  			return;
 				  		}
 				  	
 				  		else if(newpdetailnum==oldpdetailnum){
 				  			alert("해당 상품은 이미 장바구니에 존재합니다.");
-				  			return false;
+				  			return;
 				  		}
+				  		
+				  		else{
 				  		$.ajax({
 							url:"<%= ctxPath%>/cart/changeOptionCart.to",
 							type: "post",
@@ -281,16 +257,20 @@ $(document).ready(function(){
 								if(json.n==1){
 									location.href="javascript:history.go(0);"; // 새로고침해주기
 								}
-								else if(json.n==0){
+								else if(json.n==-1){
 									alert("재고수량이 없습니다.");
-									return false;
+									return;
+								}
+								else if(json.n==0){
+									alert("해당 상품은 이미 장바구니에 존재합니다.");
+									return;
 								}
 							},
 							 error: function(request, status, error){
 						            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 						     }  
 						});
-				  	
+				  		}
 				  	});
 				  	
 	
@@ -351,16 +331,17 @@ $(document).ready(function(){
 				  //		alert(oldpdetailnum);
 				  //		alert(newpdetailnum);
 				  		
-				  		if(newpdetailnum==0){
+				  		if(newpdetailnum==""){
 				  			
 				  			alert("추가할 옵션을 선택하세요");
-				  			return false;
+				  			return;
 				  		}
 				  	
 				  		else if(newpdetailnum==oldpdetailnum){
 				  			alert("해당 상품은 이미 위시리스트에 존재합니다.");
-				  			return false;
+				  			return;
 				  		}
+				  		else{
 				  		$.ajax({
 							url:"<%= ctxPath%>/cart/changeOptionWish.to",
 							type: "post",
@@ -372,14 +353,14 @@ $(document).ready(function(){
 								}
 								else if(json.n==0){
 									alert("재고수량이 없습니다.");
-									return false;
+									return;
 								}
 							},
 							 error: function(request, status, error){
 						            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 						     }  
 						});
-				  	
+				  		}
 				  	});
 				  
 	
@@ -406,7 +387,7 @@ $(document).ready(function(){
 		var index = $("button.updateOqty").index(obj);
 		var cartnum = $("input.cartnum").eq(index).val();
 	//	alert(cartnum);
-		var oqty = $("input.prodOqty").eq(index).val();
+		var oqty = $("input.oqty").eq(index).val();
 		var fk_pdetailnum = $("input.fk_pdetailnum").eq(index).val();
 	//	alert(fk_pdetailnum);
 	//	alert(oqty);
@@ -417,7 +398,7 @@ $(document).ready(function(){
 		   if(!bool){
 			   // 숫자 이외의 값이 들어온 경우
 			   alert("수량은 1개 이상이어야 합니다.");
-			   $("input.prodOqty").val("1");
+			   $("input.oqty").val("1");
 		       return; // 종료
 		   }
 		   
@@ -428,7 +409,7 @@ $(document).ready(function(){
 	         $("input.prodOqty").val("1");
 	         return; // 종료
 	      }
-	       
+	       else{
 	       $.ajax({
 				url:"<%= ctxPath%>/cart/updateOqtyCart.to",
 				type: "post",
@@ -446,7 +427,7 @@ $(document).ready(function(){
 			            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			     }  
 			});
-  
+	       }
 
 	}
 	
@@ -474,7 +455,7 @@ $(document).ready(function(){
 				
 			}
 			else{
-				return false;
+				return;
 			}
 		}
 		
@@ -503,7 +484,7 @@ $(document).ready(function(){
 				
 			}
 			else{
-				return false;
+				return;
 			}
 		}
 		
@@ -547,7 +528,7 @@ $(document).ready(function(){
 				
 			}
 			else{
-				return false;
+				return;
 			}
 		}
 		
@@ -590,7 +571,7 @@ $(document).ready(function(){
 				
 			}
 			else{
-				return false;
+				return;
 			}
 		}
 		
@@ -619,11 +600,11 @@ $(document).ready(function(){
 				
 			}
 			else{
-				return false;
+				return;
 			}
 		}
 		
-		
+
 		// === 장바구니에서 제품 선택주문하기 === // 
 		function goOrder() {
 		    
@@ -641,30 +622,106 @@ $(document).ready(function(){
 			        var allCnt = $("input:checkbox[name=pnum]").length;
 		   		
 		   			var pnumArr = new Array();
+		   			var pdetailnumArr = new Array();
 					var oqtyArr = new Array();
-					var cartnoArr = new Array();
+					var cartnumArr = new Array();
 					var totalPriceArr = new Array();
-					var totalPointArr = new Array();
+					var optionnameArr = new Array();
 					
 					for(var i=0; i<allCnt; i++) {
 						
 						if( $("input:checkbox[name=pnum]").eq(i).is(":checked") ) {
 							pnumArr.push( $("input:checkbox[name=pnum]").eq(i).val() );
 							oqtyArr.push( $("input.oqty").eq(i).val() );
-							cartnoArr.push( $("input.cartno").eq(i).val() );
+							cartnumArr.push( $("input.cartnum").eq(i).val() );
+							pdetailnumArr.push( $("input.pdetailnum").eq(i).val() );
 							totalPriceArr.push( $("input.totalPrice").eq(i).val() );
-							totalPointArr.push( $("input.totalPoint").eq(i).val() );
+							optionnameArr.push($("input.optionname").eq(i).val());
 						}
 						
 					}// end of for---------------------------
-									
+					
 					for(var i=0; i<checkCnt; i++) {
-						console.log("확인용    제품번호 : " + pnumArr[i] + ", 주문량 : " + oqtyArr[i] + ", 장바구니번호 : " + cartnoArr[i] + ", 주문금액 : " + totalPriceArr[i] + ", 포인트 : " + totalPointArr[i]); 
+				//		console.log("확인용    제품번호 : " + pnumArr[i] + ", 주문량 : " + oqtyArr[i] + ", 장바구니번호 : " + cartnoArr[i] + ", 주문금액 : " + totalPriceArr[i] ); 
 					}// end of for---------------------------
+					
+					var sumtotalPrice = 0;
+					for(var i=0;i<totalPriceArr.length;i++){			
+				//		console.log(typeof(totalPriceArr[i])+" : "+totalPriceArr[i]);			
+						sumtotalPrice += parseInt(totalPriceArr[i]);
+					}	
+						
+					for(var i=0; i<checkCnt; i++) {
+						var str_pnum = pnumArr.join();
+						var str_oqty = oqtyArr.join();
+						var str_cartnum = cartnumArr.join();
+						var str_pdetailnum = pdetailnumArr.join();
+						var str_totalPrice = totalPriceArr.join();
+						var str_optionname = optionnameArr.join();
+					}// end of for---------------------------
+					
+					console.log("제품번호들 :"+str_pnum);
+					console.log("주문량들 :"+str_oqty);
+					console.log("장바구니번호들 :"+str_cartnum);
+					console.log("제품상세번호들 :"+str_pdetailnum);
+					console.log("제품별 금액들 :"+str_totalPrice);
+					console.log("제품별 금액들의 합계 :"+sumtotalPrice);
+					console.log("제품별 옵션명 :"+str_optionname);
+					
+					
+					$.ajax({
+						
+						url: "<%= request.getContextPath()%>/cart/orderSelect.to",
+						type:"post",
+						data:{"pnum_es":str_pnum
+							, "oqty_es":str_oqty
+							, "cartnum_es":str_cartnum
+							, "pdetailnum_es": str_pdetailnum
+							, "totalPrice_es":str_totalPrice
+							, "sumtotalPrice":sumtotalPrice
+							, "str_optionnames":str_optionname},
+						dataType:"json",
+						success: function(json){
+							if(json.isSuccess ==1){
+								location.href="<%= request.getContextPath()%>/order.to"
+							}
+						},
+					 	 error: function(request, status, error){
+			               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			            } 
+					});
+					
 					
 			}
 			
 		}// end of function goOrder()----------------------
+		
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 </script>
@@ -692,7 +749,7 @@ $(document).ready(function(){
 								<span style= "font-weight: bold; ">Platinum</span>
 							</c:if>
 						] 등급입니다.</p>
-						<a href="">적립포인트:&nbsp;&nbsp;<span>${sessionScope.loginuser.point}</span>P</a>&nbsp;
+						<a href="<%= ctxPath%>/member/pointList.to">적립포인트:&nbsp;&nbsp;<span>${sessionScope.loginuser.point}</span>P</a>&nbsp;
 					</div>
 				</div>
 			</div>
@@ -737,14 +794,14 @@ $(document).ready(function(){
 							</tr>
 						</tbody>
 					</c:if>
-					
+					<from>
 					<c:if test="${not empty requestScope.cartList}">
 						<tbody>
 						<c:forEach items="${requestScope.cartList}" var="cart" varStatus="status">
 						
 									<tr class="xans-record-">
-										<td scope="col"><input type="checkbox"  class="checkpnum"
-											name="product_check" value="${cart.fk_pnum}" onclick="ChangeTotalPrice()" /></td>
+										<td scope="col"><input type="checkbox"  class="pnum"
+											name="pnum" value="${cart.fk_pnum}"/></td>
 										<td scope="col" class="thumb">
 										<a href="">
 											<img class="pimage1" src="<%=ctxPath%>/images/${cart.pvo.pimage1}" width= "90px;" height="90px;"/>
@@ -755,11 +812,11 @@ $(document).ready(function(){
 												<a href="">
 													<strong class="cname">${cart.pvo.pname}</strong>	
 												</a>
+												<input type="hidden" class="pnum" value="${cart.fk_pnum}"/>
+												<input type="hidden" class="pdetailnum" value="${cart.fk_pdetailnum}"/>
 												<input type="hidden" class="cartnum" value="${cart.cartnum}"/>
-												<input type="hidden" class="fk_pnum" value="${cart.fk_pnum}"/>
-												<input type="hidden" class="fk_pdetailnum" value="${cart.fk_pdetailnum}"/>
 											</li>
-											<li class="xans-record-" value="${cart.fk_pdetailnum}">[옵션: ${cart.pdetailvo.optionname}]<br />
+											<li class="xans-record-" >[옵션: ${cart.pdetailvo.optionname}]<input type="hidden" class="optionname" value="${cart.pdetailvo.optionname}"/><br>
 											
 											<button class="option_change btn_option" style="width: 80px; margin-top: 3px;" value="${cart.fk_pnum}">옵션변경</button>
 							
@@ -803,36 +860,39 @@ $(document).ready(function(){
 											</div>
 										</td>
 										<td scope="col" >
-	  										<input class="prodOqty" name="value" style="width: 25px; height: 20px;" value="${cart.oqty}"/>
-	  										<input type="hidden" class="pqty" value="${cart.pdetailvo.pqty}"/>
+	  										<input class="oqty"  style="width: 25px; height: 20px;" value="${cart.oqty}"/>
+	  							
 	  										<button  class="updateOqty btn_option" style="width:50px;" onclick="updateOqtyCart(this)" >변경</button>
 										</td>
 										<td scope="col" class="mileage">
 												<c:if test="${sessionScope.loginuser.level == 1}">
+													<div id="pointbox">1% 적립</div>
 													<fmt:formatNumber value="${cart.pvo.saleprice*cart.oqty*0.01}" type="number"/>P
 													<input type="hidden" value="${cart.pvo.saleprice*cart.oqty*0.01}"/>
 												</c:if>
 												<c:if test="${sessionScope.loginuser.level == 2}">
+													<div id="pointbox">3% 적립</div>
 													<fmt:formatNumber value="${cart.pvo.saleprice*cart.oqty*0.03}" type="number"/>P
 													<input type="hidden" value="${cart.pvo.saleprice*cart.oqty*0.03}"/>
 												</c:if>
 												<c:if test="${sessionScope.loginuser.level == 3}">
+													<div id="pointbox">5% 적립</div>
 													<fmt:formatNumber value="${cart.pvo.saleprice*cart.oqty*0.05}" type="number"/>P
 													<input type="hidden" value="${cart.pvo.saleprice*cart.oqty*0.05}"/>
 												</c:if>
 										</td>
 										<td scope="col">
-												<c:if test="${(sum) >= 100000}"> 
-													<span>무료</span><c:set var="delivery" value="0"/><input type="text" class="delivery" value="0"/>
+												<c:if test="${(sum) >= 50000}"> 
+													<span>무료</span><c:set var="delivery" value="0"/><input type="hidden" class="delivery" value="0"/>
 												</c:if>
-												<c:if test="${(sum) < 100000}">
-													<fmt:formatNumber value="2500" type="number" />원<input type="text" class="delivery" value="2500"/>
+												<c:if test="${(sum) < 50000}">
+													<fmt:formatNumber value="2500" type="number" />원<input type="hidden" class="delivery" value="2500"/>
 													<c:set var="delivery" value="2500"/>
 												</c:if>
 										</td>
 										<td scope="col" class="total">
 											<strong><fmt:formatNumber value="${(cart.pvo.saleprice*cart.oqty)}" type="number" /> 원</strong>
-											<input type="hidden" class="sumprice" value="${(cart.pvo.saleprice*cart.oqty)}"/>
+											<input type="hidden" class="totalPrice" value="${(cart.pvo.saleprice*cart.oqty)}"/>
 										
 										</td>
 										<td scope="col" class="button">
@@ -844,6 +904,7 @@ $(document).ready(function(){
 									</tr>
 									</c:forEach>
 								</c:if>
+								</from>
 							</tbody>	
 			</table>
 			<button id="deleteCart" class="btn_option" style="width: 120px;" onclick="deleteAllCart('${sessionScope.loginuser}')">장바구니 비우기</button>
@@ -874,10 +935,10 @@ $(document).ready(function(){
 								
 								</td>
 								<td scope="col" style="border-right: solid 1px #CCD1D1;">
-									<c:if test="${sum >= 100000}"> 
+									<c:if test="${sum >= 50000}"> 
 										<span>무료</span><c:set var="delivery" value="0"/><input type="hidden" class="sumdelivery" value="0"/>
 									</c:if>
-									<c:if test="${sum < 100000}">
+									<c:if test="${sum < 50000}">
 										<fmt:formatNumber value="2500" type="number" />원
 										<c:set var="delivery" value="2500"/><input type="hidden" class="sumdelivery" value="2500"/>
 									</c:if>
@@ -892,8 +953,8 @@ $(document).ready(function(){
 			</c:if>
 			
 			<div style="margin: 30px 0px;">
-				<button id="allorder" class="btnLarge" style="background-color: #000; color: #fff; margin-left: 380px; margin-right: 20px;">전체상품주문 </button>
-				<button  id="seperateorder" class="btnLarge" style="background-color: #eee; color: #000;">선택상품주문 </button>
+				<button id="allorder" class="btnLarge" style="background-color: #000; color: #fff; margin-left: 380px; margin-right: 20px;" >전체상품주문 </button>
+				<button  id="seperateorder" class="btnLarge" style="background-color: #eee; color: #000;" onclick="goOrder()">선택상품주문 </button>
 				<span class="btn_right"><a  href="<%= request.getContextPath()%>/home.to"><button id="shoppingcon" class="btnLarge">쇼핑계속하기 </button></a></span>
 			</div>
 		
@@ -996,33 +1057,36 @@ $(document).ready(function(){
 									</td>
 									<td scope="col" class="mileage">
 										<c:if test="${sessionScope.loginuser.level == 1}">
+													<div id="pointbox">1% 적립</div>
 													<fmt:formatNumber value="${wish.pvo.saleprice*0.01}" type="number"/>P
 													<input type="hidden" value="${wish.pvo.saleprice*0.01}"/>
 												</c:if>
 												<c:if test="${sessionScope.loginuser.level == 2}">
+													<div id="pointbox">3% 적립</div>
 													<fmt:formatNumber value="${cart.pvo.saleprice*0.03}" type="number"/>P
 													<input type="hidden" value="${wish.pvo.saleprice*0.03}"/>
 												</c:if>
 												<c:if test="${sessionScope.loginuser.level == 3}">
+													<div id="pointbox">5% 적립</div>
 													<fmt:formatNumber value="${cart.pvo.saleprice*0.05}" type="number"/>P
 													<input type="hidden" value="${wish.pvo.saleprice*0.05}"/>
 										</c:if>
 									</td>
 									<td scope="col">
-										<span><c:if test="${wish.pvo.saleprice >=100000} ">
+										<span><c:if test="${wish.pvo.saleprice >=50000} ">
 												0
 												</c:if>
-												<c:if test="${wish.pvo.saleprice < 100000}">
+												<c:if test="${wish.pvo.saleprice < 50000}">
 												<fmt:formatNumber  value="2500" type="number" />원
 												</c:if>
 										</span>
 									</td>
 									<td scope="col" class="total">
 										<strong>
-											<c:if test="${wish.pvo.saleprice >= 100000}"> 
+											<c:if test="${wish.pvo.saleprice >= 50000}"> 
 												<fmt:formatNumber value="${wish.pvo.saleprice}" type="number" /> 원</strong>
 											</c:if>
-											<c:if test="${wish.pvo.saleprice < 100000}"> 
+											<c:if test="${wish.pvo.saleprice < 50000}"> 
 											<fmt:formatNumber value="${wish.pvo.saleprice+2500}" type="number" /> 원</strong>
 											</c:if>
 									</td>
@@ -1046,28 +1110,6 @@ $(document).ready(function(){
 				${requestScope.pageBar}
 		</div>
 	
-
-
-		<!-- 레이어 팝업 만들기  -->
-		<div id="wishlistlayer" class="wishPopup addoption ec-base-layer3" style="position: absolute !important;"> 
-			<div class="header">
-	     		<h3  style="color: #fff !important; text-align: left;">옵션변경</h3>
-			</div>
-				<iframe frameborder="0"style="width: 100%; height: 365px; " src="<%= request.getContextPath()%>/cart/addmyprod.to"></iframe>    
-			<a href="#none" class="close" onclick="$('div#wishlistlayer').hide();"><img src="//img.echosting.cafe24.com/skin/base/common/btn_close.gif" alt="닫기"/></a>
-		
-		<div class="base-bottom">
-		<span class="totalprice" style="font-size: 12pt;">총상품금액(수량):</span>&nbsp;<span style="font-size: 18pt;">원</span>
-		<div class="bottom_base" style="margin-top:10px;">
-	    <a href="#none" class="btn_order" onclick="optionsChange('바로구매하기',${cart.cart_pro_code},${cart.cart_pro_detail_code},${cart.cart_pro_price},${cart.cart_pro_quantity})">
-		바로구매하기</a>
-		<a href="#none" class="btn_movecart" onclick="optionsChange('변경',${cart.cart_pro_code},${cart.cart_pro_detail_code},${cart.cart_pro_price},${cart.cart_pro_quantity})">
-	    	장바구니담기</a>
-	    	</div>
-    	</div>
-		</div>
-		<!-- 레이어 팝업 만들기  -->	
-
 
 		<div class="useInfo"><h3 >이용안내</h3>
 			<div class="inner" >
