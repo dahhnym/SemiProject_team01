@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.naming.Context;
@@ -24,7 +25,7 @@ public class ProductdetailDAO2 implements InterProductdetailDAO2 {
 		try {
 			Context initContext = new InitialContext();
 		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
-		    ds = (DataSource)envContext.lookup("jdbc/myoracle");
+		    ds = (DataSource)envContext.lookup("jdbc/semioracle");
 		} catch(NamingException e) {
 			e.printStackTrace();
 		}
@@ -43,14 +44,14 @@ public class ProductdetailDAO2 implements InterProductdetailDAO2 {
 	}
 
 	@Override
-	public List<String> getOptionByPnum(String pnum) throws SQLException {
-		List<String> option = new ArrayList<>();
+	public List<HashMap<String,String>> getOptionByPnum(String pnum) throws SQLException {
+		List<HashMap<String,String>> option = new ArrayList<>();
 		
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " select optionname "+
-				         " from tbl_productdetail "+
+			String sql = " select optionname, pdetailnum "+
+				         " from tbl_proddetail "+
 				         " where fk_pnum = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -59,8 +60,10 @@ public class ProductdetailDAO2 implements InterProductdetailDAO2 {
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				String optionsort = rs.getString(1); // 옵션내용
-				option.add(optionsort); 
+				HashMap<String, String> map = new HashMap<>();
+				map.put("optionname", rs.getString(1));
+				map.put("pdetailnum", rs.getString(2));
+				option.add(map);
 			}
 			
 		} finally {
@@ -69,5 +72,7 @@ public class ProductdetailDAO2 implements InterProductdetailDAO2 {
 		
 		return option;
 	}
+
+	
 
 }

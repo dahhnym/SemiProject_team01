@@ -345,19 +345,19 @@ public class ProductDAO2 implements InterProductDAO2 {
 	      try {
 	          conn = ds.getConnection();
 	          
-	          String sql = "select cnum, pnum, pname, pimage1, price, saleprice\n"+
-	        		  		"from\n"+
-	        		  		"(\n"+
-	        		  		"select row_number() over(order by pnum asc) AS RNO \n"+
-	        		  		"       C.cnum ,pnum, pname, pcompany, pimage1, price, saleprice, S.sname\n"+
-	        		  		" from tbl_product P \n"+
+	          String sql = "select cnum, pnum, pname, pimage1, price, saleprice "+
+	        		  		"from "+
+	        		  		"( "+
+	        		  		"select row_number() over(order by pnum asc) AS RNO  "+
+	        		  		"       C.cnum ,pnum, pname, pcompany, pimage1, price, saleprice, S.sname "+
+	        		  		" from tbl_product P "+
 	        		  		" JOIN tbl_category C \n"+
 	        		  		" ON P.fk_cnum = C.cnum \n"+
 	        		  		" JOIN tbl_spec S \n"+
-	        		  		" ON P.fk_snum = S.snum\n"+
+	        		  		" ON P.fk_snum = S.snum \n"+
 	        		  		" where C.cname = ? \n"+
 	        		  		") V\n"+
-	        		  		"where RNO between ? and ?\n"+
+	        		  		"where RNO between ? and ? \n"+
 	        		  		" order by pnum desc ";
 	          
 	          pstmt = conn.prepareStatement(sql);

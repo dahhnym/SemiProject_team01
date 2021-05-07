@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>::: ladies and gents :::</title>
 <!-- common.css -->
-<link rel="stylesheet" href="<%=ctxPath%>/css/common.css"/>
+<link rel="stylesheet" href="<%=ctxPath%>/css/common_recover.css"/>
 
 
 
@@ -28,7 +28,7 @@
 
 $(document).ready(function(){
 	//드롭다운 하위메뉴 숨기기
-	$("ul.dropdownlist").hide();
+	 /* $("ul.dropdownlist").hide(); */
 	
 	window.onscroll = function() {myFunction()};
 
@@ -49,11 +49,11 @@ $(document).ready(function(){
 
 	console.log("${sessionScope.loginuser}");
 	
-	$("ul.dropdownlist").mouseover(function(){
+	/* $("ul.dropdownlist").mouseover(function(){
 		$(this).hide();
 	});
 	
-	/* $("a.navmenu").hover(function(){	//마우스오버 시
+	$("a.navmenu").hover(function(){	//마우스오버 시
 			$("ul.dropdownlist").show();
 		},
 		function(){	//마우스아웃 시
@@ -76,7 +76,9 @@ $(document).ready(function(){
  	  <i id="searchbutton" class="fas fa-search"></i>
 	  <a href="<%=ctxPath%>/cscenter/csHome.to">고객센터</a>
 	  <a href="<%=ctxPath%>/cart/cart.to">장바구니</a>
-	  <a href="<%=ctxPath%>/member/memberAccount.to">마이페이지</a>
+	  <c:if test="${not empty sessionScope.loginuser.userid}">
+	  	<a href="<%=ctxPath%>/member/memberAccount.to">마이페이지</a>
+	  </c:if>
 	  <c:choose>
    		<c:when test="${empty sessionScope.loginuser}"><a href="<%=ctxPath%>/login/login.to">로그인</a></c:when>
    		<c:when test="${not empty sessionScope.loginuser}"><a href="<%=ctxPath%>/login/logout.to">로그아웃</a></c:when>
@@ -99,32 +101,30 @@ $(document).ready(function(){
 <div id="navbar" class="nohidden">
 	<div id="bottom-nav-container" class="nav nohidden">
 	    <ul class="nohidden">
-	        <li>
-	            <a class="navmenu" href="<%=ctxPath%>/List.to">Best 상품</a>
+	        <li class="nav-main">
+	            <a class="navmenu" href="#">Best 상품</a>
 	            <ul class="dropdownlist">
-	                <li><a href="#">토트백</a></li>
-	                <li><a href="#">숄더백</a></li>
-	                <li><a href="#">크로스백</a></li>
+	                <li><a href="<%=ctxPath%>/product/prodListBySpec.to?snum=2&cnum=1">토트백</a></li>
+	                <li><a href="<%=ctxPath%>/product/prodListBySpec.to?snum=2&cnum=2">숄더백</a></li>
+	                <li><a href="<%=ctxPath%>/product/prodListBySpec.to?snum=2&cnum=3">백팩</a></li>
+	                <li><a href="<%=ctxPath%>/product/prodListBySpec.to?snum=2&cnum=4">클러치백</a></li>
 	            </ul>
 	        </li>
-	        <li>
-	            <a class="navmenu" href="<%=ctxPath%>/List.to">Sale 상품</a>
+	        <li class="nav-main">
+	            <a class="navmenu" href="#">Sale 상품</a>
 	            <ul class="dropdownlist">
-	                <li><a href="#">토트백</a></li>
-	                <li><a href="#">숄더백</a></li>
-	                <li><a href="#">크로스백</a></li>
+	                <li><a href="<%=ctxPath%>/product/prodListBySpec.to?snum=3&cnum=1">토트백</a></li>
+	                <li><a href="<%=ctxPath%>/product/prodListBySpec.to?snum=3&cnum=2">숄더백</a></li>
+	                <li><a href="<%=ctxPath%>/product/prodListBySpec.to?snum=3&cnum=3">백팩</a></li>
+	                <li><a href="<%=ctxPath%>/product/prodListBySpec.to?snum=3&cnum=4">클러치백</a></li>
 	            </ul>
 	        </li>
-	        <li><a class="navmenu" href="<%=ctxPath%>/List.to">토트백</a></li>
-	        <li><a class="navmenu" href="<%=ctxPath%>/List.to">숄더백</a></li>
-	        <li><a class="navmenu" href="<%=ctxPath%>/List.to">크로스백</a></li>
-	        <li><a class="navmenu" href="<%=ctxPath%>/List.to">백팩</a></li>
-	        <li>
-	        	<a class="navmenu" href="#">악세사리</a>
-	        	<ul class="dropdownlist">
-	                <li><a href="#">크로스벨트</a></li>
-	                <li><a href="#">키링</a></li>
-	            </ul>
+	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/List.to?cnum=1">토트백</a>
+	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/List.to?cnum=2">숄더백</a></li>
+	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/List.to?cnum=3">백팩</a></li>
+	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/List.to?cnum=4">클러치백</a></li>
+	        <li class="nav-main">
+	        	<a class="navmenu" href="<%=ctxPath%>/List.to?cnum=5">악세사리</a>
 	        </li>
 	    </ul>
 	</div>

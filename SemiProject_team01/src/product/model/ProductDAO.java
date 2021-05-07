@@ -549,10 +549,9 @@ public class ProductDAO implements InterProductDAO {
 			
 			try {
 				conn = ds.getConnection();
-
 				String sql = " select ceil( count(*)/? ) "
 						   + " from tbl_product";
-				
+				/*
 				// ======검색어가 있는경우 시작 =========== 
 				String colname = paraMap.get("searchType");
 				String searchWord = paraMap.get("searchWord");
@@ -563,15 +562,18 @@ public class ProductDAO implements InterProductDAO {
 					sql += " and "+colname+" like '%'||?||'%' ";
 					// 위치홀더는 데이터값에만 사용됨. 테이블명이나 컬럼명에는 위치홀더를 사용할 수 없다.
 				}
-				// ======검색어가 있는경우 끝 ===========
+				// ======검색어가 있는경우 끝 =========== */
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, paraMap.get("sizePerPage"));
-
+				System.out.println("sizePerPage "+paraMap.get("sizePerPage"));
+				
+				
+				/*
 				if( searchWord != null && !searchWord.trim().isEmpty()) {
 					// 검색어를 아예 안 쓰거나 공백(space)만 입력한 것이 아닌 검색어를 입력한 경우
 					pstmt.setString(2, searchWord);
-				}
+				} */
 				
 				rs = pstmt.executeQuery();
 				
@@ -691,5 +693,176 @@ public class ProductDAO implements InterProductDAO {
 		
 		}
 
+		// 제품 카테고리 별로 불러오기
+		@Override
+		public List<ProductVO> selectCateonly(Map<String, String> paraMap) throws SQLException {
+				
+			List<ProductVO> prodList = new ArrayList<>();
+		      
+		      try {
+		          conn = ds.getConnection();
+		          
+		          String sql = "select cnum, cname, snum, pnum, pname, pimage1, price, saleprice\n"+
+		        		  	   "from \n"+
+		        		  	   "( \n"+
+		        		  	   "select row_number() over(order by pnum asc) AS RNO,         \n"+
+		        		  	   "    C.cnum, C.cname, pnum, pname, pcompany, pimage1, price, saleprice, S.sname, snum  \n"+
+		        		  	   "from tbl_product P  \n"+
+		        		  	   "JOIN tbl_category C  \n"+
+		        		  	   "ON P.fk_cnum = C.cnum  \n"+
+		        		  	   "JOIN tbl_spec S  \n"+
+		        		  	   "ON P.fk_snum = S.snum\n"+
+		        		  	   "where C.cnum = ?\n"+
+		        		  	   ") V\n"+
+		        		  	   "where RNO between ? and ?\n"+
+		        		  	   "order by pnum desc";
+		          
+		          pstmt = conn.prepareStatement(sql);
+		          int currentShowPageNo = Integer.parseInt( paraMap.get("currentShowPageNo") );
+		          int sizePerPage = Integer.parseInt( paraMap.get("sizePerPage") );
+		          
+		          pstmt.setString(1, paraMap.get("cnum"));
+		          pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식
+		          pstmt.setInt(3, (currentShowPageNo * sizePerPage)); // 공식 
+		          
+		          
+		          rs = pstmt.executeQuery();
+		          
+		          while( rs.next() ) {
+		             
+		             ProductVO pvo = new ProductVO();
+		             CategoryVO categvo = new CategoryVO();
+		             SpecVO spvo = new SpecVO();
+		            		 
+		             pvo.setFk_cnum(rs.getInt("cnum")); 	// 카테고리번호
+		             categvo.setCname(rs.getString("cname")); //카테고리명
+		             pvo.setCategvo(categvo);
+		             spvo.setSnum(rs.getInt("snum"));	// 제품스펙명
+		             pvo.setSpvo(spvo);
+		             pvo.setPnum(rs.getInt("pnum"));     // 제품번호
+		             pvo.setPname(rs.getString("pname")); // 제품명
+		             pvo.setPimage1(rs.getString("pimage1"));   // 제품이미지1   이미지파일명
+		             pvo.setPrice(rs.getInt("price"));        // 제품 정가
+		             pvo.setSaleprice(rs.getInt("saleprice"));    // 제품 판매가
+		               
+		             
+		             prodList.add(pvo);
+		          }// end of while-----------------------------------------
+		          
+		      } finally {
+		         close();
+		      }      
+		      
+		      return prodList;
+		}
+
+
+		// 페이지바를 만들기 위해서 특정카테고리의 제품개수에 대한 총페이지수 알아오기(select)
+		@Override
+		public int getTotalPage(String cnum) throws SQLException {
+			int totalPage = 0;
+		      
+		      try {
+		         conn = ds.getConnection();
+		         
+		         String sql = " select  ceil(count(*)/12) "  // 12 이 sizePerPage 이다.
+		                  + " from tbl_product "
+		                  + " where fk_cnum = ? "; 
+		         
+		         pstmt = conn.prepareStatement(sql);
+		         
+		         pstmt.setString(1, cnum);
+		               
+		         rs = pstmt.executeQuery();
+		         
+		         rs.next();
+		         
+		         totalPage = rs.getInt(1);
+		         
+		      } finally {
+		         close();
+		      }      
+		      
+		      return totalPage;
+		}
+
+		// 특정 제품 스펙의 카테고리별 제품 select 해오기
+		@Override
+		public List<ProductVO> selectByBothSpecCateg(Map<String, String> paraMap) throws SQLException {
+			List<ProductVO> prodList = new ArrayList<>();
+		      
+		      try {
+		          conn = ds.getConnection();
+		          
+		          String sql = "select cnum, cname, snum, pnum, pname, pimage1, price, saleprice\n"+
+			        		  "from \n"+
+			        		  "( \n"+
+			        		  "select row_number() over(order by pnum asc) AS RNO,\n"+
+			        		  "    C.cnum, C.cname, pnum, pname, pcompany, pimage1, price, saleprice, S.sname, snum\n"+
+			        		  "from tbl_product P  \n"+
+			        		  "JOIN tbl_category C  \n"+
+			        		  "ON P.fk_cnum = C.cnum  \n"+
+			        		  "JOIN tbl_spec S  \n"+
+			        		  "ON P.fk_snum = S.snum\n"+
+			        		  "where S.snum = ? and C.cnum = ?"+
+			        		  ") V\n"+
+			        		  "where RNO between ? and ?\n"+
+			        		  "order by pnum desc";
+		          
+		          pstmt = conn.prepareStatement(sql);
+		          int currentShowPageNo = Integer.parseInt( paraMap.get("currentShowPageNo") );
+		          int sizePerPage = Integer.parseInt( paraMap.get("sizePerPage") );
+		          
+		          pstmt.setString(1, paraMap.get("snum"));
+		          pstmt.setString(2, paraMap.get("cnum"));
+		          pstmt.setInt(3, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식
+		          pstmt.setInt(4, (currentShowPageNo * sizePerPage)); // 공식 
+		          
+		          
+		          rs = pstmt.executeQuery();
+		          
+		          while( rs.next() ) {
+		             
+		             ProductVO pvo = new ProductVO();
+		             CategoryVO categvo = new CategoryVO();
+		             SpecVO spvo = new SpecVO();
+		            		 
+		             pvo.setFk_cnum(rs.getInt("cnum")); 	// 카테고리번호
+		             categvo.setCname(rs.getString("cname")); //카테고리명
+		             pvo.setCategvo(categvo);
+		             spvo.setSnum(rs.getInt("snum"));	// 제품스펙명
+		             pvo.setSpvo(spvo);
+		             pvo.setPnum(rs.getInt("pnum"));     // 제품번호
+		             pvo.setPname(rs.getString("pname")); // 제품명
+		             pvo.setPimage1(rs.getString("pimage1"));   // 제품이미지1   이미지파일명
+		             pvo.setPrice(rs.getInt("price"));        // 제품 정가
+		             pvo.setSaleprice(rs.getInt("saleprice"));    // 제품 판매가
+		               
+		             
+		             prodList.add(pvo);
+		          }// end of while-----------------------------------------
+		          
+		      } finally {
+		         close();
+		      }      
+		      
+		      
+		      return prodList;
+		}
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 }
 
