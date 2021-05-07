@@ -27,6 +27,9 @@ public interface InterProductDAO2 {
 	// 제품 스펙이름 불러오기
 	List<ProductVO2> selectBySpecName(Map<String, String> paraMap) throws SQLException;
 
+	// 카테고리 별로 제품 불러오기
+	List<ProductVO2> selectCateonly(Map<String, String> paraMap) throws SQLException;
+
 	
 
 }
