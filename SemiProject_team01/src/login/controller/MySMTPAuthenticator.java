@@ -1,7 +1,6 @@
 package login.controller;
 
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
+import javax.mail.*;
 
 public class MySMTPAuthenticator extends Authenticator {
 
