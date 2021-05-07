@@ -784,15 +784,15 @@ public class CartDAO implements InterCartDAO {
 	        conn.setAutoCommit(false); // 수동 커밋
 	        
 	     // 2. 주문 테이블에 채번해온 주문전표, 로그인한 사용자, 현재시각을 insert 하기(수동커밋처리)
-	        String sql = " insert into tbl_order(odrcode, fk_userid, totalcost,orderdate) "
-                    + " values(to_number(?), ?, ?,default) ";
+	        String sql = " insert into tbl_order(odrcode, fk_userid, totalcost) "
+                    + " values(to_number(?), ?, ?) ";
        
 	        pstmt = conn.prepareStatement(sql);
 	        pstmt.setString(1, (String) paraMap.get("odrcode")); 
 	        pstmt.setString(2, (String)paraMap.get("userid"));
 	        pstmt.setInt(3, Integer.parseInt((String)paraMap.get("sumtotalPrice")));
 	        
-	        System.out.println("주문번호: "+(String) paraMap.get("odrcode"));
+	    //    System.out.println("주문번호: "+(String) paraMap.get("odrcode"));
 	        n1 = pstmt.executeUpdate();
 	    
 	        System.out.println("확인용 :"+n1);
@@ -807,6 +807,8 @@ public class CartDAO implements InterCartDAO {
 	            
 	            
 	            int cnt = 0;
+	            
+	      //      System.out.println("pnumArr: "+pnumArr.length);
 	           
 	            for(int i=0; i<pnumArr.length; i++) {
 	               sql = " insert into tbl_odrdetail(odrdetailno,fk_userid , fk_pnum, fk_odrcode , fk_pdetailnum, odrqty , odrprice, optionname) "  
@@ -833,20 +835,93 @@ public class CartDAO implements InterCartDAO {
 	      
 	                pstmt.executeUpdate();
 	                cnt++;
-
+	                
+	                System.out.println(cnt);
 	            }// end of for----------------------
 	            
 	            	if(cnt == pnumArr.length) {
 		               n2=1;
 		            }
 		        
-		            System.out.println("확인용:"+n2);
+		            System.out.println("확인용 n2:"+n2);
 	            
 	         }// end of if---------------------------          
 	            
 	        if(n1*n2>0) {
-	        
+	        	conn.commit();
 	        	isSuccess = 1;
+	        	  System.out.println("n1*n2: "+(n1*n2));
+	        }
+	   
+	    }catch (SQLException e) {
+	    	conn.rollback();
+            isSuccess = 0;
+	    
+	    }finally {
+			close();
+		}
+	    return isSuccess;
+	    
+	}
+
+	
+	
+	// 장바구니, 위시리스트 한개씩 insert
+	@Override
+	public int orderOneAdd(Map<String, String> paraMap) throws SQLException {
+
+		int isSuccess = 0;
+	    int n1=0, n2=0;
+	     
+	    try {
+	    	conn = ds.getConnection();
+	          
+	        conn.setAutoCommit(false); // 수동 커밋
+	        
+	     // 2. 주문 테이블에 채번해온 주문전표, 로그인한 사용자, 현재시각을 insert 하기(수동커밋처리)
+	        String sql = " insert into tbl_order(odrcode, fk_userid, totalcost) "
+                    + " values(to_number(?), ?, to_number(?) )";
+       
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, paraMap.get("odrcode")); 
+	        pstmt.setString(2, paraMap.get("userid"));
+	        pstmt.setString(3, paraMap.get("totalPrice"));
+	        
+	        System.out.println("주문번호: "+ paraMap.get("odrcode"));
+	        System.out.println("아이디: "+paraMap.get("userid"));
+	        System.out.println("금액: "+paraMap.get("totalPrice"));
+	        
+	        n1 = pstmt.executeUpdate();
+	    
+	        System.out.println("확인용 :"+n1);
+	        
+	     // 3. 주문상세 테이블에 채번해온 주문전표, 제품번호, 주문량, 주문금액을 insert 하기(수동커밋처리)
+	        if(n1 == 1) {
+	 
+	               sql = " insert into tbl_odrdetail(odrdetailno,fk_userid , fk_pnum, fk_odrcode , fk_pdetailnum, odrqty , odrprice, optionname) "  
+	                  + " values(seq_orderdetail_odetailno.nextval, ?, to_number(?), to_number(?), to_number(?), to_number(?) , to_number(?), ?) ";
+	               
+	                pstmt = conn.prepareStatement(sql);
+	                
+	                pstmt.setString(1, paraMap.get("userid"));
+	                pstmt.setString(2, paraMap.get("pnum"));
+	                pstmt.setString(3, paraMap.get("odrcode"));
+	                pstmt.setString(4, paraMap.get("pdetailnum"));
+	                pstmt.setString(5, paraMap.get("oqty"));
+	                pstmt.setString(6, paraMap.get("totalPrice"));
+	                pstmt.setString(7, paraMap.get("optionname"));
+	                
+	        
+	                n2 = pstmt.executeUpdate();
+
+		            System.out.println("확인용 n2:"+n2);
+	            
+	         }// end of if---------------------------          
+	            
+	        if(n1*n2>0) {
+	        	conn.commit();
+	        	isSuccess = 1;
+	        	  System.out.println("n1*n2: "+(n1*n2));
 	        }
 	   
 	    }catch (SQLException e) {
