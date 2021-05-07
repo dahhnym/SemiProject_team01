@@ -30,7 +30,7 @@ public class ProductDAO2 implements InterProductDAO2 {
 		try {
 			Context initContext = new InitialContext();
 		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
-		    ds = (DataSource)envContext.lookup("jdbc/myoracle");
+		    ds = (DataSource)envContext.lookup("jdbc/semioracle");
 		} catch(NamingException e) {
 			e.printStackTrace();
 		}
