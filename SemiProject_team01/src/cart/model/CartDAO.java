@@ -487,27 +487,42 @@ public class CartDAO implements InterCartDAO {
 	      
 	        	int pqty=rs.getInt(1);
 	        	
+
 	        	if(pqty==0) {
-	        		n=0;
+	        		n=-1;
 	        	}
-			
-	        	else {	// 장바구니에 존재하지 않는 새로운 제품을 넣고자 하는 경우
-	        		sql = " update tbl_wishlist set fk_pdetailnum = ? "+    		
-		                     " where fk_userid = ? and fk_pdetailnum = ? "+
-					         " and 0< (select D.pqty " + 
-							 "            from tbl_proddetail D " + 
-							 "            where  D.pdetailnum = ? )";
+	        	else {
 		        	
-		        	pstmt = conn.prepareStatement(sql);
-		        	pstmt = conn.prepareStatement(sql);
-		        	pstmt.setInt(1, Integer.parseInt(newpdetailnum));
-		        	pstmt.setString(2, userid);
-		        	pstmt.setInt(3,Integer.parseInt(oldpdetailnum));
-		        	pstmt.setInt(4,Integer.parseInt(oldpdetailnum));
-		        
-		        	n = pstmt.executeUpdate();
+	        		sql = " select W.wnum , D.pqty " + 
+							" from tbl_wishlist W join tbl_proddetail D " + 
+							" on W.fk_pdetailnum = D.pdetailnum " + 
+							" where W.fk_userid = ? and W.fk_pdetailnum= ? ";
+
+							pstmt = conn.prepareStatement(sql);
+					        pstmt.setString(1, userid);
+					        pstmt.setString(2, newpdetailnum);
+					        
+					        rs = pstmt.executeQuery();
+					        
+					        if(rs.next()) {
+					        	n=0;
+					        }
+					        else {
+		        	// 장바구니에 존재하지 않는 새로운 제품을 넣고자 하는 경우
+					        	sql = " update tbl_wishlist set fk_pdetailnum = ? "
+					                    + " where fk_userid = ? and fk_pdetailnum = ? ";
+					        
+					        	pstmt = conn.prepareStatement(sql);
+					        	pstmt.setInt(1, Integer.parseInt(newpdetailnum));
+					        	pstmt.setString(2, userid);
+					        	pstmt.setInt(3,Integer.parseInt(oldpdetailnum));
+				        	
+					        
+					        	n = pstmt.executeUpdate();
+			
+					        }
 	        	}
-	        }
+	        	}
 		}finally {
 			close();
 		}

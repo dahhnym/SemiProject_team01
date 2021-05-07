@@ -380,8 +380,12 @@ $("input.prodOqty").bind("spinstop",function(){
 								if(json.n==1){
 									location.href="javascript:history.go(0);"; // 새로고침해주기
 								}
-								else if(json.n==0){
+								else if(json.n==-1){
 									alert("재고수량이 없습니다.");
+									return;
+								}
+								else if(json.n==0){
+									alert("해당 상품은 이미 장바구니에 존재합니다.");
 									return;
 								}
 							},
