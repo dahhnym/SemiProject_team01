@@ -24,14 +24,21 @@ public interface InterMemberDAO {
 	// 아이디 찾기
 	String findUserid(String name, String email) throws SQLException;
 
-	// 비밀번호 찾기
-	int findPwd(Map<String, String> paraMap) throws SQLException;
+	// 회원계정 존재여부 확인하기
+	int checkAccount(Map<String, String> paraMap) throws SQLException;
 
+	// 임시비밀번호로 DB 저장하기
+	int saveRndPwd(String rndPwd, String userid) throws SQLException;	
+	
 	// 페이징 처리를 위해 회원목록 총페이지수 알아오기
 	int selectTotalPage(Map<String, String> paraMap) throws SQLException;
 
 	// 페이징 처리를 한 모든 회원 또는 검색한 회원 목록 보여주기
 	List<MemberVO> selectPagingMember(Map<String, String> paraMap) throws SQLException;
+
+
+
+	
 
 
 
