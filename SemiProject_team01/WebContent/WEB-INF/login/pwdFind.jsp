@@ -30,9 +30,12 @@
 		
 		// 임시비밀번호 발송 버튼 누른 경우
 		$("button#pwdFind").click(function(){
-			goConfirm();
+			var registerName = $("input#registerName").val().trim();
+			var registerEmail = $("input#registerEmailID").val().trim()+"@"+$("input#emailAddress").val().trim();
+			var registerUserid = $("input#registerUserid").val().trim();
 			
-			console.log(bool);
+			goConfirm();
+
 			if(bool) {	
 				findPwdCheck();
 			}	
@@ -49,12 +52,11 @@
 		});
 
 	});// end of $(function() ------------------------------------------------------------
-	
-			
+
+
 	function goConfirm() {	// 비밀번호 찾기를 누른 경우		
 		
 		// 성명 체크
-		var registerName = $("input#registerName").val();
 		if(registerName=="") {
 			$("div#registerName").show();
 			$("div#registerName").html("회원가입시 성명을 입력해주세요.");
@@ -67,7 +69,6 @@
 		}	
 		
 		// 아이디 체크
-		var registerUserid = $("input#registerUserid").val();
 		if(registerUserid=="") {
 			$("div#registerUserid").show();
 			$("div#registerUserid").html("회원가입시 아이디를 입력해주세요.");
@@ -80,7 +81,6 @@
 		}	
 		
 		// 이메일 아이디 체크 
-		var registerEmailID = $("input#registerEmailID").val().trim();
 		if(registerEmailID==""){
 			$("div#registerEmailID").show();
 			$("div#registerEmailID").html("이메일 아이디를 입력해주세요.");
@@ -92,7 +92,7 @@
 			bool=true;
 		}		
 		
-		if($("select#selectedEmailAddress").val()=="기타"){
+		if($("select#selectedEmailAddress").val().trim()=="기타"){
 			// 기타 주소 체크
 			var etcEmailAddress = $("input#etcEmailAddress").val().trim();
 			var regExp=/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
@@ -126,29 +126,24 @@
 		
 	}// end of function goConfirm() ----------------------------------------------------------
 
-	
+		
 	// 일치하는 회원계정 존재여부 확인함수	
-	function findPwdCheck() {
-		console.log("하하");
-		var name = $("input#registerName").val().trim();
-		var userid = $("input#registerUserid").val().trim();
-		var email = $("input#registerEmailID").val().trim()+"@"+$("input#emailAddress").val().trim();
+	function findPwdCheck() {	
+		var registerName = $("input#registerName").val().trim();
+		var registerEmail = $("input#registerEmailID").val().trim()+"@"+$("input#emailAddress").val().trim();
+		var registerUserid = $("input#registerUserid").val().trim();
 		
 		$.ajax({
 			url:"<%= ctxPath%>/login/pwdFind.to",
 			type: "post",
-			data:{"name":name, "email":email, "userid":userid},
+			data:{"name":registerName, "email":registerEmail, "userid":registerUserid},
 			dataType:"json",	
 			success:function(json){
-				if(json.n==1) {		// 회원계정이 존재한다면
+				
+				if(json.bool==1) {		// 회원계정이 존재한다면
 					$("div#findPwd").show();
- 					$("div#findPwd").html("이메일로 임시 비밀번호를 발송했습니다.").css("color","green");
- 					
-					var frm = document.pwdFindFrm;
-					frm.action="sendRndPwd.to";
-					frm.method="POST";
-					frm.submit();	
- 					
+					$("div#findPwd").html("이메일로 임시 비밀번호를 발송했습니다.").css("color","green");
+					
  				} else { 	// 회원계정이 존재하지 않는다면
  					$("div#findPwd").show();
  					$("div#findPwd").html("일치하는 회원정보가 없습니다.").css("color","red");
@@ -157,8 +152,10 @@
 				error: function(request, status, error){
                 alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
         	}    				
-		}); // end of $.ajax ----------------------------------------------
-	}
+		}); 
+	}// end of function findPwdCheck()  ----------------------------------------------
+	
+	
 </script> 
 
 
