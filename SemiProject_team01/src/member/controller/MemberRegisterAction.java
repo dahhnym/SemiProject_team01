@@ -35,7 +35,7 @@ public class MemberRegisterAction extends AbstractController {
 			String emailAddress = request.getParameter("emailAddress"); 
 			String email = emailID+"@"+emailAddress;
 			
-			String mobile = "010"+request.getParameter("hp2"); 
+			String mobile = "010"+request.getParameter("ph2"); 
 			String postcode = request.getParameter("postcode");
 			String address = request.getParameter("address"); 
 			String detailaddress = request.getParameter("detailAddress"); 
