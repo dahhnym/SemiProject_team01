@@ -22,7 +22,7 @@
 		<table>
 			<tr>
 				<th width="120px;">주문번호</th>
-				<td>1234567</td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>주문일자</th>
