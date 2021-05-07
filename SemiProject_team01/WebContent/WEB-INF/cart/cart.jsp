@@ -605,6 +605,7 @@ $(document).ready(function(){
 		}
 		
 
+	
 		// === 장바구니에서 제품 선택주문하기 === // 
 		function goOrder() {
 		    
@@ -660,15 +661,7 @@ $(document).ready(function(){
 						var str_optionname = optionnameArr.join();
 					}// end of for---------------------------
 					
-					console.log("제품번호들 :"+str_pnum);
-					console.log("주문량들 :"+str_oqty);
-					console.log("장바구니번호들 :"+str_cartnum);
-					console.log("제품상세번호들 :"+str_pdetailnum);
-					console.log("제품별 금액들 :"+str_totalPrice);
-					console.log("제품별 금액들의 합계 :"+sumtotalPrice);
-					console.log("제품별 옵션명 :"+str_optionname);
-					
-					
+
 					$.ajax({
 						
 						url: "<%= request.getContextPath()%>/cart/orderSelect.to",
@@ -696,33 +689,86 @@ $(document).ready(function(){
 			
 		}// end of function goOrder()----------------------
 		
+		
+		
+		function orderAll(){
+			
+		///// == 체크박스의 체크된 갯수(checked 속성이용) == /////
+		    var checkAll = $("input:checkbox[name=pnum]").prop("checked", true);
 	
 		
+				//// == 체크박스에서 체크된 value값(checked 속성이용) == ////
+		   		///  == 체크가 된 것만 값을 읽어와서 배열에 넣어준다. /// 
+			        var allCnt = $("input:checkbox[name=pnum]").length;
+		   		
+		   			var pnumArr = new Array();
+		   			var pdetailnumArr = new Array();
+					var oqtyArr = new Array();
+					var cartnumArr = new Array();
+					var totalPriceArr = new Array();
+					var optionnameArr = new Array();
+					
+					for(var i=0; i<allCnt; i++) {
+						
+						if( $("input:checkbox[name=pnum]").eq(i).is(":checked") ) {
+							pnumArr.push( $("input:checkbox[name=pnum]").eq(i).val() );
+							oqtyArr.push( $("input.oqty").eq(i).val() );
+							cartnumArr.push( $("input.cartnum").eq(i).val() );
+							pdetailnumArr.push( $("input.pdetailnum").eq(i).val() );
+							totalPriceArr.push( $("input.totalPrice").eq(i).val() );
+							optionnameArr.push($("input.optionname").eq(i).val());
+						}
+						
+					}// end of for---------------------------
+					
+					for(var i=0; i<checkCnt; i++) {
+				//		console.log("확인용    제품번호 : " + pnumArr[i] + ", 주문량 : " + oqtyArr[i] + ", 장바구니번호 : " + cartnoArr[i] + ", 주문금액 : " + totalPriceArr[i] ); 
+					}// end of for---------------------------
+					
+					var sumtotalPrice = 0;
+					for(var i=0;i<totalPriceArr.length;i++){			
+				//		console.log(typeof(totalPriceArr[i])+" : "+totalPriceArr[i]);			
+						sumtotalPrice += parseInt(totalPriceArr[i]);
+					}	
+						
+					for(var i=0; i<checkCnt; i++) {
+						var str_pnum = pnumArr.join();
+						var str_oqty = oqtyArr.join();
+						var str_cartnum = cartnumArr.join();
+						var str_pdetailnum = pdetailnumArr.join();
+						var str_totalPrice = totalPriceArr.join();
+						var str_optionname = optionnameArr.join();
+					}// end of for---------------------------
+					
+	
+					$.ajax({
+						
+						url: "<%= request.getContextPath()%>/cart/orderSelect.to",
+						type:"post",
+						data:{"pnum_es":str_pnum
+							, "oqty_es":str_oqty
+							, "cartnum_es":str_cartnum
+							, "pdetailnum_es": str_pdetailnum
+							, "totalPrice_es":str_totalPrice
+							, "sumtotalPrice":sumtotalPrice
+							, "str_optionnames":str_optionname},
+						dataType:"json",
+						success: function(json){
+							if(json.isSuccess ==1){
+								location.href="<%= request.getContextPath()%>/order.to"
+							}
+						},
+					 	 error: function(request, status, error){
+			               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			            } 
+					});
+					
+					
+			
+		}
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	
 		
 </script>
 
@@ -953,7 +999,7 @@ $(document).ready(function(){
 			</c:if>
 			
 			<div style="margin: 30px 0px;">
-				<button id="allorder" class="btnLarge" style="background-color: #000; color: #fff; margin-left: 380px; margin-right: 20px;" >전체상품주문 </button>
+				<button id="allorder" class="btnLarge" style="background-color: #000; color: #fff; margin-left: 380px; margin-right: 20px;" onclick="orderAll()">전체상품주문 </button>
 				<button  id="seperateorder" class="btnLarge" style="background-color: #eee; color: #000;" onclick="goOrder()">선택상품주문 </button>
 				<span class="btn_right"><a  href="<%= request.getContextPath()%>/home.to"><button id="shoppingcon" class="btnLarge">쇼핑계속하기 </button></a></span>
 			</div>

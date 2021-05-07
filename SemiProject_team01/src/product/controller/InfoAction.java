@@ -57,13 +57,13 @@ public class InfoAction extends AbstractController {
 			 * request.setAttribute("option", option); // 제품 옵션 정보
 			 */			
 		//	super.setRedirect(false);
-			super.setViewPage("/WEB-INF/product/productInfo.jsp");
+			super.setViewPage("/WEB-INF/product/productInfo_front.jsp");
 		}
 		
 		
 		
 		
-		super.setViewPage("/WEB-INF/product/productInfo.jsp");
+		super.setViewPage("/WEB-INF/product/productInfo_front.jsp");
 		
 	}
 

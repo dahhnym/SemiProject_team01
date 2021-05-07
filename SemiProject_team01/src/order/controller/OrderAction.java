@@ -1,70 +1,55 @@
 package order.controller;
 
+import java.util.HashMap;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import cart.model.*;
 import common.controller.AbstractController;
 import member.model.MemberVO;
+import order.model.*;
 
-import product.model.InterProductDAO;
-import product.model.ProductDAO;
 public class OrderAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		HttpSession session = request.getSession();
+
+		// 로그인한 사용자 정보를 조회해오기
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		
-		//if(loginuser != null) {
-		// 로그인이 되어 있을 경우
+		
+		if(loginuser !=null) {
 			
-			String method=request.getMethod();
-			if(!"POST".equalsIgnoreCase(method)) { // GET 이라면 
-				
-				// 장바구니 상품 목록을 조회해오기
-			//	super.getCartList(request);				
-				
-				// 로그인한 사용자 정보를 조회해오기
-				InterProductDAO pdao = new ProductDAO();
-			//	List<ProdVO> specList = pdao.selectSpecList();
-			//	request.setAttribute("specList", specList);
-				
-				// 제품번호를 가지고서 해당 제품의 정보를 조회해오기
-			//	ProductVO pvo = pdao.selectOneProductByPnum(pnum);
-				
-				
-				super.setRedirect(false);
-				super.setViewPage("/WEB-INF/order/order.jsp");
-			}
-			else {
-				String orderName = request.getParameter("orderName");
-				String orderZip = request.getParameter("orderZip");
-				String addr1 = request.getParameter("addr1");
-				String addr2 = request.getParameter("addr2");
-				String extraAddress = request.getParameter("extraAddress");
-				String ordererHp1 = request.getParameter("ordererHp1");
-				String ordererHp2 = request.getParameter("ordererHp2");
-				String ordererHp3 = request.getParameter("ordererHp3");
-				String orderEmail = request.getParameter("orderEmail");
-				String shipName = request.getParameter("shipName");
-				String shipZip = request.getParameter("shipZip");
-				String addr3 = request.getParameter("addr3");
-				String addr4 = request.getParameter("addr4");
-				String extraAddress2 = request.getParameter("extraAddress2");
-				String shipHp1 = request.getParameter("shipHp1");
-				String shipHp2 = request.getParameter("shipHp2");
-				String shipHp3 = request.getParameter("shipHp3");
-				String shippingMsg = request.getParameter("shippingMsg");
-
-						
-				
-			}
-	//	}
-		
-		
-		
+	       InterOrderDAO odao = new OrderDAO();
+	       InterCartDAO cdao = new CartDAO();
+	       
+	       	 List<CartVO> cartList =  cdao.cartList(loginuser.getUserid());
+	         
+	         // 로그인한 사용자의 장바구니에 담긴 주문총액합계 및 총포인트합계 알아오기 
+	         HashMap<String,String> sumMap = odao.selectCartSum(loginuser.getUserid());
+	         
+	         request.setAttribute("cartList", cartList);
+	         request.setAttribute("sumMap", sumMap);
+	         
+	         super.setRedirect(false);
+			super.setViewPage("/WEB-INF/order/order.jsp");
+		}
+		else{
+			String message = "로그인을 해야 이용 가능한 페이지입 니다.";
+			String loc = request.getContextPath()+"/login/login.to";
+	         
+	         request.setAttribute("message", message);
+	         request.setAttribute("loc", loc);
+	         
+	      //   super.setRedirect(false);
+	         super.setViewPage("/WEB-INF/msg.jsp");
+		}
 	}
 
 }
+

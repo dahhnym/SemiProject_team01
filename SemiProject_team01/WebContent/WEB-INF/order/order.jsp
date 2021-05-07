@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<% String ctxPath = request.getContextPath(); %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<% String ctxPath = request.getContextPath(); %>  
+<c:set var="sum" value="0"/>  
+<c:forEach items="${requestScope.cartList}" var="cart">
+	<c:set var="sum" value="${sum+(cart.pvo.saleprice*cart.oqty)}"/>
+</c:forEach>
 <jsp:include page="../header.jsp"/>
 <!DOCTYPE html>
 <html>
@@ -24,6 +30,199 @@
 <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 
 <script type="text/javascript">
+
+$(function(){
+	
+	
+	///// ===== ***** 상품 목록 보여주기 ***** ===== /////
+
+	
+	$("[name=checkAll]").click(function(){
+	    allCheck(this);
+	    //모두동의하기 체크박스 클릭시
+	});
+	
+	$("[name=product]").each(function(){
+	    $(this).click(function(){
+	        oneCheck($(this));
+	    });
+	});
+	
+	$("[name=agreeAll]").click(function(){
+		allAgree(this);
+	    //모두동의하기 체크박스 클릭시
+	});
+	
+	$("[name=agree]").each(function(){
+	    $(this).click(function(){
+	    	oneAgree($(this));
+	    });
+	});
+	
+	
+    
+    // 모달창 만들기
+    $('#testBtn1').click(function(e){
+		e.preventDefault();
+		$('#testModal1').modal("show");
+	});
+    
+    $('#testBtn2').click(function(e){
+		e.preventDefault();
+		$('#testModal2').modal("show");
+	});
+    
+    
+    
+    
+    
+    // 주문자 정보와 동일 클릭하면 자동으로 채워넣기
+    $("input#sameLoginusesr").click(function(){
+    	
+    	var name = $("input#orderName").val();
+    	var hp2 = $("[name=ordererHp2]").val();
+    	var hp3 = $("[name=ordererHp3]").val();
+    	var zip = $('[name=orderZip]').val();
+    	var addr1 = $('[name=addr1]').val();
+    	var addr2 = $('[name=addr2]').val();
+    	var extraAddress = $('[name=extraAddress]').val();
+    	
+    	if($(this).is(":checked")){
+	    	$("input#shipName").val(name);
+	    	$("[name=shipHp2]").val(hp2);
+	    	$("[name=shipHp3]").val(hp3);
+	    	$("[name=shipZip]").val(zip);
+	    	$("[name=addr3]").val(addr1);
+	    	$("[name=addr4]").val(addr2);
+	    	$("[name=extraAddress2]").val(extraAddress);
+    	}
+    	else {
+    		$("input#shipName").val("");
+	    	$("[name=shipHp2]").val("");
+	    	$("[name=shipHp3]").val("");
+	    	$("[name=shipZip]").val("");
+	    	$("[name=addr3]").val("");
+	    	$("[name=addr4]").val("");
+	    	$("[name=extraAddress2]").val("");
+    	}
+    });
+    
+    
+    
+	// 첫번째 모달창에서 동의하기클릭하면 체크하기
+	$("#modalY").click(function(){
+		$("#agree1").prop("checked",true);
+	});
+	
+	// 두번째 모달창에서 동의하기클릭하면 체크하기
+	$("#modalY2").click(function(){
+		$("#agree2").prop("checked",true);
+	});
+	
+	
+	
+	// 연락처 hp2 숫자 4자리 아닐 경우
+	$("[name=hp2]").blur(function(){
+         
+            var regExp = /^[1-9][0-9]{3}$/i; 
+            // 첫번째 숫자는 0을 제외하고 나머지 3개는 0을 포함한 숫자만 오도록 검사해주는 정규표현식 객체 생성  
+         
+            var bool = regExp.test($(this).val());
+            
+            if(!bool) {
+            	alert("전화번호 4자리를 올바르게 입력하세요");
+            }
+         });
+    
+	
+    $("input#hp3").blur(function(){
+       
+       var regExp = /^\d{4}$/i; 
+       // 숫자 4개만 오도록 검사해주는 정규표현식 객체 생성  
+    
+       var bool = regExp.test($(this).val());
+       
+       if(!bool) {
+          alert("전화번호 4자리를 올바르게 입력하세요");
+       }
+       
+    });
+         
+         
+	// 이메일 정규표현식 검사
+	$("input#email").blur(function(){
+         
+         //   var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i; 
+         //  또는   
+            var regExp = new RegExp(/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i);
+            // 이메일 정규표현식 객체 생성   
+         
+            var bool = regExp.test($(this).val());
+            
+            if(!bool) {
+               // 이메일이 정규표현식에 위배된 경우
+            	alert("올바른 이메일 형식으로 작성하십시오");
+            }
+            
+         }); // 아이디가 email 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+      
+	
+	// 사용 포인트 입력했을 때
+	$('input#usePoint').blur(function(){
+		var usePoint = $(this).val().trim();
+		var bool = isNaN(usePoint);
+		var havingPoint=$('input#havingPoint').val();
+				
+		if(bool){
+			// 숫자 외 다른 문자 친 경우
+			$(this).val("");
+		}
+		
+		else if(usePoint>havingPoint){
+			// 만약 보유포인트보다 큰 숫자 입력했으면 val()값 보유 적립금 금액으로 바꾸기	
+			$(this).val(havingPoint);
+		}
+		
+		else{
+			$('input#usePoint').val(usePoint);
+		}
+		
+	});
+	
+         
+    // 결제 총 금액 계산 *****************************
+    var sum = $('[name=sum]').val();
+    var delivery = $('[name=delivery]').val();
+    var usePoint = $('input#usePoint').val().trim();
+    var totalPrice = sum+delivery-usePoint;
+    $("input#totalPrice").val(totalPrice);
+	
+ 
+	
+
+         
+         
+         
+	
+
+
+	// 결제방법 선택 시 선택 및 선택 외 버튼들 css변경해주기
+	$("[name=payment]").click(function(){
+		$(this).parent().find('[name=payment]').css('background-color','');
+		$(this).parent().find('[name=payment]').css('color','');
+		$(this).css('background-color','#8c8c8c');
+		$(this).css('color','white');
+	});
+	
+	
+});
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////
 
 
 // == 물건 체크박스 함수 시작 == //
@@ -151,189 +350,47 @@ function goCheckOut(){
 }
 
 
-
-
-
-//////////////////////////////////////////////////////////////////////////////////
-
-$(function(){
-	
-	
-	///// ===== ***** 상품 목록 보여주기 ***** ===== /////
-
-	
-	$("[name=checkAll]").click(function(){
-	    allCheck(this);
-	    //모두동의하기 체크박스 클릭시
-	});
-	
-	$("[name=product]").each(function(){
-	    $(this).click(function(){
-	        oneCheck($(this));
-	    });
-	});
-	
-	$("[name=agreeAll]").click(function(){
-		allAgree(this);
-	    //모두동의하기 체크박스 클릭시
-	});
-	
-	$("[name=agree]").each(function(){
-	    $(this).click(function(){
-	    	oneAgree($(this));
-	    });
-	});
-	
-	
-    
-    // 모달창 만들기
-    $('#testBtn1').click(function(e){
-		e.preventDefault();
-		$('#testModal1').modal("show");
-	});
-    
-    $('#testBtn2').click(function(e){
-		e.preventDefault();
-		$('#testModal2').modal("show");
-	});
-    
-    
-    
-    // 주문상품 삭제하기 클릭하면 다시 새로고침되면서 체크한 상품 삭제하고 보여주기 *******따오기만 한것 재정비하기*********
-    // *** 삭제하기 버튼 눌렀을 때 ***//
-	$("#deleteBtn").click(function(){
-		  var confirm_val = confirm("정말 삭제하시겠습니까?");
-		  
-		  if(confirm_val) {
-			   var checkArr = new Array();
-			   
-			   $("input[name=product]:checked").each(function(){
-			    	checkArr.push($(this).attr("data-cartNum"));
-			   });
-			    
-			   $.ajax({
-				    url : "<%=ctxPath%>/order.to",
-				    type : "post",
-				    data : { chbox : checkArr },
-				    success : function(){
-				     location.href = "<%=ctxPath%>/order.to";
-				    }
-			   });
-		  } 
-	 });
-    
-    
-    
-    
-    
-    // 주문자 정보와 동일 클릭하면 자동으로 채워넣기
-    $("input#sameLoginusesr").click(function(){
-    	
-    	var name = $("input#orderName").val();
-    	var hp2 = $("[name=ordererHp2]").val();
-    	var hp3 = $("[name=ordererHp3]").val();
-    	var zip = $('[name=orderZip]').val();
-    	var addr1 = $('[name=addr1]').val();
-    	var addr2 = $('[name=addr2]').val();
-    	var extraAddress = $('[name=extraAddress]').val();
-    	
-    	if($(this).is(":checked")){
-	    	$("input#shipName").val(name);
-	    	$("[name=shipHp2]").val(hp2);
-	    	$("[name=shipHp3]").val(hp3);
-	    	$("[name=shipZip]").val(zip);
-	    	$("[name=addr3]").val(addr1);
-	    	$("[name=addr4]").val(addr2);
-	    	$("[name=extraAddress2]").val(extraAddress);
-    	}
-    });
-    
-    
-    
-	// 첫번째 모달창에서 동의하기클릭하면 체크하기
-	$("#modalY").click(function(){
-		$("#agree1").prop("checked",true);
-	});
-	
-	// 두번째 모달창에서 동의하기클릭하면 체크하기
-	$("#modalY2").click(function(){
-		$("#agree2").prop("checked",true);
-	});
-	
-	
-	
-	// 연락처 hp2 숫자 4자리 아닐 경우
-	$("[name=hp2]").blur(function(){
-         
-            var regExp = /^[1-9][0-9]{3}$/i; 
-            // 첫번째 숫자는 0을 제외하고 나머지 3개는 0을 포함한 숫자만 오도록 검사해주는 정규표현식 객체 생성  
-         
-            var bool = regExp.test($(this).val());
-            
-            if(!bool) {
-            	alert("전화번호 4자리를 올바르게 입력하세요");
-            }
-         });
-    
-	
-    $("input#hp3").blur(function(){
-       
-       var regExp = /^\d{4}$/i; 
-       // 숫자 4개만 오도록 검사해주는 정규표현식 객체 생성  
-    
-       var bool = regExp.test($(this).val());
-       
-       if(!bool) {
-          alert("전화번호 4자리를 올바르게 입력하세요");
-       }
-       
-    });
-         
-         
-	// 이메일 정규표현식 검사
-	$("input#email").blur(function(){
-         
-         //   var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i; 
-         //  또는   
-            var regExp = new RegExp(/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i);
-            // 이메일 정규표현식 객체 생성   
-         
-            var bool = regExp.test($(this).val());
-            
-            if(!bool) {
-               // 이메일이 정규표현식에 위배된 경우
-            	alert("올바른 이메일 형식으로 작성하십시오");
-            }
-            
-         }); // 아이디가 email 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
-      
-	
-	// 사용 포인트 입력했을 때
-	$('input#usePoint').blur(function(){
-		var usePoint = $(this).val().trim();
-		var bool = isNaN(usePoint);
-	//	var havingPoint = ${loginuser.point};
+//장바구니 개별 삭제하기 
+function goDel(cartnum) {		
+	var $target = $(event.target);
+	var pname = $target.parent().parent().find(".cname").text();
+//	console.log(pname);
+	var bool = confirm("주문목록에서 ["+pname+"] 상품을 삭제하시겠습니까?");
+//	alert(cartnum);
+	if(bool){
+		$.ajax({
+			url:"<%= ctxPath%>/cart/deleteCartOne.to",
+			type: "post",
+			data: {"userid":"${sessionScope.loginuser.userid}","cartnum":cartnum},
+			dataType: "json",
+			success:function(json){
+					alert(json.msg);
+					location.href="javascript:history.go(0);"; // 새로고침해주기
+			},
+			 error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		     }  
+		});
 		
-		if(bool){
-			// 숫자 외 다른 문자 친 경우
-			$(this).val("");
-		}
-	/*	
-		else if(usePoint>havinPoint){
-			// 만약 보유포인트보다 큰 숫자 입력했으면 val()값 보유 적립금 금액으로 바꾸기	
-			$(this).val(havingPoint);
-		}*/
-	});
-	
+	}
+	else{
+		return false;
+	}
+}
 
-	
-});
 
-</script>
 
+
+
+
+
+  
+   </script>
 
 </head>
 
+
+<form name="orderFrm">
 <div class="container">
 
 	<h2>Order</h2>
@@ -346,7 +403,7 @@ $(function(){
 	<table id="prodInfo">
 		<thead align="center">
 			<tr id="prodInfo">
-				<th><input type="checkbox" name="checkAll"/></th>
+				<th></th>
 				<th>이미지</th>
 				<th width="30%">상품정보</th>
 				<th>수량</th>
@@ -356,24 +413,87 @@ $(function(){
 				<th>합계</th>
 			</tr>
 		</thead>
-			<tr id="prodInfo">
-				<th><input type="checkbox" name="product"  /></th>
-				<td><a href="">이미지 연결</a></td>
-				<td align="left"><a href="">[상품정보]링크걸기</a><br>[옵션:컬러]</td>
-				<td>1</td>
-				<td>30,000원</td>
-				<td align="center"><div id="pointbox">5% 적립</div>150p</td>
-				<td>[무료]</td>
-				<td>30,000원</td>
-			</tr>
+		<tbody>
+		
+			<c:forEach items="${requestScope.cartList}" var="cart" varStatus="status">
+				<tr id="prodInfo">
+					<td><%-- 장바구니에서 해당 제품 삭제하기 --%> 
+		               <span class="del" style="cursor: pointer; font-size:11pt; text-decoration: underline;" onClick="goDel('${cart.cartnum}');">삭제</span>  
+		            </td>
+					<td><a href=""><img class="pimage1" src="<%=ctxPath%>/images/${cart.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
+					<td align="left"><span class="cname"><a href="">${cart.pvo.pname}</a></span><br>[옵션: ${cart.pdetailvo.optionname}]</td>
+					<td>${cart.oqty}</td>
+					<td><fmt:formatNumber value="${cart.pvo.saleprice}" type="number"/>원</td>
+					<td align="center">
+						<div id="pointbox">
+							<c:if test="${sessionScope.loginuser.level == 1}">
+								<fmt:formatNumber value="1" type="number"/>
+							</c:if>
+							<c:if test="${sessionScope.loginuser.level == 2}">
+								<fmt:formatNumber value="3" type="number"/>P
+							</c:if>
+							<c:if test="${sessionScope.loginuser.level == 3}">
+								<fmt:formatNumber value="5" type="number"/>P
+							</c:if>
+							% 적립
+						</div>
+						
+						<c:if test="${sessionScope.loginuser.level == 1}">
+							<fmt:formatNumber value="${cart.pvo.saleprice*cart.oqty*0.01}" type="number"/>P
+							<input type="hidden" value="${cart.pvo.saleprice*cart.oqty*0.01}"/>
+						</c:if>
+						<c:if test="${sessionScope.loginuser.level == 2}">
+							<fmt:formatNumber value="${cart.pvo.saleprice*cart.oqty*0.03}" type="number"/>P
+							<input type="hidden" value="${cart.pvo.saleprice*cart.oqty*0.03}"/>
+						</c:if>
+						<c:if test="${sessionScope.loginuser.level == 3}">
+							<fmt:formatNumber value="${cart.pvo.saleprice*cart.oqty*0.05}" type="number"/>P
+							<input type="hidden" value="${cart.pvo.saleprice*cart.oqty*0.05}"/>
+						</c:if>
+						
+					</td>
+					<td>
+					<c:if test="${(sum) >= 50000}"> 
+							<span>[무료]</span>
+							<c:set var="delivery" value="0"/><input type="hidden" class="delivery" value="0"/>
+						</c:if>
+						<c:if test="${(sum) < 50000}">
+							<span>[조건]</span>
+							<fmt:formatNumber value="2500" type="number" />원<input type="hidden" class="delivery" value="2500"/>
+							<c:set var="delivery" value="2500"/>
+						</c:if>
+					</td>
+					<td>
+						<fmt:formatNumber value="${(cart.pvo.saleprice*cart.oqty)}" type="number" />
+						원
+					</td>
+					
+						</tr>
+			</c:forEach>
 			<tr>
-				<td id="sumtbl" colspan="8">상품구매금액 원 + 배송비 원 = 합계 : <span id="sum">원</span></td>				
-			</tr>
+					<td id="sumtbl" colspan="8">상품구매금액&nbsp;<fmt:formatNumber value="${sum}" type="number" />원
+									<input type="hidden" name="sum" value="${sum}"/> 
+					+&nbsp;배송비 
+						<c:if test="${(sum) >= 50000}"> 
+							<span>[무료]</span><c:set var="delivery" value="0"/><input type="hidden" class="delivery" value="0"/>
+						</c:if>
+						<c:if test="${(sum) < 50000}">
+							<fmt:formatNumber value="2500" type="number" />원<input type="hidden" class="delivery" value="2500"/>
+							<c:set var="delivery" value="2500"/>
+						</c:if>
+					 = 합계 : <span id="sum"><fmt:formatNumber value="${sum+delivery}" type="number" />원
+									<input type="hidden" class="totalprice" value="${sum+delivery}"/>
+							</span>
+					</td>				
+				</tr>
 		</tbody>
-	</table>	 
+	</table>	
+	
+	
+	
+	 
 	<div class="left" style="font-size:10pt;">
 	! 상품의 옵션 및 수량 변경은 상품 상세 혹은 장바구니에서 가능합니다.
-	<br>선택상품을 <input type="button" value="삭제하기" id="deleteBtn" style="border:none; font-size:9pt;""/>
 	</div>
 	<br><br>
 	
@@ -397,7 +517,7 @@ $(function(){
 			</tr>
 			<tr>
 				<td>
-					<input type="text" name="orderName" id="orderName" class="requiredInfo" /> 
+					<input type="text" name="orderName" id="orderName" class="requiredInfo" value="${(sessionScope.loginuser).name}"/> 
 				</td>
 			</tr>	
 			<tr>
@@ -407,20 +527,20 @@ $(function(){
 			</tr>
 			<tr>
 				<td>
-					<input type="text" name="orderZip" id="postcode1" class="requiredInfo" size="6" maxlength="5" readonly />&nbsp;&nbsp;
+					<input type="text" name="orderZip" id="postcode1" class="requiredInfo" value="${(sessionScope.loginuser).postcode}" size="6" maxlength="5" readonly />&nbsp;&nbsp;
 					<%-- 우편번호 찾기 --%>
 					<input type="button" value="우편번호" id="zipcodeSearch" style="vertical-align: middle;" onclick="openZipSearch()" />
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="text" name="addr1"  size="40" placeholder="주소" readonly /><br>
+					<input type="text" name="addr1"  size="40" value="${(sessionScope.loginuser).address}" placeholder="주소" readonly /><br>
 				</td>
 			</tr>
 			<tr>		
 				<td>
-					<input type="text" name="addr2"  id="extraAddress"  size="40" placeholder="참고항목" readonly />&nbsp;
-					<input type="text" name="extraAddress" size="40" placeholder="상세주소" />
+					<input type="text" name="addr2"  id="extraAddress" value="${(sessionScope.loginuser).extraaddress}" size="40" placeholder="참고항목" readonly />&nbsp;
+					<input type="text" name="extraAddress" size="40" value="${(sessionScope.loginuser).detailaddress}"placeholder="상세주소" />
 				</td>
 			</tr>			
 			<tr>
@@ -448,7 +568,7 @@ $(function(){
 	
 	<div class="left" style="display:inline-block; float:left; ">
 		<span style="font-size:15pt; font-weight: bold;">배송 정보</span>
-		<span style="font-size:10pt;">&nbsp;<input type="checkbox" id="sameLoginusesr"/>&nbsp;주문자 정보와 동일</span>
+		<span style="font-size:10pt;">&nbsp;<input type="checkbox" id="sameLoginusesr"/>&nbsp;<label for="sameLoginusesr">주문자 정보와 동일</label></span>
 	</div>
 	<div style="float:right;display:inline-block;" align="right">
 		<span style="font-size:10pt;"><span class="star">*</span>&nbsp;필수입력사항</span>
@@ -529,7 +649,7 @@ $(function(){
 		<tr>
 			<th style="text-align:left; width:40%; ">보유 point</th>
 			<td style="text-align:right; width:60%;">
-				<input type="text" style="width:100%; border:none; text-align:right; background-color:#e6e6e6;" value="로그인사용자point" readonly/>
+				<input type="text" id="havingPoint" style="width:100%; border:none; text-align:right; background-color:#e6e6e6;" value="${(sessionScope.loginuser).point}" readonly/>
 			</td>
 		</tr>
 		<tr>
@@ -549,9 +669,9 @@ $(function(){
 	</div>
 	<hr>
 	<div class="left">
-		<input type="button" value="신용카드" id="btnCredit" style="width:100px; height:40px; border:none; margin-right:20px;"/>
-		<input type="button" value="무통장" id="btnCredit" style="width:100px; height:40px; border:none; margin-right:20px;"/>
-		<input type="button" value="휴대폰결제" id="btnCredit" style="width:100px; height:40px; border:none;"/>
+		<input type="button" value="신용카드" name="payment" id="btnCredit" style="width:100px; height:40px; border:none; margin-right:20px;"/>
+		<input type="button" value="무통장" name="payment" id="btnAccount" style="width:100px; height:40px; border:none; margin-right:20px;"/>
+		<input type="button" value="휴대폰결제" name="payment" id="btnMobile" style="width:100px; height:40px; border:none;"/>
 	</div>
 	<br><br>
 	
@@ -564,19 +684,37 @@ $(function(){
 	<table style="width:100%;">
 		<tr>
 			<td style="text-align:left;">상품금액</td>
-			<td style="text-align:right;">30,000원</td>
+			<td style="text-align:right;">
+				<fmt:formatNumber value="${sum}" type="number" />원
+				<input type="hidden" name="sum" value="${sum}"/></td>
 		</tr>
 		<tr>
 			<td style="text-align:left;">배송비</td>
-			<td style="text-align:right;">원</td>
+			<td style="text-align:right;">
+				<c:if test="${(sum) >= 50000}"> 
+					<span>0</span>
+					<c:set var="delivery" value="0"/>
+					<input type="hidden" name="delivery" class="delivery" value="0"/>
+				</c:if>
+				<c:if test="${(sum) < 50000}">
+					<fmt:formatNumber value="2500" type="number" />
+					<input type="hidden" name="delivery" class="delivery" value="2500"/>
+					<c:set var="delivery" value="2500"/>
+				</c:if>원
+			</td>
 		</tr>
 		<tr>
 			<td style="text-align:left;">포인트 사용</td>
-			<td style="text-align:right;">원</td>
+			<td style="text-align:right;">
+			<input type="text" id="usePoint" style="border:none; text-align: right;" value="0"/>
+			P</td>
 		</tr>
 		<tr>
 			<td style="text-align:left; font-size:13pt; font-weight:bold;">최종 결제금액</td>
-			<td style="text-align:right; font-size:15pt; font-weight:bold;">30,000원</td>
+			<td style="text-align:right; font-size:15pt; font-weight:bold;"> 
+				<input style="border:none; text-align: right;" id="totalPrice"></input>원
+				<input type="hidden" class="totalprice" value="${sum+delivery}"/>
+			</td>
 		</tr>
 	</table>
 	<br><br>
@@ -718,6 +856,6 @@ $(function(){
 
 
 </div>
-
+</form>
 
 <jsp:include page="../footer.jsp"/> 

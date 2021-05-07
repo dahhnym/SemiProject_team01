@@ -27,6 +27,9 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
+	//드롭다운 하위메뉴 숨기기
+	$("ul.dropdownlist").hide();
+	
 	window.onscroll = function() {myFunction()};
 
 	var navbarfixed = document.getElementById("navbar-fixed");
@@ -45,6 +48,19 @@ $(document).ready(function(){
 	}
 
 	console.log("${sessionScope.loginuser}");
+	
+	$("ul.dropdownlist").mouseover(function(){
+		$(this).hide();
+	});
+	
+	/* $("a.navmenu").hover(function(){	//마우스오버 시
+			$("ul.dropdownlist").show();
+		},
+		function(){	//마우스아웃 시
+			$("ul.dropdownlist").hide();
+	}); */
+
+	
 	
 });
 
@@ -85,7 +101,7 @@ $(document).ready(function(){
 	    <ul class="nohidden">
 	        <li>
 	            <a class="navmenu" href="<%=ctxPath%>/List.to">Best 상품</a>
-	            <ul>
+	            <ul class="dropdownlist">
 	                <li><a href="#">토트백</a></li>
 	                <li><a href="#">숄더백</a></li>
 	                <li><a href="#">크로스백</a></li>
@@ -93,7 +109,7 @@ $(document).ready(function(){
 	        </li>
 	        <li>
 	            <a class="navmenu" href="<%=ctxPath%>/List.to">Sale 상품</a>
-	            <ul>
+	            <ul class="dropdownlist">
 	                <li><a href="#">토트백</a></li>
 	                <li><a href="#">숄더백</a></li>
 	                <li><a href="#">크로스백</a></li>
@@ -105,7 +121,7 @@ $(document).ready(function(){
 	        <li><a class="navmenu" href="<%=ctxPath%>/List.to">백팩</a></li>
 	        <li>
 	        	<a class="navmenu" href="#">악세사리</a>
-	        	<ul>
+	        	<ul class="dropdownlist">
 	                <li><a href="#">크로스벨트</a></li>
 	                <li><a href="#">키링</a></li>
 	            </ul>
