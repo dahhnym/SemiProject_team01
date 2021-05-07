@@ -14,6 +14,8 @@
 <style type="text/css">
 
 	.contents  h2{
+	  width: 90%;
+	  margin: 0 auto;
       border-bottom: solid 1px #707070;
       padding-bottom: 20px;
    }
@@ -100,7 +102,7 @@
             <span class="cell col2" style="color: #00ace6; text-align: right; padding-right: 50px;">
             	<span style="color: #00ace6; font-weight: bold;"><c:out value="${sessionScope.loginuser.point}"/>&nbsp;P</span>
             </span>
-            <a class="cell col3" href="<%= request.getContextPath() %>/orderList.to"  >회원정보</a>
+            <a class="cell col3" href="<%= request.getContextPath() %>/member/personalInfo.to"  >회원정보</a>
             <span class="cell col4"> <img src="<%=request.getContextPath()%>/images/human.png" /></span>
          </div>
          <div class="row">
