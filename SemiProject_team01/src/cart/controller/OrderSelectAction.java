@@ -85,7 +85,7 @@ public class OrderSelectAction extends AbstractController {
 			
 					int isSuccess = cdao.orderAdd(paraMap);// Transcation 처리를 해주는 메소드 호출
 					
-				//	System.out.println(isSuccess);
+					System.out.println(isSuccess);
 					
 					jsobj.put("isSuccess", isSuccess);
 					// 성공되어지면 1

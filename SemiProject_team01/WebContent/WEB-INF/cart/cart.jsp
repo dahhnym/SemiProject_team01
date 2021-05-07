@@ -93,7 +93,36 @@ $(document).ready(function(){
 	});
 	
 	
-	
+$("input.prodOqty").bind("spinstop",function(){
+		
+		var index = $("input.prodOqty").index($(this));
+	//	alert(index);
+		var cartnum = $("input.cartnum").eq(index).val();
+	//	alert(cartnum);
+		var oqty = $("input.prodOqty").eq(index).val();
+	//	alert(oqty);
+		var fk_pdetailnum = $("input.fk_pdetailnum").eq(index).val();
+	//	alert($(this).val());
+		 $.ajax({
+				url:"<%= ctxPath%>/cart/updateOqtyCart.to",
+				type: "post",
+				data: {"userid":"${sessionScope.loginuser.userid}","cartnum":cartnum, "oqty": oqty,"fk_pdetailnum":fk_pdetailnum},
+				dataType: "json",
+				success:function(json){
+					if(json.n==1){
+						location.href="javascript:history.go(0);";
+					}
+					else if(json.n==0){ // 재고 수량이 변경할 수량보다 적을 경우
+						alert("상품의 수량이 재고수량 보다 많습니다.");
+						return;
+					}
+				},
+				 error: function(request, status, error){
+			            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			     }  
+			});
+			
+	});
 	
 	
 	
@@ -388,8 +417,8 @@ $(document).ready(function(){
 		var cartnum = $("input.cartnum").eq(index).val();
 	//	alert(cartnum);
 		var oqty = $("input.oqty").eq(index).val();
-		var fk_pdetailnum = $("input.fk_pdetailnum").eq(index).val();
-	//	alert(fk_pdetailnum);
+		var fk_pdetailnum = $("input.pdetailnum").eq(index).val();
+		alert(fk_pdetailnum);
 	//	alert(oqty);
 		 var regExp=/^[0-9]+$/;
 		 
@@ -643,12 +672,12 @@ $(document).ready(function(){
 					}// end of for---------------------------
 					
 					for(var i=0; i<checkCnt; i++) {
-				//		console.log("확인용    제품번호 : " + pnumArr[i] + ", 주문량 : " + oqtyArr[i] + ", 장바구니번호 : " + cartnoArr[i] + ", 주문금액 : " + totalPriceArr[i] ); 
+						console.log("확인용    제품번호 : " + pnumArr[i] + ", 주문량 : " + oqtyArr[i] + ", 주문금액 : " + totalPriceArr[i] ); 
 					}// end of for---------------------------
 					
 					var sumtotalPrice = 0;
 					for(var i=0;i<totalPriceArr.length;i++){			
-				//		console.log(typeof(totalPriceArr[i])+" : "+totalPriceArr[i]);			
+						console.log(typeof(totalPriceArr[i])+" : "+totalPriceArr[i]);			
 						sumtotalPrice += parseInt(totalPriceArr[i]);
 					}	
 						
@@ -689,7 +718,7 @@ $(document).ready(function(){
 			
 		}// end of function goOrder()----------------------
 		
-		
+	
 		
 		function orderAll(){
 			
