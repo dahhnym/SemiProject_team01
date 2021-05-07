@@ -254,9 +254,9 @@ public class MemberDAO implements InterMemberDAO {
 	}
 
 	
-	// 비밀번호 찾기
+	// 회원계정 존재여부 확인하기
 	@Override
-	public int findPwd(Map<String, String> paraMap) throws SQLException {
+	public int checkAccount(Map<String, String> paraMap) throws SQLException {
 		int n = 0;
 		
 		try {
@@ -417,6 +417,30 @@ public class MemberDAO implements InterMemberDAO {
 		}
 		
 		return memberList;
+	}
+
+	
+	// 임시비밀번호로 DB 저장하기
+	@Override
+	public int saveRndPwd(String rndPwd, String userid) throws SQLException {
+		int n=0;
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = " update tbl_member set pwd=? where userid=?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, Sha256.encrypt(rndPwd));
+			pstmt.setString(2, userid);
+			
+	        n = pstmt.executeUpdate();
+
+		} finally {
+			close();
+		}
+		
+		return n;
 	}
 
 

@@ -4,10 +4,9 @@ import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
 
-
 public class GoogleMail {
 
-	public void sendmail(String recipient, String rndPwd) throws Exception {
+	public void sendmail(String recipient, String certificationCode) throws Exception {
 		
 		// 1. 정보를 담기 위한 객체
     	Properties prop = new Properties();
@@ -42,7 +41,7 @@ public class GoogleMail {
     	MimeMessage msg = new MimeMessage(ses);
     	
     	// 제목 설정
-    	String subject = "[ladies and gents] 임시비밀번호 발송";
+    	String subject = "localhost:9090/MyMVC/home.up 회원님의 비밀번호를 찾기위한 인증코드 발송";
     	msg.setSubject(subject);
     	
     	// 보내는 사람의 메일주소
@@ -55,23 +54,11 @@ public class GoogleMail {
     	msg.addRecipient(Message.RecipientType.TO, toAddr);
     	    	
     	// 메시지 본문의 내용과 형식, 캐릭터 셋 설정
-    	msg.setContent("<h4 style='font-weight:bold;'>안녕하세요, ladies and gents 고객님. </h4><br><br>"
-    			     + "<span>요청하신 임시 비밀번호는 다음과 같습니다.<br>"
-    			     + "임시 비밀번호: "+rndPwd+"</span><br><br>"
-    			     + "<button type='button'>비밀번호 바로 변경하기</button><br><br>"
-    			     + "<div style='margin:10px 0;'>임시 비밀번호를 사용해서 로그인 하신 후 바로 비밀번호를 변경하셔야 정상적으로 로그인이 가능합니다.<br>"
-    			     + "다른 문의사항는 고객센터(000-000-0000)으로 문의해 주시기 바랍니다.</div>"
-    			     + "<h5 style='font-weight:bold;'>감사합니다.</h5>"
-    			     , "text/html;charset=UTF-8");
+    	msg.setContent("발송된 인증코드 : <span style='font-size:14pt; color:red;'>"+certificationCode+"</span>", "text/html;charset=UTF-8");
     	
     	// 메일 발송하기
     	Transport.send(msg);
     	
 	}// end of public void sendmail(String recipient, String certificationCode) throws Exception---------------------------- 
 	
-	
-	/*
-	 *  DEBUG: setDebug: JavaMail version 1.4.7
-		java.lang.NullPointerException
-	*/
 }
