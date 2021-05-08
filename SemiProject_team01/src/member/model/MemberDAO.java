@@ -529,6 +529,27 @@ public class MemberDAO implements InterMemberDAO {
 		return loginuser;
 	}
 
+	// 회원탈퇴
+	@Override
+	public int delAccount(String userid) throws SQLException {
+		int n=0;
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = "update tbl_member set status=0 and pwd=0 where userid=?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			
+	        n = pstmt.executeUpdate();
+
+		} finally {
+			close();
+		}	
+		return n;
+	}
+
 
 		
 }

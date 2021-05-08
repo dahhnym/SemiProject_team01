@@ -42,6 +42,9 @@ public interface InterMemberDAO {
 	// 수정한 유저 session에 저장하기
 	MemberVO getLoginuser(MemberVO member) throws SQLException;
 
+	// 회원탈퇴
+	int delAccount(String userid) throws SQLException;
+
 
 
 	
