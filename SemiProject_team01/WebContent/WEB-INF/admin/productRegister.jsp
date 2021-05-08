@@ -263,7 +263,7 @@ $(document).ready(function(){
 		
 			
 			var frm = document.registerFrm;
-			frm.action="<%= ctxPath%>/shop/admin/productRegister.to";
+			frm.action="<%= ctxPath%>/admin/productRegister.to";
 			frm.method="post";
 			frm.enctype="multipart/form-data"
 			frm.submit();
