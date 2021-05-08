@@ -19,33 +19,38 @@
 	$(function(){
 		var bool = false;
 		
-		$("button#btnPersionInfo").click(function(){
-
+		$("button#btnDelAccount").click(function(){
+			var frm = document.personalInfoFrm;
+			frm.action="deleteMember.to";
+			frm.submit();
 		});
 	
+		$("button#btnCancelDelAccount").click(function(){
+			var frm = document.personalInfoFrm;
+			frm.action="personalInfo.to";
+			frm.submit();
+		});
 	});
 </script>
 
-<div class="personalInfoContainer">
+<div class="surveyContainer">
    <div class="contents">
       <h2>
 	      <span style="font-weight: bold;"><c:out value="${sessionScope.loginuser.userid}"/></span> 님의 계정정보&nbsp;&nbsp;
       </h2>
    </div>
-   <div id="personalInfoMenu">
+   <div id="surveyMenu">
       <span id="viewInfo" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalInfo.to'">내 정보보기</span>
       <span id="delAccount" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalDel.to'">회원탈퇴</span>
    </div><br>
-   <div id="personalInfoContains">
+   <div id="surveyContains">
 	   <form name="surveyFrm">
-	   		<h4 style="font-weight: bold;">회원정보 확인</h4>
-	   		<h5 style="margin-bottom: 50px;">상세 회원정보 조회/수정을 위해 비밀번호를 입력해주세요.</h5>
+	   		<h4 style="font-weight: bold;">정말로 탈퇴하시겠습니까?</h4>
+	   		<h5 style="margin-bottom: 50px;">회원탈퇴 시 삭제한 정보는 복구할 수 없으며,<br>탈퇴 후 재가입 시 동일 ID 사용불가합니다.</h5>
 	   		<span style="display:block; height: 50px;">
-		   		<input type="passward" name="passward" style="margin: 0 30px 0 40%; vertical-align: middle;" placeholder=" 비밀번호"/>
-		   		<button type="button" class="btn btn-secondary" id="btnPersionInfo" >조회하기</button>
+		   		<button type="button" class="btn btn-secondary" id="btnDelAccount" >탈퇴하기</button>
+		   		<button type="button" class="btn btn-secondary" id="btnCancelDelAccount" >취소</button>
 	   		</span>
-	   		<br>
-	   		<span class="confirm" id="currentPwd"></span>
 	   </form>
    </div>
 </div>
