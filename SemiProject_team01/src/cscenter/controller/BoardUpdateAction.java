@@ -15,7 +15,9 @@ public class BoardUpdateAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//글 수정
-				
+		
+		// 사용자가 글을 수정할 수 있도록 DB에 등록되어있는 내용을 읽어와서 view단에 입력해주는 Action단
+		
 		String boardno = request.getParameter("boardno");
 		String fk_bigcateno = request.getParameter("fk_bigcateno");
 		//System.out.println("boardno" + boardno);

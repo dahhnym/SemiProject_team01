@@ -16,6 +16,7 @@ public class CsFaqAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+		// ajax로 화면 전환 없이 카테고리별로 등록된 글을 보여주도록 하는 Action단
 		
 		//카테고리 번호 알아오기
 		super.getFaqCategoryList(request);		

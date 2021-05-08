@@ -2,9 +2,11 @@ package cscenter.model;
 
 public class FaqCategoryVO {
 	//부모
-	private int fcNo;
-	private String fcname;
-	private String fccode;
+	
+	// 자주 묻는 질문  카테고리
+	private int fcNo; //자.묻 카테고리번호
+	private String fcname; // 자.묻 카테고리명
+	private String fccode; // 자.묻 카테고리seq
 	
 
 	public FaqCategoryVO() { }

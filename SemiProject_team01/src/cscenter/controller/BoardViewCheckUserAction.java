@@ -15,6 +15,9 @@ public class BoardViewCheckUserAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+		// 사용자가 작성한 글을 보기 전에 작성시 입력한 비밀번호와 현재 입력한 비밀번호가 일치하는지 알아오는 Action단
+		// AJAX
+		
 		String boardpwd = request.getParameter("boardpwd");
 		String boardno = request.getParameter("boardno");
 		//System.out.println("확인용 boardpwd"+boardpwd);

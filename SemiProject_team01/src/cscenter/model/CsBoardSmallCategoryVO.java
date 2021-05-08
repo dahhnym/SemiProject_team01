@@ -3,11 +3,11 @@ package cscenter.model;
 public class CsBoardSmallCategoryVO {
 	//소분류 카테고리
 	
-	private int smallcateno;
-	private String smallcatename;
-	private int fk_bigcateno;
+	private int smallcateno; //소분류카테고리번호
+	private String smallcatename; //소분류카테고리명
+	private int fk_bigcateno; //대분류카테고리번호
 	
-	private CsBoardBigCategoryVO cbbcvo;
+	private CsBoardBigCategoryVO cbbcvo; //대분류카테고리VO
 	
 	public CsBoardBigCategoryVO getCbbcvo() {
 		return cbbcvo;

@@ -14,6 +14,8 @@ public class CsBoardViewAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		// DB에 등록되어있는 모든 글을 페이징처리해서 보여주는 Action단
+		
 		String fk_bigcateno = request.getParameter("fk_bigcateno"); //카테고리 번호
 				
 		if(fk_bigcateno == null) {
@@ -44,6 +46,9 @@ public class CsBoardViewAction extends AbstractController {
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("fk_bigcateno", fk_bigcateno);
 		paraMap.put("currentShowPageNo", currentShowPageNo);
+		String bigcatename = bdao.getBigCategoryName(fk_bigcateno);
+		
+		request.setAttribute("bigcatename", bigcatename);
 		
 		// 특정 카테고리에 속하는 제품들을 페이지바를 이용한 페이징 처리하여 조회(select)해오기 
 		List<CsBoardVO> BoardList = bdao.selectBoardByCategory(paraMap, fk_bigcateno);

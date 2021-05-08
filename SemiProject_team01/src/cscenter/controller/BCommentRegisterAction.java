@@ -14,6 +14,8 @@ import my.util.MyUtil;
 
 public class BCommentRegisterAction extends AbstractController {
 
+	// 관리자가 작성한 답변 등록 Action단
+	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		System.out.println("sf");

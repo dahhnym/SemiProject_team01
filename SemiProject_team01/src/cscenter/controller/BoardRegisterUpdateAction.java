@@ -21,7 +21,9 @@ public class BoardRegisterUpdateAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-String method = request.getMethod();
+		// 사용자가 작성한 글 수정
+		
+		String method = request.getMethod();
 		
 		if("GET".equalsIgnoreCase(method)) {
 			super.setViewPage("/WEB-INF/cscenter/BoardUpdate.jsp");

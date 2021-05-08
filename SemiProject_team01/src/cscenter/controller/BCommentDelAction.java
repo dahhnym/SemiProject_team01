@@ -11,6 +11,8 @@ import cscenter.model.InterCsBoardDAO;
 
 public class BCommentDelAction extends AbstractController {
 
+	// 관리자가 작성한 답변 삭제 Action단
+	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String method = request.getMethod();

@@ -18,16 +18,14 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 	$(document).ready(function() {
 		$("span.error").hide();
 		
-		if("${empty requestScope.fk_bigcateno}"){
-			//카테고리를 선택한 것이 아닌 전체보기에서 글쓰기 버튼을 눌렀을 때는
-			//상품문의가 기본적으로 선택되게한다.
+		<%-- 사용자가 어떤 카테고리에서 글쓰기 버튼을 눌렀는지. 그에 따라 미리 select의 값을 입력해준다. --%>
+		if(${requestScope.fk_bigcateno eq '0'}) { <%-- 사용자가 전체보기에서 글쓰기 버튼을 클릭했을 때 기본으로 '상품문의'가 선택되도록 한다. --%>
 			$("select#fk_bigcateno").val("1");
-		} else {
-			//선택한 카테고리가 자동적으로 selected 되도록 한다.
+		}else {
 			$("select#fk_bigcateno").val("${requestScope.fk_bigcateno}");
 		}
 		
-		
+		<%-- select 값이 변경되었을 때 그에 맞는 소분류카테고리를 읽어오기 위한 이벤트 --%>
 		$("select#fk_bigcateno").bind("change", function(){
 			//var choice = $(this).val();
 			//alert(choice);
@@ -46,7 +44,6 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 			   				html += "<option value='"+item.smallcateno+"'>"+item.smallcatename+"</option>";
 			   				$("select#fk_smallcateno").css("display", "inline-block");
 			   			}
-			   			
 			   		});
 			   		
 			   		$("select#fk_smallcateno").html(html);
@@ -55,8 +52,11 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 				   }
 			});
 			
+			
+			
 		});
 		
+		<%-- 비밀번호 정규화 숫자6자리 --%>
 		$("input#boardpwd").bind("blur", function() {
 			var regExp = /^\d{6}$/i;
 			var bool = regExp.test( $(this).val() );
@@ -70,10 +70,19 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 				
 		});
 		
+		<%-- 취소버튼 시 이전 페이지로 이동 --%>
+		$("button#btnList").click(function() {
+			location.href="javascript:history.back()";
+		});
+		
+		
+		
 	});
 	
 	function goRegister() {
 		
+		<%-- 사용자에게 보여지는 값은 사용자의 이름이지만 DB에 저장하기 위해선 userid가 입력되어야하기 때문에
+				 input의 값을 변경해준다. --%>
 		$("input#fk_userid").val("${sessionScope.loginuser.userid}");
 		
 		var frm = document.boardForm;
@@ -123,7 +132,8 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 				</div>
 				<div class="mb-3">
 					<label for="content">내용</label>
-					<textarea class="form-control" rows="10" name="boardcontent" id="boardcontent" placeholder="내용을 입력해 주세요" ></textarea>
+					<textarea class="form-control" rows="10" name="boardcontent" id="boardcontent" 
+					placeholder="1. 주문자명 :&#13;&#10;2. 주문번호/상품명 :&#13;&#10;3. 요청 및 문의사항 :" ></textarea>
 				</div>
 				<div class="mb-3">
 					<label for="reg_id" style="padding-right:15px;">파일</label>
@@ -133,7 +143,7 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 			</form>
 			<div align="center">
 				<button type="button" class="btn btn-outline-secondary " id="btnSave" onclick="goRegister();">등록</button>
-				<button type="button" class="btn btn-outline-secondary" id="btnList">취소</button>
+				<button type="button" class="btn btn-outline-secondary" id="btnList" >취소</button>
 			</div>
 </div>
 <br><br><br><br>

@@ -16,10 +16,12 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 <script>
 
 	$(document).ready(function() {
-		$("span.error").hide();
+		$("span.error").hide(); <%-- 에러메세지 숨기기 --%>
 		
-		$("select#fk_bigcateno").val("${bvo.cbscvo.fk_bigcateno}");
+		<%-- 사용자가 어떤 카테고리에서 글쓰기 버튼을 눌렀는지. 그에 따라 미리 select의 값을 입력해준다. --%>
+		$("select#fk_bigcateno").val("${bvo.cbscvo.fk_bigcateno}"); 
 		
+		<%-- 사용자가 처음 문의글을 작성했을 때 선택한 select값 미리 입력 --%>
 		if("${bvo.cbscvo.fk_bigcateno}" == "1" || "${bvo.cbscvo.fk_bigcateno}" == "4") {
 			$("select#fk_smallcateno").css("display","none");
 		}else{
@@ -28,12 +30,12 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 		$("select#fk_smallcateno").val("${bvo.fk_smallcateno}");
 		
 		
-		
+		<%-- select 값을 변경했을 때 --%>
 		$("select#fk_bigcateno").bind("change", function(){
 			//var choice = $(this).val();
 			//alert(choice);
 			var html = "";
-			$.ajax({
+			$.ajax({ <%-- 그에 맞는 소분류 카테고리를 읽어오는 ajax --%>
 				   url:"/SemiProject_team01/cscenter/getSmallCategory.to",
 				   type:"GET",
 				   data:{"fk_bigcateno" : $(this).val()},
@@ -41,7 +43,7 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 			   	   success:function(json) {
 			   		   var html = "";
 			   		$.each(json, function(index, item){
-			   			if(item.smallcatename == "없음") {
+			   			if(item.smallcatename == "없음") { <%-- 소분류카테고리가 없는 대분류카테고리는 소분류카테고리를 선택하는 select가 보이지 않도록 한다. --%>
 			   				$("select#fk_smallcateno").css("display", "none");
 			   			}else {
 			   				html += "<option value='"+item.smallcateno+"'>"+item.smallcatename+"</option>";
@@ -58,6 +60,7 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 			
 		});
 		
+		<%-- 문의글 비밀번호 정규화. 숫자 6자리 --%>
 		$("input#boardpwd").bind("blur", function() {
 			var regExp = /^\d{6}$/i;
 			var bool = regExp.test( $(this).val() );

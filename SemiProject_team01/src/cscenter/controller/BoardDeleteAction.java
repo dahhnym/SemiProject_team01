@@ -8,6 +8,8 @@ import cscenter.model.*;
 
 public class BoardDeleteAction extends AbstractController {
 
+	// 사용자가 작성한 게시글 삭제
+	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//글 삭제

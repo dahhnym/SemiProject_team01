@@ -13,6 +13,8 @@ import cscenter.model.*;
 
 public class BCommentListAction extends AbstractController {
 
+	// 관리자가 작성한 답변 보여주는 Action단
+	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String boardno = request.getParameter("boardno");  // 제품번호 

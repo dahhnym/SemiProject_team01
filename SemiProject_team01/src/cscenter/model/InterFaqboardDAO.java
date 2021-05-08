@@ -7,16 +7,16 @@ import java.util.Map;
 
 public interface InterFaqboardDAO {
 	
-	// 메인페이지에 보여지는 상품이미지파일명을 모두 조회(select)하는 메소드 
-	// DTO(Data Transfer Object) == VO(Value Object)
+	// 고객센터 메인에서 보여질 자주묻는 질문 카테고리이름 불러오는 메소드
 	List<HashMap<String, String>> getFaqCategoryList() throws SQLException;
 
+	// 선택한 탭의 내용을 보여주는 메소드
 	List<FaqboardVO> selectbyfaq(Map<String, String> paraMap) throws SQLException;
 
+	// 페이징처리를 위한 총 페이지 수 구하는 메소드
 	int selectTotalPage(Map<String, String> paraMap) throws SQLException;
 
+	// 자주묻는 질문 전체보기 페이징 처리
 	List<FaqboardVO> selectPagingFaq(Map<String, String> paraMap) throws SQLException;
-
-	List<HashMap<String, String>> getBoardCategoryList() throws SQLException;
 
 }

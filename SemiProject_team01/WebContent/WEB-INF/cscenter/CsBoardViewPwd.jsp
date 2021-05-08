@@ -18,6 +18,7 @@ input#boardpwd {
 	$(function() {
 		$("span.error").hide();
 		
+		<%-- 비밀번호 작성 후 입력창에서 마우스가 벗어나면 정규화에 맞게 값을 입력했는지 확인해줌 --%>
 		$("input#boardpwd").bind("blur", function() {
 			var regExp = /^\d{6}$/i;
 			var bool = regExp.test( $(this).val() );
@@ -29,7 +30,7 @@ input#boardpwd {
 				$("span.error").hide();
 			}
 				
-		});
+		}); //$("input#boardpwd").bind("blur", function() {} ---------------------
 		
 		$("button#btncheck").bind("click", function() {
 			
@@ -45,7 +46,7 @@ input#boardpwd {
 				   type:"post",
 				   data:{"boardpwd" : $("input#boardpwd").val(), "boardno" : "${requestScope.boardno}" },
 			   	   dataType:"json",
-			   	   success:function(json) {
+			   	   success:function(json) { <%-- 사용자가 입력한 비밀번호와 DB에 저장된 비밀번호가 일치한지 확인 --%>
 			   		   if(json.n == 1) {
 			   			var frm = document.pwdForm;
 			   			//console.log("확인용 => " + Frm.boardno.value);
@@ -61,11 +62,9 @@ input#boardpwd {
 				   }
 			   	   
 			   });// end of ajax--------------------
-			}
-			
-			   
+			}// end of else
 
-		});
+		});//$("button#btncheck").bind("click", function() {}---------------------
 	});
 
 </script>

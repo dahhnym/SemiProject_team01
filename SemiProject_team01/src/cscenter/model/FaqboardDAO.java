@@ -36,9 +36,6 @@ public class FaqboardDAO implements InterFaqboardDAO {
 	      }
 	   }
 	   
-	   
-	   // tbl_category 테이블에서 카테고리 대분류 번호(cnum), 카테고리코드(code), 카테고리명(cname)을 조회해오기 
-		// VO 를 사용하지 않고 Map 으로 처리해보겠습니다.
 	@Override
 	public List<HashMap<String, String>> getFaqCategoryList() throws SQLException{
 		
@@ -202,37 +199,5 @@ public class FaqboardDAO implements InterFaqboardDAO {
 		return faqList;
 	}
 
-	@Override
-	public List<HashMap<String, String>> getBoardCategoryList() throws SQLException {
-		List<HashMap<String, String>> boardcategoryList = new ArrayList<>(); 
-	      
-	      try {
-				  conn = ds.getConnection();
-				  
-				  String sql = " select fcNo, fcname, fccode "+
-									 " from tbl_faqcategory "+
-									 " order by fcNo asc ";
-				            
-				 pstmt = conn.prepareStatement(sql);
-				 
-				 rs = pstmt.executeQuery();
-				         
-				 while(rs.next()) {
-					 
-				    HashMap<String, String> map = new HashMap<>();
-				    map.put("fcNo", rs.getString(1));
-					map.put("fcname", rs.getString(2));
-					map.put("fccode", rs.getString(3));
-				    
-					boardcategoryList.add(map);
-				 }// end of while(rs.next())----------------------------------
-				 
-	      } finally {
-	         close();
-	      }   
-	      
-	      return boardcategoryList;
-	}
-
-
+	
 }
