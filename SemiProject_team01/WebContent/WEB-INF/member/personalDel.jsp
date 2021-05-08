@@ -17,7 +17,6 @@
 
 <script>
 	$(function(){
-		setTimeout(function(){location.reload();},1000);	// 새로고침
 		
 		var bool = false;
 		
