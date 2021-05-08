@@ -38,8 +38,8 @@
 			}
 			
 			if(bool) {
-				var frm = document.personalInfoFrm;
-				frm.action="beforeDel.to";
+				var frm = document.personalDelFrm;
+				frm.action="askDel.to";
 				frm.method="POST";
 				frm.submit();
 			}
