@@ -19,7 +19,7 @@
 
 #content-container {
 	padding: 50px 100px 0 100px;
-	border: solid 1px gray;
+	/* border: solid 1px gray; */
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -46,43 +46,26 @@
  }
 
 
-/***** Multi item Carousel CSS *****/
-
-div.slide-container{
-	border: solid 1px gray;
-	background-color: #ccc;
+/* 신상품 이미지 슬라이드 CSS */
+#multi-item-example > div > div.carousel-item > div.row > div.col-md-3 > div.card > div.card-body > button
+{
+	display : inline-block; 
+	width: 70px;
+ 	heiht: 40px;
+ 	background-color: #fff;
+ 	color: #000;
+ 	border: solid 1px #000;
+ 	font-size: 10pt;
+	padding: 3px 0px;
+	margin-left: auto;
+	margin-right: auto;
 }
-
-.carousel-control-next, .carousel-control-prev { border: 0; }
-
-div.slideImg > img {
-	height: 200px;
+#multi-item-example > div > div.carousel-item > div.row > div.col-md-3 > div.card > div.card-body > button:hover{
+	background-color: #000;
+ 	color: #fff;
+ 	border: solid 1px #fff;
 	
 }
-
-
-div#prodInfo > ul {
-	list-style-type: none;
-	padding-left: 0;
-	/* border: solid 1px blue; */
-}
-
-div#prodInfo > ul > li{
-	/* border: solid 1px red; */
-	height: 25px;
-}
-
-.prodInfoList{
-	padding-right: 5px;
-	margin-bottom: 0;
-}
-
-carousel-control-prev, carousel-control-next{
-	border: solid 1px gray;
-}
-
-
-
 
 /* 신상품 제품 목록 스크롤 페이징 처리 */
 div.moreProdInfo {

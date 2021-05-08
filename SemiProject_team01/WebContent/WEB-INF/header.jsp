@@ -73,7 +73,6 @@ $(document).ready(function(){
 
 <div id="navbar-fixed">
   <div id="top-nav-container" class="content-width">
- 	  <i id="searchbutton" class="fas fa-search"></i>
 	  <a href="<%=ctxPath%>/cscenter/csHome.to">고객센터</a>
 	  <a href="<%=ctxPath%>/cart/cart.to">장바구니</a>
 	  <c:if test="${not empty sessionScope.loginuser.userid}">

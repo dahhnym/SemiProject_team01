@@ -27,22 +27,14 @@ public class BoardViewCheckUserAction extends AbstractController {
 		try {
 			int n = bdao.checkUserPwd(boardpwd, boardno);
 			
-			if(n == 1) {
-				JSONObject jsonObj = new JSONObject();
-				jsonObj.put("n", n);
-				String json = jsonObj.toString();
-				//System.out.println("json" + json);
-				request.setAttribute("json", json);
-				super.setViewPage("/WEB-INF/jsonview.jsp");
-			} else {
-				 String message = "비밀번호가 일치하지 않습니다."; 
-        		 String loc = "javascript:history.go(0)";
-        		 
-        		 request.setAttribute("message", message); request.setAttribute("loc", loc);
-				 
-				 super.setRedirect(false); //false는 forward 방식
-				 super.setViewPage("/WEB-INF/msg.jsp");
-        	 }
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("n", n);
+			String json = jsonObj.toString();
+			System.out.println("json" + json);
+			request.setAttribute("json", json);
+			super.setViewPage("/WEB-INF/jsonview.jsp");
+			
 			
 		} catch(SQLException e) {
 			e.printStackTrace();

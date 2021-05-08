@@ -16,7 +16,6 @@ public class ListAction_front extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		super.getCategoryList(request);
-		
 		String cnum = request.getParameter("cnum");
 		String cname = request.getParameter("cname");
 		String pnum = request.getParameter("pnum");

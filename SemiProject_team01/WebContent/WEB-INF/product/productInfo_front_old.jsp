@@ -229,6 +229,7 @@ span.rvch {
  
  <script>
   $( function() {
+	  console.log("확인");
 	  
 	// 색상 옵션 선택 전 수량선택div 숨기기
 	$("div#oqty").hide();

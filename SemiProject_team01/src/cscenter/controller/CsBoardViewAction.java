@@ -151,7 +151,7 @@ public class CsBoardViewAction extends AbstractController {
 	      
 	      
 	      request.setAttribute("pageBar", pageBar);
-		
+	      request.setAttribute("fk_bigcateno", fk_bigcateno);
 		super.setViewPage("/WEB-INF/cscenter/CsBoardView.jsp");
 	}
 
