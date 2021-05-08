@@ -111,13 +111,12 @@ div.moreProdInfo:hover, .overlay > span {
 	
 }
 
-/* 
-** 제품 상세 페이지 **
+/* 제품 상세 페이지 */
 #prod-content-container{
 	width: 70%;
 	margin-left: auto;
 	margin-right: auto;
-	border: solid 1px gray;
+	/* border: solid 1px gray; */
 	padding-left: 70px;
 	padding-right: 70px;
 }
@@ -131,7 +130,7 @@ div.moreProdInfo:hover, .overlay > span {
 nav#info-list {
 	text-align: left;
 	margin-top: 0;
-	border: solid 1px blue;
+	/*border: solid 1px blue;*/
 }
 
 nav#info-list > ul > li {
@@ -150,13 +149,13 @@ div.proddetailmain{
 	width: 50%;
 	padding-left: 50px;
 	padding-right: 50px;
-	border: solid 1px gray;
+	/* border: solid 1px gray; */
 	height: 600px;
 }
 
 img#mainimage{
 	margin-top: 10%;
-	border: solid 1px purple;
+	/* border: solid 1px purple; */
 	height: 80%;
 	display: block;
 	margin-left: auto;
@@ -165,7 +164,7 @@ img#mainimage{
 
 span#itemname {
 	font-size: 20pt;
-	border: solid 1px red;
+	/* border: solid 1px red; */
 	display: inline-block;
 	margin-top: 20px;
 	margin-bottom: 10px;
@@ -195,7 +194,7 @@ select#option1 {
   	margin-left: auto;
 	margin-right: auto;
 	font-size: 11pt;
-	border: solid 1px red;
+	/* border: solid 1px red; */
  }
 
 table.table > tr {
@@ -227,10 +226,9 @@ button#btn-buynow{
 	color: #fff;
 }
 
-  
-div#bestproductdiv{
-	border: solid 1px red;
-}
+div.col-md-2:hover {
+	cursor: pointer;
+} 
 
 
 span#tbltextname {
@@ -250,75 +248,38 @@ li.tabli {
 	text-align: center;
 }
 
-td.qasortno, td.qasortac, td.qasortwriter {
-	width: 150px;
-	height: 40px;
-	border-top: solid 2px black;
-	border-bottom: solid 1px gray;
-	font-weight: bold;
+div#rvcontent{
+	/* border: solid 1px gray; */
+	margin-top: 20px;
 	text-align: center;
 }
-
-td.qasorttitle {
-	width: 350px;
-	border-top: solid 2px black;
-	border-bottom: solid 1px gray;
-	font-weight: bold;
-	text-align: center;
-}
-
-td.qasortdate {
-	width: 250px;
-	border-top: solid 2px black;
-	border-top: solid 2px black;
-	border-bottom: solid 1px gray;
-	font-weight: bold;
-	text-align: center;
-}
-
-td.qasorttdno {
-	width: 150px;
-	height: 40px;
-	border-bottom: solid 1px gray;
-	text-align: center;
-}
-
-td.qasorttdac {
-	width: 150px;
-	border-bottom: solid 1px gray;
-	text-align: center;
-}
-
-td.qasorttdtitle {
-	width: 350px;
-	border-bottom: solid 1px gray;
+div#writer{
+	/* border: solid 1px blue; */
+	display: inline-block;
 	text-align: left;
 }
-
-td.qasorttdwriter {
-	width: 150px;
-	border-bottom: solid 1px gray;
-	text-align: center;
+div#writedate{
+	margin-bottom: 10px;
 }
 
-td.qasorttddate {
-	width: 250px;
-	border-bottom: solid 1px gray;
-	text-align: center;
+div.commentDel:hover{
+	cursor: pointer;
 }
 
-span.qasorttext{
-	font-size: 15px;
+div.commentDel, button.btnCommentOK{
+	display: inline-block;
+	background-color: #fff;
+	color: #000;
+	border: solid 1px #000;
+	font-size: 10pt;
+	padding: 3px 5px;
+	
 }
 
-span.rvch {
-	font-size: 20px;
-	margin-top: 20px;
-	margin-left: 30px;
-   	
+div.commentDel{
+	margin-bottom: 25px;
+	
 }
- */
-
 
 /* 카테고리별 제품 목록 출력용 */
 
