@@ -17,10 +17,12 @@
 
 <script>
 	$(function(){
-		var bool = false;
-		
-		$("button#btnPersionInfo").click(function(){
-				
+
+		$("button#btnDelete").click(function(){
+			var frm = document.delFrm;
+			frm.action="delAccount.to";
+			frm.method="POST";
+			frm.submit();
 		});
 	
 	});
@@ -40,11 +42,12 @@
 		<h4 style="font-weight: bold;">정말로 탈퇴하시겠습니까?</h4>
 		<h5 style="margin-bottom: 50px;">회원탈퇴시 삭제된 정보는 복구할 수 없으며, 탈퇴후 재가입시 동일ID는 사용불가 합니다.</h5>
 		<span style="display:block; height: 50px;">
-			<button type="button" class="btn btn-secondary" id="btnPersionInfo" >탈퇴하기</button>
-			<button type="button" class="btn btn-secondary" id="btnPersionInfo" onclick="location.href='<%=ctxPath%>/member/personalInfo.to'" >취소</button>
+			<button type="button" class="btn btn-secondary" id="btnDelete" >탈퇴하기</button>
+			<button type="button" class="btn btn-secondary" id="btnCancelDel" onclick="location.href='<%=ctxPath%>/member/personalInfo.to'" >취소</button>
 		</span>
-		<br>
-		<span class="confirm" id="currentPwd"></span>
+		<form name="delFrm">
+			<input type="hidden" name="userid" id="userid" value="${sessionScope.loginuser.userid}"/>
+		</form>
    </div>
 </div>
 
