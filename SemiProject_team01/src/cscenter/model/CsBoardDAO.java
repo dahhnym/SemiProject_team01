@@ -1,5 +1,6 @@
 package cscenter.model;
 
+
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.sql.*;
@@ -9,9 +10,12 @@ import java.util.Map;
 
 import javax.naming.*;
 import javax.sql.DataSource;
+
+import member.model.MemberVO;
 import util.security.Sha256;
 
 public class CsBoardDAO implements InterCsBoardDAO {
+	
 	private DataSource ds; // DataSource ds 는 아파치톰캣이 제공하는 DBCP(DB Connection Pool) 이다.
 	private Connection conn;
 	private PreparedStatement pstmt;
@@ -44,11 +48,19 @@ public class CsBoardDAO implements InterCsBoardDAO {
 		try {
 			conn = ds.getConnection();
 			
+			String str = "";
+			
+			if(board.getFk_smallcateno() == "6" || board.getFk_smallcateno() == "7") {
+				str = "";
+			} else {
+				str = "["+board.getFk_smallcateno()+"]";
+			}
+			
 			String sql = "insert into tbl_csBoard(boardno, boardtitle, boardcontent, boardpwd, boardfile, fk_userid, fk_smallcateno) "     
 							+ "values(seq_csboard_boardno.nextval,?, ?, ?, ?, ?, ?)"; 
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, board.getBoardtitle());
+			pstmt.setString(1, str + board.getBoardtitle());
 			pstmt.setString(2, board.getBoardcontent());
 			pstmt.setString(3, Sha256.encrypt(board.getBoardpwd())); // 암호를 SHA256 알고리즘으로 단방향 암호화 시킨다. 
 			pstmt.setString(4, board.getBoardfile());
@@ -62,33 +74,6 @@ public class CsBoardDAO implements InterCsBoardDAO {
 			close();
 		}
 		
-		return n;
-	}
-
-	@Override
-	public int selectSmallCateCnt(String fk_bigcateno) throws SQLException {
-		
-		int n = 0;
-		try {
-			conn = ds.getConnection();
-			
-			String sql =  " select count(*) "+
-								" from tbl_bigcategory JOIN tbl_smallcategory "+
-								" ON  bigcateno = fk_bigcateno " +
-								" where fk_bigcateno = ?";
-			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, fk_bigcateno);
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				n = rs.getInt(1);
-			}
-			
-			
-		}finally {
-			close();
-		}
 		return n;
 	}
 
@@ -300,7 +285,270 @@ public class CsBoardDAO implements InterCsBoardDAO {
 		return n;
 	}
 
+	@Override
+	public CsBoardVO selectBoardDetail(String boardno) throws SQLException {
+		CsBoardVO bvo = null;
+		CsBoardSmallCategoryVO svo = null;
+		CsBoardBigCategoryVO bcvo = null;
+		MemberVO mvo = null;
+	      try {
+	          
+	          conn = ds.getConnection();
+	          String sql =    " select boardno, boardtitle, boardcontent, boardfile, fk_smallcateno,fk_bigcateno, smallcatename, bigcatename ,name, fk_userid  " + 
+					          		" from tbl_csBoard JOIN tbl_smallcategory " + 
+					          		" ON fk_smallcateno = smallcateno " + 
+					          		" JOIN tbl_bigcategory " + 
+					          		" ON fk_bigcateno = bigcateno " + 
+					          		" JOIN tbl_member " + 
+					          		" ON fk_userid = userid " + 
+					          		" where boardno = ? ";
+	          
+	          pstmt = conn.prepareStatement(sql);
+	          pstmt.setString(1, boardno);
+	          
+	          rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				
+				bvo = new CsBoardVO();
+				
+				bvo.setBoardno(rs.getInt(1));
+	            bvo.setBoardtitle(rs.getString(2));
+	            bvo.setBoardcontent(rs.getString(3));
+	            bvo.setBoardfile(rs.getString(4));
+	            bvo.setFk_smallcateno(rs.getString(5));
+	            
+	            svo = new CsBoardSmallCategoryVO();
+	            svo.setFk_bigcateno(rs.getInt(6));
+	            svo.setSmallcatename(rs.getString(7));
+	            
+	            bcvo = new CsBoardBigCategoryVO();
+	            bcvo.setBigcatename(rs.getString(8));
+	            
+	            mvo = new MemberVO();
+	            mvo.setName(rs.getString(9));
+	            
+	            bvo.setFk_userid(rs.getString(10));
+	            
+	            svo.setCbbcvo(bcvo);
+	            bvo.setCbscvo(svo);
+	            bvo.setMvo(mvo);
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return bvo;
+	}
+
+	@Override
+	public int BoardDelete(String boardno) throws SQLException {
+		int n = 0;
+		
+	      try {
+	         conn = ds.getConnection();
+	         String sql = " delete from tbl_csBoard where boardno = ? ";
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         pstmt.setString(1, boardno); // 암호를 SHA256 알고리즘으로 단방향 암호화 시킨다.
+	         
+	         n = pstmt.executeUpdate();
+	      } finally {
+	         close();
+	      }
+	   
+	      
+	      return n;
+	}
 	
+	@Override
+	   public List<CsBoardVO> memberCsBoardView(Map<String, String> paraMap, String fk_bigcateno) throws SQLException {
+	      List<CsBoardVO> boardList = new ArrayList<>();
+	         
+	         try {
+	             conn = ds.getConnection();
+	             
+	             String sql =  " select boardno, boardtitle, boardcontent, boardregistdate ,boardfile ,boardpwd , fk_smallcateno, fk_bigcateno, bigcatename "+
+	                            " from "+
+	                            " ( "+
+	                            "     select rownum as rno, boardno, boardtitle, boardcontent, boardregistdate ,boardfile ,boardpwd ,fk_userid ,fk_smallcateno, fk_bigcateno, bigcatename "+
+	                            "     from "+
+	                            "     ( "+
+	                            "         select boardno, boardtitle, boardcontent, boardregistdate ,boardfile ,boardpwd ,fk_userid ,fk_smallcateno, fk_bigcateno, bigcatename "+
+	                            "         from tbl_csBoard JOIN tbl_smallcategory "+
+	                            "         ON fk_smallcateno = smallcateno "+
+	                            "         JOIN tbl_bigcategory "+
+	                            "         ON fk_bigcateno = bigcateno" +
+	                            "     )V "+
+	                            " )T "+
+	                            " where fk_userid =? and rno between ? and ? ";
+	             
+	             pstmt = conn.prepareStatement(sql);
+	             
+	             int currentShowPageNo = Integer.parseInt( paraMap.get("currentShowPageNo") );
+	             int sizePerPage = 10; // 한 페이지당 화면상에 보여줄 제품의 개수는 10 으로 한다.
+	             
+	             pstmt.setString(1, paraMap.get("userid"));
+	             pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식
+	             pstmt.setInt(3, (currentShowPageNo * sizePerPage)); // 공식 
+
+	             rs = pstmt.executeQuery();
+	             
+	             while( rs.next() ) {
+	                
+	                CsBoardVO bvo = new CsBoardVO();
+	                                                      
+	                
+	                bvo.setBoardno(rs.getInt(1));
+	                bvo.setBoardtitle(rs.getString(2));
+	                bvo.setBoardcontent(rs.getString(3));
+	                bvo.setBoardregistdate(rs.getString(4));
+	                bvo.setBoardfile(rs.getString(5));
+	                bvo.setBoardpwd(rs.getString(6));
+	                bvo.setFk_smallcateno(rs.getString(7));
+	                
+	                CsBoardSmallCategoryVO smallvo = new CsBoardSmallCategoryVO();
+	                smallvo.setFk_bigcateno(rs.getInt(8));
+	                bvo.setCbscvo(smallvo);
+	                
+	                CsBoardBigCategoryVO bigvo = new CsBoardBigCategoryVO();
+	                bigvo.setBigcatename(rs.getString(9));
+	                smallvo.setCbbcvo(bigvo);
+	                
+	                
+	                boardList.add(bvo);
+	                
+	             }// end of while-----------------------------------------
+	             
+	         } finally {
+	            close();
+	         }      
+	         
+	         return boardList;
+	   }
+
+	@Override
+	public int updateBoard(CsBoardVO board, String fk_userid, String boardno) throws SQLException {
+		
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = "update tbl_csBoard set "
+						   + "                      boardtitle = ? "
+						   + "                    , fk_userid = ? " 
+						   + "                    , boardpwd = ? "
+						   + "                    , boardcontent = ? "
+						   + "                    , boardfile = ? "
+						   + "                    , fk_smallcateno = ? "
+					   + " where fk_userid = ? and boardno = ?"; 
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, board.getBoardtitle());
+			pstmt.setString(2, board.getFk_userid());
+			pstmt.setString(3, Sha256.encrypt(board.getBoardpwd()));
+			pstmt.setString(4, board.getBoardcontent());
+			pstmt.setString(5, board.getBoardfile());
+			pstmt.setString(6, board.getFk_smallcateno());
+			pstmt.setString(7, fk_userid);
+			pstmt.setString(8, boardno);
+						
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;	
+	}
+
+	@Override
+	public int addComment(BoardAdminCommentVO adcommvo) throws SQLException {
+		
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " insert into tbl_boardcomment(bcommentno, bcontent, fk_boardno) "
+					   		+ " values(seq_bcommentno.nextval, ?, ?) ";
+					   
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, adcommvo.getBcontent());
+			pstmt.setInt(2, adcommvo.getFk_boardno());
+			
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;		
+	}
+
+	@Override
+	public List<BoardAdminCommentVO> commentList(String boardno) throws SQLException {
+		List<BoardAdminCommentVO> commentList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql =	 " select bcommentno, bcontent, fk_boardno, to_char(commDate, 'yyyy-mm-dd hh24:mi:ss') AS commDate " + 
+							     " from tbl_boardcomment " +
+							     " where fk_boardno = ? " ;
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, boardno);
+			
+			rs = pstmt.executeQuery();
+								
+			while(rs.next()) {
+				
+				int bcommentno = rs.getInt("bcommentno");
+				String bcontent = rs.getString("bcontent");
+				int fk_boardno = rs.getInt("fk_boardno");
+				String commDate = rs.getString("commDate");
+				
+				BoardAdminCommentVO adcommvo = new BoardAdminCommentVO();
+				adcommvo.setBcommentno(bcommentno);
+				adcommvo.setBcontent(bcontent);
+				adcommvo.setFk_boardno(fk_boardno);
+				adcommvo.setCommDate(commDate);
+				
+				commentList.add(adcommvo);
+			}
+			
+		} finally {
+			close();
+		}		
+		
+		return commentList;		
+	}
+
+	@Override
+	public int reviewDel(String fk_boardno) throws SQLException {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " delete from tbl_boardcomment "
+					   + " where fk_boardno = ? ";
+					   
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, fk_boardno);
+			
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;		
+	}
 
 
 

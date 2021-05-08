@@ -1,5 +1,7 @@
 package cscenter.model;
 
+import member.model.MemberVO;
+
 public class CsBoardVO {
 
 	private int boardno;
@@ -12,8 +14,8 @@ public class CsBoardVO {
 	private String fk_smallcateno;
 	
 	private CsBoardSmallCategoryVO cbscvo;
-	
-	
+	private MemberVO mvo;
+
 	public CsBoardVO() {}
 
 	public CsBoardVO(String fk_smallcateno, String boardtitle, String fk_userid, String boardpwd,
@@ -25,9 +27,27 @@ public class CsBoardVO {
 		this.boardfile = boardfile;
 		this.fk_userid = fk_userid;
 		this.fk_smallcateno = fk_smallcateno;
-		this.cbscvo = cbscvo;
+	}
+	
+	public CsBoardVO(int boardno, String fk_smallcateno, String boardtitle, String fk_userid, String boardpwd,
+			String boardcontent, String boardfile) {
+		
+		this.boardno = boardno;
+		this.boardtitle = boardtitle;
+		this.boardcontent = boardcontent;
+		this.boardpwd = boardpwd;
+		this.boardfile = boardfile;
+		this.fk_userid = fk_userid;
+		this.fk_smallcateno = fk_smallcateno;
 	}
 
+	public MemberVO getMvo() {
+		return mvo;
+	}
+
+	public void setMvo(MemberVO mvo) {
+		this.mvo = mvo;
+	}
 
 	public CsBoardSmallCategoryVO getCbscvo() {
 		return cbscvo;

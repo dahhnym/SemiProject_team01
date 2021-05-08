@@ -1,9 +1,15 @@
 package cscenter.controller;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import common.controller.AbstractController;
 import cscenter.model.*;
@@ -19,21 +25,38 @@ public class BoardRegisterAction extends AbstractController {
 			super.setViewPage("/WEB-INF/cscenter/CsBoardWrite.jsp");
 		} else {
 			
-			String fk_bigcateno = request.getParameter("fk_bigcateno");
+			MultipartRequest mtrequest = null;
+			HttpSession session = request.getSession();
+            
+            ServletContext svlCtx = session.getServletContext();
+            String imagesDir = svlCtx.getRealPath("/images");
+            
+            System.out.println(session);
+            
+            try {
+            	mtrequest = new MultipartRequest(request, imagesDir, 10*1024*1024, "UTF-8", new DefaultFileRenamePolicy());
+            } catch (IOException e) {
+            	e.printStackTrace();
+			}
+
+			String fk_bigcateno = mtrequest.getParameter("fk_bigcateno");
 			fk_bigcateno = fk_bigcateno.trim();
+			String fk_smallcateno = mtrequest.getParameter("fk_smallcateno");
+			String boardtitle = mtrequest.getParameter("boardtitle");
+			String fk_userid = mtrequest.getParameter("fk_userid");
+			String boardpwd = mtrequest.getParameter("boardpwd");
+			String boardcontent = mtrequest.getParameter("boardcontent");
+			boardcontent = boardcontent.replace("<", "&lt;");
+			boardcontent =  boardcontent.replace(">", "&gt;");
+	         
+	         //입력한 내용에서 엔터는 <br>로 변환시키기
+			boardcontent =  boardcontent.replace("\r\n", "<br>");
+			
+			String boardfile = mtrequest.getFilesystemName("boardfile");
+			
+			
+			
 			InterCsBoardDAO bdao = new CsBoardDAO();
-			
-			
-			String fk_smallcateno = request.getParameter("fk_smallcateno");
-			String boardtitle = request.getParameter("boardtitle");
-			String fk_userid = request.getParameter("fk_userid");
-			String boardpwd = request.getParameter("boardpwd");
-			String boardcontent = request.getParameter("boardcontent");
-			String boardfile = request.getParameter("boardfile");
-			
-			
-			
-			
 			CsBoardVO board = new CsBoardVO(fk_smallcateno, boardtitle, fk_userid, boardpwd, boardcontent, boardfile);
 			
 			

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link rel="stylesheet" href="../css/yh_css/boardTable.css">
 <jsp:include page="../header.jsp"/>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
@@ -17,6 +18,15 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 	$(document).ready(function() {
 		$("span.error").hide();
 		
+		if("${empty requestScope.fk_bigcateno}"){
+			//카테고리를 선택한 것이 아닌 전체보기에서 글쓰기 버튼을 눌렀을 때는
+			//상품문의가 기본적으로 선택되게한다.
+			$("select#fk_bigcateno").val("1");
+		} else {
+			//선택한 카테고리가 자동적으로 selected 되도록 한다.
+			$("select#fk_bigcateno").val("${requestScope.fk_bigcateno}");
+		}
+		
 		
 		$("select#fk_bigcateno").bind("change", function(){
 			//var choice = $(this).val();
@@ -30,9 +40,15 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 			   	   success:function(json) {
 			   		   var html = "";
 			   		$.each(json, function(index, item){
-			   			html += "<option value='"+item.smallcateno+"'>"+item.smallcatename+"</option>";
+			   			if(item.smallcatename == "없음") {
+			   				$("select#fk_smallcateno").css("display", "none");
+			   			}else {
+			   				html += "<option value='"+item.smallcateno+"'>"+item.smallcatename+"</option>";
+			   				$("select#fk_smallcateno").css("display", "inline-block");
+			   			}
+			   			
 			   		});
-			   		$("select#fk_smallcateno").css("display", "inline-block");
+			   		
 			   		$("select#fk_smallcateno").html(html);
 			   	   }, error: function(request, status, error){
 					      alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -69,18 +85,30 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 <div class="container container_b">
 
 <br><br><h2 align="center">문의 게시판</h2><br><br><br>
-
-			<form name="boardForm"role="form">
+<span></span>
+			<form name="boardForm" role="form" enctype="multipart/form-data">
 				<div class="mb-3">
 					<label for="title">카테고리&nbsp;&nbsp;</label>
-					<select class="w3-select w3-border" id="fk_bigcateno" name="fk_bigcateno">
+					<select class="w3-select w3-border selectBig" id="fk_bigcateno" name="fk_bigcateno">
 						<option value="1">상품문의</option>
 						<option value="2">배송전변경/취소</option>
 						<option value="3">배송/교환/반품</option>
 						<option value="4">입금확인/입금자변경</option>
 					</select>&nbsp;
-					<select class='w3-select w3-border' id='fk_smallcateno' name='fk_smallcateno' style="display:none;">
-					</select>
+					<c:if test="${requestScope.fk_bigcateno == '1' || requestScope.fk_bigcateno == '4'}">
+						<select class='w3-select w3-border' id='fk_smallcateno' name='fk_smallcateno' style="display:none;">
+							<c:forEach var="list" items="${requestScope.boardList}" varStatus="status">
+								<option value="${list.cbscvo.smallcateno}">${list.cbscvo.smallcatename}</option>
+							</c:forEach>
+						</select>
+					</c:if>
+					<c:if test="${requestScope.fk_bigcateno == '2' || requestScope.fk_bigcateno == '3'}">
+						<select class='w3-select w3-border' id='fk_smallcateno' name='fk_smallcateno' style="display:inline-block;">
+							<c:forEach var="list" items="${requestScope.boardList}" varStatus="status">
+								<option value="${list.cbscvo.smallcateno}">${list.cbscvo.smallcatename}</option>
+							</c:forEach>
+						</select>
+					</c:if>
 				</div>
 				<div class="mb-3">
 					<label for="title">제목</label>
@@ -100,9 +128,6 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 				<div class="mb-3">
 					<label for="reg_id" style="padding-right:15px;">파일</label>
 					<input type="file" name="boardfile" id="boardfile">
-				</div>
-				<div class="mb-3">
-					
 				</div>
 				<br>
 			</form>

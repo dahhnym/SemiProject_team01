@@ -9,8 +9,6 @@ public interface InterCsBoardDAO {
 
 	int registerBoard(CsBoardVO board) throws SQLException;
 
-	int selectSmallCateCnt(String fk_bigcateno) throws SQLException;
-
 	List<CsBoardVO> GetSmallCategoryList(String fk_bigcateno) throws SQLException;
 
 	List<CsBoardVO> selectBoardByCategory(Map<String, String> paraMap, String fk_bigcateno) throws SQLException;
@@ -20,5 +18,21 @@ public interface InterCsBoardDAO {
 	String getBigCategoryName(String fk_bigcateno) throws SQLException;
 
 	int checkUserPwd(String userid, String boardpwd) throws SQLException;
+
+	CsBoardVO selectBoardDetail(String boardno) throws SQLException;
+
+	int BoardDelete(String boardno) throws SQLException;
+	
+	List<CsBoardVO> memberCsBoardView(Map<String, String> paraMap, String fk_bigcateno) throws SQLException;
+
+	int updateBoard(CsBoardVO board, String fk_userid, String boardno) throws SQLException;
+
+	int addComment(BoardAdminCommentVO adcommvo) throws SQLException;
+
+	List<BoardAdminCommentVO> commentList(String boardno) throws SQLException;
+
+	int reviewDel(String fk_boardno) throws SQLException;
+
+	
 
 }
