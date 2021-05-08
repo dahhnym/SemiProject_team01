@@ -59,11 +59,8 @@ public class ListAction_front extends AbstractController {
 			paraMap.put("currentShowPageNo", currentShowPageNo);
 		}
 		
-		String sizePerPage = "12";
-		
 		List<ProductVO> productList = pdao.selectCateonly(paraMap);
 		request.setAttribute("productList", productList);
-		request.setAttribute("sizePerPage", sizePerPage);
 		
 		String pageBar = "";
 		
