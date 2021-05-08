@@ -156,11 +156,11 @@ public class ProductRegisterAction extends AbstractController {
            
            if(n*k*m==1) { // n은 제품등록(제품테이블에 insert완료)된 값 * m은 추가이미지(추가이미지 테이블에 insert 완료)등록 된 값
 	              message = "제품등록 성공!!";
-	              loc = request.getContextPath()+"/shop/admin/productRegister.to";
+	              loc = request.getContextPath()+"/admin/productRegister.to";
 	       }
            else {
               message = "제품등록 실패!!";
-              loc = request.getContextPath()+"/shop/admin/productRegister.to";
+              loc = request.getContextPath()+"/admin/productRegister.to";
            }
 	           
 	           request.setAttribute("message", message);
