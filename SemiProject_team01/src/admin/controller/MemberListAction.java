@@ -105,8 +105,8 @@ public class MemberListAction extends AbstractController {
 			
 			// *** [맨처음] [이전] 만들기 *** //
 			if( pageNo != 1 ) {
-				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo=1&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'>[맨처음]</a>&nbsp;";
-				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'>[이전]</a>&nbsp;";
+				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo=1&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'><i class='fas fa-angle-double-left' style='font-size:15px'></i></a>&nbsp;";
+				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'><i class='fas fa-angle-left' style='font-size:15px'></i></a>&nbsp;";
 			}
 			
 			
@@ -126,8 +126,8 @@ public class MemberListAction extends AbstractController {
 			
 			// *** [다음] [마지막] 만들기 *** //
 			if( pageNo <= totalPage ) {
-				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'>[다음]</a>&nbsp;";
-				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo="+totalPage+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'>[마지막]</a>";
+				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'><i class='fas fa-angle-right' style='font-size:15px;'></i></a>&nbsp;";
+				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo="+totalPage+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'><i class='fas fa-angle-double-right' style='font-size:15px;'></i></a>";
 			} 
 			
 			

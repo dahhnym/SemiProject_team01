@@ -37,7 +37,7 @@
 
 #pageBar{
 	display: block;
-	width: 10%;
+	width: 15%;
 	margin-left: auto;
 	margin-right: auto;
 	
