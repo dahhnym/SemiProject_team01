@@ -78,7 +78,9 @@
 
 </style>
 <script>
-	$(function(){});
+	$(function(){
+		setTimeout(function(){location.reload();},1000);	// 새로고침
+	});
 </script>
 
 <div class="container">
