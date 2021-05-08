@@ -25,7 +25,7 @@ public class CartDAO2 implements InterCartDAO2 {
 		try {
 			Context initContext = new InitialContext();
 		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
-		    ds = (DataSource)envContext.lookup("jdbc/myoracle");
+		    ds = (DataSource)envContext.lookup("jdbc/semioracle");
 		} catch(NamingException e) {
 			e.printStackTrace();
 		}
@@ -79,14 +79,17 @@ public class CartDAO2 implements InterCartDAO2 {
 				 else {
 					// 장바구니에 존재하지 않는 새로운 제품을 넣고자 하는 경우
 					
-					sql = " insert into tbl_cart(cartnum, fk_userid, fk_pnum, oqty) "
-					    + " values(seq_tbl_cart_cartnum.nextval, ?, ?, 1) ";
+					 sql = " insert into tbl_cart(cartnum, fk_userid, fk_pnum, oqty,fk_pdetailnum) " + 
+			               		"                           		values(seq_cart_num.nextval, ?, ?, ?, ?) ";
 					
 					pstmt = conn.prepareStatement(sql);
-					pstmt.setString(1, paraMap.get("userid"));
-					pstmt.setInt(2, Integer.parseInt(paraMap.get("pnum")));
+	                pstmt.setString(1, paraMap.get("userid"));
+	                pstmt.setInt(2, Integer.parseInt(paraMap.get("pnum")));
+	                pstmt.setInt(3,  Integer.parseInt(paraMap.get("oqty")));
+	                pstmt.setInt(4,  Integer.parseInt(paraMap.get("fk_pdetailnum")));
+	                n = pstmt.executeUpdate();
+	                //System.out.println("n"+n);
 					
-					n = pstmt.executeUpdate();
 				 }
 			 
 			 if(n == 1) {

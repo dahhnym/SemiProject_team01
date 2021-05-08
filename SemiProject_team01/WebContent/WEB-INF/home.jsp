@@ -191,14 +191,26 @@ function goProdDetail(imgs) {
 						</tbody>
 					</table>
 				</div>
-				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
-					<img src="/SemiProject_team01/images/w-backpack5.jpg" class="img-fluid mx-auto d-block" alt="img3">
-					<div id="prodInfo">
+				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-4 slideImg">
+					<div class="slide-container col1" style="display: inline-block; float: left; margin-right: 10px;">
+					<img src="/SemiProject_team01/images/w-backpack5.jpg" style="width: 300px;"class="img-fluid mx-auto d-block" alt="img3">
+					<div id="prodInfo" style="display:table-cell">
            				<ul>
            					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
            					<li><label class="prodInfoList">정가</label>12,000원</li>
            					<li><label class="prodInfoList">할인가</label>10,000원</li>
            				</ul>
+					</div>
+					</div>
+					<div class="slide-container col2" style="display: inline-block; float: left; ">
+					<img src="/SemiProject_team01/images/w-backpack5.jpg" style="width: 300px;" class="img-fluid mx-auto d-block" alt="img3">
+					<div id="prodInfo" style="display:table-cell">
+           				<ul>
+           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
+           					<li><label class="prodInfoList">정가</label>12,000원</li>
+           					<li><label class="prodInfoList">할인가</label>10,000원</li>
+           				</ul>
+					</div>
 					</div>
 				</div>
 				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">

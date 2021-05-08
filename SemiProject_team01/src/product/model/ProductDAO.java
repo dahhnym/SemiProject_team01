@@ -543,7 +543,7 @@ public class ProductDAO implements InterProductDAO {
 		          
 		          pstmt = conn.prepareStatement(sql);
 		          int currentShowPageNo = Integer.parseInt( paraMap.get("currentShowPageNo") );
-		          int sizePerPage = Integer.parseInt( paraMap.get("sizePerPage") );
+		          int sizePerPage = 12; // 한 페이지당 화면상에 보여줄 제품의 개수는 12 으로 한다.
 		          
 		          pstmt.setString(1, paraMap.get("cnum"));
 		          pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식

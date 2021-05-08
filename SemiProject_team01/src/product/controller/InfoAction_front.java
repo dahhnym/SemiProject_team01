@@ -1,5 +1,6 @@
 package product.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +22,7 @@ public class InfoAction_front extends AbstractController {
 		super.getFaqCategoryList(request);
 		
 		String pnum = request.getParameter("pnum"); // 제품번호
-		
+		request.setAttribute("pnum", pnum);
 		
 		InterProductDAO2 pdao2 = new ProductDAO2();
 		
@@ -33,8 +34,8 @@ public class InfoAction_front extends AbstractController {
 		// 제품번호를 가지고서 해당 제품의 추가된 이미지 정보를 조회해오기 
 		List<String> imgList = pdao2.getImagesByPnum(pnum);
 		
-		// 제품번호로 제품의 옵션을 조회하기
-		/* List<String> option = pddao2.getOptionByPnum(pnum); */
+		// 제품 번호로 옵션 조회해오기
+				List<HashMap<String,String>> optionList = pddao2.getOptionByPnum(pnum);
 		
 		if(pvo2 == null) {
 			// GET 방식이므로 사용자가 웹브라우저 주소창에서 장난쳐서 존재하지 않는 제품번호를 입력한 경우
@@ -53,10 +54,9 @@ public class InfoAction_front extends AbstractController {
 			// 제품이 있는 경우 
 			request.setAttribute("pvo2", pvo2);         // 제품의 정보
 			request.setAttribute("imgList", imgList); // 해당 제품의 추가된 이미지 정보
-			/*
-			 * request.setAttribute("option", option); // 제품 옵션 정보
-			 */			
-		//	super.setRedirect(false);
+			request.setAttribute("optionList", optionList);
+
+			//	super.setRedirect(false);
 			super.setViewPage("/WEB-INF/product/productInfo_front.jsp");
 		}
 		
