@@ -526,28 +526,28 @@ public class ProductDAO implements InterProductDAO {
 		      try {
 		          conn = ds.getConnection();
 		          
-		          String sql = "select cnum, cname, snum, pnum, pname, pimage1, price, saleprice\n"+
-		        		  	   "from \n"+
-		        		  	   "( \n"+
-		        		  	   "select row_number() over(order by pnum asc) AS RNO,         \n"+
-		        		  	   "    C.cnum, C.cname, pnum, pname, pcompany, pimage1, price, saleprice, S.sname, snum  \n"+
-		        		  	   "from tbl_product P  \n"+
-		        		  	   "JOIN tbl_category C  \n"+
-		        		  	   "ON P.fk_cnum = C.cnum  \n"+
-		        		  	   "JOIN tbl_spec S  \n"+
-		        		  	   "ON P.fk_snum = S.snum\n"+
-		        		  	   "where C.cnum = ?\n"+
-		        		  	   ") V\n"+
-		        		  	   "where RNO between ? and ?\n"+
-		        		  	   "order by pnum desc";
+		          String sql = " select cnum, cname, snum, pnum, pname, pimage1, price, saleprice "+
+		        		  	   " from  "+
+		        		  	   " (  "+
+		        		  	   " select row_number() over(order by pnum asc) AS RNO,          "+
+		        		  	   "    C.cnum, C.cname, pnum, pname, pcompany, pimage1, price, saleprice, S.sname, snum   "+
+		        		  	   " from tbl_product P   "+
+		        		  	   " JOIN tbl_category C   "+
+		        		  	   " ON P.fk_cnum = C.cnum   "+
+		        		  	   " JOIN tbl_spec S   "+
+		        		  	   " ON P.fk_snum = S.snum "+
+		        		  	   " where C.cnum = ? "+
+		        		  	   " ) V "+
+		        		  	   " where RNO between ? and ? "+
+		        		  	   " order by pnum desc";
 		          
 		          pstmt = conn.prepareStatement(sql);
 		          int currentShowPageNo = Integer.parseInt( paraMap.get("currentShowPageNo") );
 		          int sizePerPage = Integer.parseInt( paraMap.get("sizePerPage") );
 		          
 		          pstmt.setString(1, paraMap.get("cnum"));
-		          pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식
-		          pstmt.setInt(3, (currentShowPageNo * sizePerPage)); // 공식 
+		          pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+				  pstmt.setInt(3, (currentShowPageNo * sizePerPage));
 		          
 		          
 		          rs = pstmt.executeQuery();
