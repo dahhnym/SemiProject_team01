@@ -159,8 +159,8 @@ public class MemberDAO implements InterMemberDAO {
 		        	loginuser.setLevel(rs.getString(4));
 		        	loginuser.setPwdCycleMonth(rs.getInt(5));
 		        	loginuser.setIdle(rs.getString(6));
-		        	loginuser.setEmail(rs.getString(7));
-		        	loginuser.setMobile(rs.getString(8));
+		        	loginuser.setEmail(aes.decrypt(rs.getString(7)));
+		        	loginuser.setMobile(aes.decrypt(rs.getString(8)));
 		        	loginuser.setAddress(rs.getString(9));
 		        	loginuser.setDetailaddress(rs.getString(10));
 		        	loginuser.setExtraaddress(rs.getString(11));
@@ -169,7 +169,7 @@ public class MemberDAO implements InterMemberDAO {
 				}
 	        } 
 	        
-		} catch(SQLException e) {
+		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} finally {
 			close();
