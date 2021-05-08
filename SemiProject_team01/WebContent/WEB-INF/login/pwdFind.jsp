@@ -9,7 +9,10 @@
 	var bool = false;
 
 	$(function(){
-		setTimeout(function(){location.reload();},1000);	// 새로고침
+		if(self.name!='reload'){
+			self.name='reload'
+			self.location.reload();
+		} else self.name="";
 		
 		$("div#etcEmailAddress").hide();
 		$("div.infoConfirm").hide();

@@ -10,7 +10,10 @@
 	var b_check = false;
 
 	$(function(){
-		setTimeout(function(){location.reload();},1000);	// 새로고침
+		if(self.name!='reload'){
+			self.name='reload'
+			self.location.reload();
+		} else self.name="";
 		
 		$("span.confirm").hide();
 		

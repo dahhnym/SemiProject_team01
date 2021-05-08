@@ -13,7 +13,10 @@
  	var loginuser = "${sessionScope.loginuser}"
  	
 	$(function(){
-		setTimeout(function(){location.reload();},1000);	// 새로고침
+		if(self.name!='reload'){
+			self.name='reload'
+			self.location.reload();
+		} else self.name="";
 		
 		$("div#confirm").html("");
 		
