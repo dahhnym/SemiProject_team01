@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
 <% String ctxPath = request.getContextPath(); %>   
 <%@ page import="java.util.Date , java.text.SimpleDateFormat" %>
 <%
@@ -97,7 +100,7 @@
 <!-- 탭 메뉴 상단 시작 -->
 	<ul class="tabs">
 		<li class="tab-link current" data-tab="tab-1">주문내역조회</li>
-		<li class="tab-link" data-tab="tab-2">취소/반품/교환 내역</li>
+		<li class="tab-link" data-tab="tab-2">취소/교환/반품 내역</li>
 	</ul>
 <!-- 탭 메뉴 상단 끝 -->
 
@@ -145,25 +148,36 @@
 			<tr id="prodInfo">
 				<th>주문일자<br>[주문번호]</th>
 				<th>이미지</th>
-				<th width="30%">상품정보</th>
+				<th width="25%">상품정보</th>
 				<th>수량</th>
 				<th>상품구매금액</th>
 				<th>주문처리상태</th>
-				<th>교환/환불</th>
+				<th>취소/교환/반품</th>
 			</tr>
 		</thead>
-		
+		<c:if test="${empty requestScope.orderList}">
+			<tbody>
+				<tr>
+					<td colspan="7" height="150px;"><span style="color: black;">주문하신 상품이 없습니다.</span></td>
+				</tr>
+			</tbody>
+		</c:if>
+		<c:if test="${not empty requestScope.orderList}">						
 		<tbody align="center">
+			<c:forEach items="${requestScope.orderList}" var="odr" varStatus="status">
+		
 			<tr id="prodInfo">
-				<td>2021-04-17<br><a href="">[주문번호링크]</a></td>
-				<td><a href="">이미지 연결</a></td>
-				<td align="left"><a href="">[상품정보]링크걸기</a><br>[옵션:컬러]</td>
-				<td>1</td>
-				<td>30,000원</td>
-				<td>입금전</td>
+				<td>${odr.ovo.orderdate}<br><a href="">[ ${odr.fk_odrcode} ]</a></td>
+				<td><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}"><img class="pimage1" src="<%=ctxPath%>/images/${odr.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
+				<td align="left"><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}">${odr.pvo.pname}</a><br>[옵션: ${odr.optionname} ]</td>
+				<td>${odr.odrqty}</td>
+				<td><fmt:formatNumber value="${odr.odrprice}" type="number" />원</td>
+				<td>${odr.ovo.odrstatus}&nbsp;${odr.ovo.odrprgrss}</td>
 				<td><button>취소/교환/반품</button></td>
 			</tr>
+			</c:forEach>
 		</tbody>
+		</c:if>
 	</table>
 		
 	</div>
@@ -210,25 +224,37 @@
 			<tr id="prodInfo">
 				<th>주문일자<br>[주문번호]</th>
 				<th>이미지</th>
-				<th width="30%">상품정보</th>
+				<th width="25%">상품정보</th>
 				<th>수량</th>
 				<th>상품구매금액</th>
 				<th>주문처리상태</th>
-				<th>교환/환불</th>
+				<th>취소/교환/반품</th>
 			</tr>
 		</thead>
-		
+		<c:if test="${empty requestScope.orderList}">
+			<tbody>
+				<tr>
+					<td colspan="7" height="150px;"><span style="color: black;">취소/교환/반품하신 상품이 없습니다.</span></td>
+				</tr>
+			</tbody>
+		</c:if>
+		<c:if test="${not empty requestScope.orderList}">						
 		<tbody align="center">
+			<c:forEach items="${requestScope.orderList}" var="odr" varStatus="status">
+		
 			<tr id="prodInfo">
-				<td>2021-04-17<br><a href="">[주문번호링크]</a></td>
-				<td><a href="">이미지 연결</a></td>
-				<td align="left"><a href="">[상품정보]링크걸기</a><br>[옵션:컬러]</td>
+				<td>${odr.ovo.orderdate}<br><a href="">[ ${odr.fk_odrcode} ]</a></td>
+				<td><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}"><img class="pimage1" src="<%=ctxPath%>/images/${odr.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
+				<td align="left"><a href="">${odr.pvo.pname}</a><br>[옵션: ${odr.optionname} ]</td>
 				<td>1</td>
-				<td>30,000원</td>
-				<td>진행중</td>
-				<td>교환</td>
+				<td><fmt:formatNumber value="${odr.odrprice}" type="number" />원</td>
+				<td>${odr.ovo.odrprgrss}</td>
+				<td>${odr.ovo.odrstatus}</td>
 			</tr>
+			
+			</c:forEach>
 		</tbody>
+		</c:if>
 	</table>
   
   	</div> <!-- 탭2 메뉴 내용 끝 -->

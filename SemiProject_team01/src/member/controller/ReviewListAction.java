@@ -9,10 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
-import member.model.MemberVO;
+
 import my.util.MyUtil;
-import product.model.InterProductDAO;
-import product.model.ProductDAO;
+import order.model.InterOrderDAO;
+import order.model.OrderDAO;
+import order.model.OrderDetailVO;
+
 import product.model.ProductVO;
 
 public class ReviewListAction extends AbstractController {
@@ -23,14 +25,12 @@ public class ReviewListAction extends AbstractController {
 		
 		String userid = request.getParameter("userid");
 		
-		InterProductDAO pdao = new ProductDAO();
-		List<ProductVO> pdrvList = pdao.pendingReview(userid);
-		int pdrvListNo = pdao.pdrvListNo(userid);
-		request.setAttribute("pdrvList", pdrvList);
-		request.setAttribute("pdrvListNo", pdrvListNo);
+		InterOrderDAO odao = new OrderDAO();
+		List<OrderDetailVO> pdrvList = odao.pendingReview(userid);
+		int pdrvListNo = odao.pdrvListNo(userid);
+		request.setAttribute("pdrvList", pdrvList);		
 		
-		
-		List<ProductVO> wtrvList = pdao.writtenReview(userid);
+		List<OrderDetailVO> wtrvList = odao.writtenReview(userid);
 		request.setAttribute("wtrvList", wtrvList);
 	/*	if( loginuser != null ) {*/
 			// 회원 로그인 했을 경우

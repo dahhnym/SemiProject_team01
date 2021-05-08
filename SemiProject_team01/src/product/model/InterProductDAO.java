@@ -37,18 +37,6 @@ public interface InterProductDAO {
 	// 페이징 처리를 한 채로 리뷰작성할 수 있는 주문 내역 보여주기 -실패
 	List<ProductVO> selectPagingReview(Map<String, String> paraMap) throws SQLException;
 
-	// 보류중인 리뷰 보여주기
-	List<ProductVO> pendingReview(String userid) throws SQLException;
-
-	// 보류중인 리뷰 갯수 세오기
-	int pdrvListNo(String userid) throws SQLException;
-
-	// 작성한 리뷰 보여주기
-	List<ProductVO> writtenReview(String userid) throws SQLException;
-  
-	// 작성한 리뷰 갯수 세오기
-	int wtrvListNo(String userid) throws SQLException;
-
 	// 페이징처리를 위해서 전 제품에 대한 총페이지 개수 알아오기(select) 
 	int selectProdTotalPage(Map<String, String> paraMap) throws SQLException;
 

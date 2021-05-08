@@ -106,22 +106,23 @@
         </thead>
         
         <tbody>
-       	 	<c:if test="${pdrvListNo eq 0}">
+       	 	<c:if test="${empty requestScope.pdrvList}">
 				<tr><td colspan="3">현재 작성 가능한 리뷰가 없습니다.</td></tr>
 			</c:if>
-        	<c:forEach var="rv" items="${requestScope.reviewList}">
+			<c:if test="${not empty requestScope.pdrvList}">
+        	<c:forEach var="pdrv" items="${requestScope.pdrvList}">
         	    <tr class="orderInfo">
-        			<td><img src="<%=ctxPath%>/images/${rv.pimage1}"/></td>
-        			<td>${rv.pname}<br>${rv.optionname}</td>
+        			<td><img src="<%=ctxPath%>/images/${pdrv.pvo.pimage1}"/></td>
+        			<td>${pdrv.pvo.pname}<br>${pdrv.optionname}</td>
         			<td><input type="button" value="리뷰쓰기"></td>
         	    </tr>
         	</c:forEach>
+        	</c:if>
+        	
         </tbody>
     </table>    
 
-    <div>
-    	${requestScope.pageBar}
-    </div>
+    
 	</div>
 <!-- 탭1 메뉴 내용 끝 -->
 	
@@ -129,22 +130,25 @@
 	<div id="tab-2" class="tab-content">
 	    <table id="reviewTbl" class="table table-bordered" style="width: 100%; margin-top: 20px;">
         <thead>
-        <tr><th colspan="4" style="border:none;">${pdrvListNo}개의 리뷰를 작성하였습니다</th></tr>	
         	<tr>
         		<th style="width:20%;">이미지</th>
         		<th>상품정보 및 옵션</th>
         		<th>별점</th>
         		<th style="width:15%;">리뷰 작성날짜</th>
         	</tr>
+        	<c:if test="${empty requestScope.wtrvList}">
+				<tr><td colspan="4">내가 작성한 리뷰가 없습니다.</td></tr>
+			</c:if>
         </thead>
         
         <tbody>		
 						
-        	<c:forEach var="pdrv" items="${requestScope.pdrvList}">        	
+        	<c:forEach var="wtrv" items="${requestScope.pdrvList}">        	
         	    <tr class="orderInfo">
-        			<td><img src="<%=ctxPath%>/images/${pdrv.pimage1}"/></td>
-        			<td>${pdrv.pname}</td>
-        			<td><input type="button" value="후기쓰기"></td>
+        			<td><img src="<%=ctxPath%>/images/${wtrv.pvo.pimage1}"/></td>
+        			<td>${wtrv.pvo.pname}<br>${wtrv.optionname}</td>
+        			<td>${wtrv.rvo.stars}</td>
+        			<td>${wtrv.rvo.rvdate}</td>
         	    </tr>
         	</c:forEach>
         </tbody>

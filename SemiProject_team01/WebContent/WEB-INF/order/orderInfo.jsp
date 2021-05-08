@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <% String ctxPath = request.getContextPath(); %>   
 <jsp:include page="../header.jsp"/>
 <link rel="stylesheet" href="<%=ctxPath%>/css/hanseoyeon.css"/>
@@ -22,23 +25,20 @@
 		<table>
 			<tr>
 				<th width="120px;">주문번호</th>
-				<td></td>
+				<td>${orderInfo.odrcode}</td>
 			</tr>
 			<tr>
 				<th>주문일자</th>
-				<td>yyyy-mm-dd&nbsp;hh:mm:ss</td>
+				<td>${orderInfo.orderdate}</td>
 			</tr>
 			<tr>
 				<th>주문자</th>
-				<td>주문자이름</td>
+				<td>${orderInfo.odrname}</td>
 			</tr>
 			<tr>
 				<th>주문처리상태</th>
-				<td>배송중&nbsp;
-					 <span style="font-size:10pt;">대한통운(송장번호 : 
-					<a style=" text-decoration: underline; color: blue;"
-					href=" https://www.doortodoor.co.kr/parcel/doortodoor.do?fsp_action=PARC_ACT_002&fsp_cmd=retrieveInvNoACT&invc_no=388773705275">
-					388773705275</a>)</span></td>
+				<td>${orderInfo.odrstatus}&nbsp;${orderInfo.odrprgrss}
+				</td>				
 			</tr>
 		</table>
 		<br><br>
@@ -47,15 +47,11 @@
 		<table>
 			<tr>
 				<th width="120px;">총 주문금액</th>
-				<td><a>30,000원</a></td>
-			</tr>
-			<tr>
-				<th>총 결제금액</th>
-				<td>30,000원</td>
+				<td><a><fmt:formatNumber value="${orderInfo.totalcost}" type="number" />원</a></td>
 			</tr>
 			<tr>
 				<th>결제수단</th>
-				<td>무통장입금&nbsp; <span style="font-size:10pt;">계좌번호: 신한은행 <span style="font-weight: bold;">110-1234-5678</span>&nbsp;(김민지)</span></td>
+				<td>${orderInfo.payment}&nbsp;</td>
 			</tr>
 		</table>
 		<br><br>
@@ -70,25 +66,52 @@
 					<th>수량</th>
 					<th>판매가</th>
 					<th>적립포인트</th>
-					<th>배송비</th>
-					<th>주문처리상태</th>
-					<th>취소/교환/반품</th>
+					<th>합계</th>
 				</tr>
 			</thead>
-			<tbody align="center">
-				<tr id="prodInfo">
-					<td><a href="">이미지 연결</a></td>
-					<td align="left"><a href="">[상품정보]링크걸기</a><br>[옵션:컬러]</td>
-					<td>1</td>
-					<td>30,000원</td>
-					<td>150p</td>
-					<td>[무료]</td>
-					<td>입금전</td>
-					<td>취소</td>
-				</tr>
+			<c:if test="${not empty requestScope.orderList}">						
+				<tbody align="center">
+					<c:forEach items="${requestScope.orderList}" var="odr" varStatus="status">
+		
+						<tr id="prodInfo">
+							<td><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}"><img class="pimage1" src="<%=ctxPath%>/images/${odr.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
+							<td align="left"><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}">${odr.pvo.pname}</a><br>[옵션: ${odr.optionname} ]</td>
+							<td>${odr.odrqty}</td>
+							<td><fmt:formatNumber value="${odr.odrprice}" type="number" />원</td>
+							<td>
+								<div id="pointbox">
+								<c:if test="${sessionScope.loginuser.level == 1}">
+									<fmt:formatNumber value="1" type="number"/>
+								</c:if>
+								<c:if test="${sessionScope.loginuser.level == 2}">
+									<fmt:formatNumber value="3" type="number"/>P
+								</c:if>
+								<c:if test="${sessionScope.loginuser.level == 3}">
+									<fmt:formatNumber value="5" type="number"/>P
+								</c:if>
+								% 적립
+								</div>
+								
+								<c:if test="${sessionScope.loginuser.level == 1}">
+									<fmt:formatNumber value="${odr.odrprice*odr.odrqty*0.01}" type="number"/>P
+									<input type="hidden" value="${odr.odrprice*odr.odrqty*0.01}"/>
+								</c:if>
+								<c:if test="${sessionScope.loginuser.level == 2}">
+									<fmt:formatNumber value="${odr.odrprice*odr.odrqty*0.03}" type="number"/>P
+									<input type="hidden" value="${odr.odrprice*odr.odrqty*0.03}"/>
+								</c:if>
+								<c:if test="${sessionScope.loginuser.level == 3}">
+									<fmt:formatNumber value="${odr.odrprice*odr.odrqty*0.05}" type="number"/>P
+									<input type="hidden" value="${odr.odrprice*odr.odrqty*0.05}"/>
+								</c:if>
+							</td>
+						</tr>
+					</c:forEach>
 			</tbody>
+		</c:if>
+			
 				<tr>
-					<td id="sumtbl" colspan="8">상품구매금액 원 + 배송비 원 - 쿠폰적용(쿠폰이름 원) = 합계 : <span id="sum">원</span></td>				
+					<td id="sumtbl" colspan="8">상품구매금액 원 + 배송비 원 - 포인트 P= 합계 : <span id="sum">원</span></td>				
 				</tr>
 			</tbody>
 		</table>	 
@@ -98,23 +121,23 @@
 		<table>
 			<tr>
 				<th width="120px;">받으시는 분</th>
-				<td>받는사람 이름</td>
+				<td>${orderInfo.payment}</td>
 			</tr>
 			<tr>
 				<th>우편번호</th>
-				<td>12345</td>
+				<td>${orderInfo.payment}</td>
 			</tr>
 			<tr>
 				<th>주소</th>
-				<td>주소+참고항목+상세주소</td>
+				<td>${orderInfo.delipostcode}&nbsp;${orderInfo.deliaddress}&nbsp;${orderInfo.delidtaddress}&nbsp;${orderInfo.deliextddress}</td>
 			</tr>
 			<tr>
 				<th>연락처</th>
-				<td>010-1234-5678</td>
+				<td>${orderInfo.delimobile}</td>
 			</tr>
 			<tr>
 				<th>배송메세지</th>
-				<td>메세지 중 하나</td>
+				<td>${orderInfo.delimsg}</td>
 			</tr>
 		</table>
 	</div>

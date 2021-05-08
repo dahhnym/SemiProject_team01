@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import cart.model.*;
 import common.controller.AbstractController;
 import member.model.MemberVO;
 import order.model.*;
@@ -26,14 +25,13 @@ public class OrderAction extends AbstractController {
 		if(loginuser !=null) {
 			
 	       InterOrderDAO odao = new OrderDAO();
-	       InterCartDAO cdao = new CartDAO();
 	       
-	       	 List<CartVO> cartList =  cdao.cartList(loginuser.getUserid());
+	       	 List<OrderDetailVO> orderList =  odao.selectProductOrder(loginuser.getUserid());
 	         
 	         // 로그인한 사용자의 장바구니에 담긴 주문총액합계 및 총포인트합계 알아오기 
 	         HashMap<String,String> sumMap = odao.selectCartSum(loginuser.getUserid());
 	         
-	         request.setAttribute("cartList", cartList);
+	         request.setAttribute("orderList", orderList);
 	         request.setAttribute("sumMap", sumMap);
 	         
 	         super.setRedirect(false);
