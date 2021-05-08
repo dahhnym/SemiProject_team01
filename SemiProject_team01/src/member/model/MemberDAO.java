@@ -442,6 +442,22 @@ public class MemberDAO implements InterMemberDAO {
 		
 		return n;
 	}
+	
+	
+	// 멤버수정하기
+	@Override
+	public int altMemberInfo(MemberVO member) throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	
+	// 수정한 유저 session에 저장하기
+	@Override
+	public MemberVO getLoginuser(MemberVO member) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 		
