@@ -357,8 +357,7 @@ $("input.prodOqty").bind("spinstop",function(){
 				  		var oldpdetailnum = $(this).val();
 				  		var newpdetailnum =  $("select.colorWishOption").eq(index).val(); 
 				  		
-				  //		alert(oldpdetailnum);
-				  //		alert(newpdetailnum);
+			
 				  		
 				  		if(newpdetailnum==""){
 				  			

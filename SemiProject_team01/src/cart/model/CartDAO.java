@@ -838,15 +838,7 @@ public class CartDAO implements InterCartDAO {
 	                pstmt.setString(5, oqtyArr[i]);
 	                pstmt.setString(6, totalPriceArr[i]);
 	                pstmt.setString(7, optionnameArr[i]);
-	                
-	               
-	                System.out.println((String)paraMap.get("userid"));
-	                System.out.println(pnumArr[i]);
-	                System.out.println((String)paraMap.get("odrcode"));
-	                System.out.println(pdetailnumArr[i]);
-	                System.out.println(oqtyArr[i]);
-	                System.out.println(totalPriceArr[i]);
-	                System.out.println(optionnameArr[i]);
+
 	      
 	                pstmt.executeUpdate();
 	                cnt++;
@@ -858,7 +850,7 @@ public class CartDAO implements InterCartDAO {
 		               n2=1;
 		            }
 		        
-		            System.out.println("확인용 n2:"+n2);
+
 	            
 	         }// end of if---------------------------          
 	            
@@ -908,7 +900,7 @@ public class CartDAO implements InterCartDAO {
 	        
 	        n1 = pstmt.executeUpdate();
 	    
-	        System.out.println("확인용 :"+n1);
+	
 	        
 	     // 3. 주문상세 테이블에 채번해온 주문전표, 제품번호, 주문량, 주문금액을 insert 하기(수동커밋처리)
 	        if(n1 == 1) {
@@ -928,8 +920,6 @@ public class CartDAO implements InterCartDAO {
 	                
 	        
 	                n2 = pstmt.executeUpdate();
-
-		            System.out.println("확인용 n2:"+n2);
 	            
 	         }// end of if---------------------------          
 	            
