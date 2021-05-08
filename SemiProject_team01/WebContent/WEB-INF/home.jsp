@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix='c' uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <% String ctxPath=request.getContextPath(); %>
 
 <jsp:include page="header.jsp"/>
@@ -41,6 +43,8 @@ $(document).ready(function(){
 			 displayNEW(start);
 		 }	
 	
+		 
+		 
 	
 	}); // end of $(window).scroll(function() ------
 
@@ -108,10 +112,9 @@ function displayNEW(start) {
 	
 
 <%-- 제품 이미지 클릭시 제품 상세 페이지 이동--%>
-function goProdDetail(imgs) {
-	window.location.href = "<%=ctxPath%>/Info.to?pnum=${requestScope.pvo.pnum}";
+function goProdDetail(pnum) {
+	window.location.href = "<%=ctxPath%>/Info.to?pnum="+pnum;
 }
-
 
 
 </script>
@@ -155,131 +158,106 @@ function goProdDetail(imgs) {
 <!-- 인기상품 이미지 슬라이드 -->	
 <div class="hr-sect itemtitle">Best Seller</div>
 
-<div class="slide-container">
-      	<div class="container-fluid">
-      		<div id="carousel-example" class="carousel slide" data-ride="carousel">
-      			<div class="carousel-inner row w-75 mx-auto" role="listbox">
-   					<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-4 active slideImg">
-   					<table>
-   						<tbody>
-   							<tr>
-   								<td>
-					  <div style="float: left; border: solid 1px blue;">
-						<img src="/SemiProject_team01/images/w-backpack1.jpg" class="img-fluid mx-auto d-block" alt="img1">
-	          			<div id="prodInfo">
-	           				<ul>
-	           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
-	           					<li><label class="prodInfoList">정가</label>12,000원</li>
-	           					<li><label class="prodInfoList">할인가</label>10,000원</li>
-	           				</ul>
-						</div>
-						</div>
-						</td>
-						<td>
-					  <div style="float: left; border: solid 1px blue;">
-						<img src="/SemiProject_team01/images/w-backpack3.jpg" class="img-fluid mx-auto d-block" alt="img2">
-						<div id="prodInfo">
-	           				<ul>
-	           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
-	           					<li><label class="prodInfoList">정가</label>12,000원</li>
-	           					<li><label class="prodInfoList">할인가</label>10,000원</li>
-	           				</ul>
-						</div>
-					</div>
-					</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-4 slideImg">
-					<div class="slide-container col1" style="display: inline-block; float: left; margin-right: 10px;">
-					<img src="/SemiProject_team01/images/w-backpack5.jpg" style="width: 300px;"class="img-fluid mx-auto d-block" alt="img3">
-					<div id="prodInfo" style="display:table-cell">
-           				<ul>
-           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
-           					<li><label class="prodInfoList">정가</label>12,000원</li>
-           					<li><label class="prodInfoList">할인가</label>10,000원</li>
-           				</ul>
-					</div>
-					</div>
-					<div class="slide-container col2" style="display: inline-block; float: left; ">
-					<img src="/SemiProject_team01/images/w-backpack5.jpg" style="width: 300px;" class="img-fluid mx-auto d-block" alt="img3">
-					<div id="prodInfo" style="display:table-cell">
-           				<ul>
-           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
-           					<li><label class="prodInfoList">정가</label>12,000원</li>
-           					<li><label class="prodInfoList">할인가</label>10,000원</li>
-           				</ul>
-					</div>
-					</div>
-				</div>
-				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
-					<img src="/SemiProject_team01/images/w-backpack7.jpg" class="img-fluid mx-auto d-block" alt="img4">
-					<div id="prodInfo">
-           				<ul>
-           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
-           					<li><label class="prodInfoList">정가</label>12,000원</li>
-           					<li><label class="prodInfoList">할인가</label>10,000원</li>
-           				</ul>
-					</div>
-				</div>
-				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
-					<img src="/SemiProject_team01/images/w-backpack9.jpg" class="img-fluid mx-auto d-block" alt="img5">
-					<div id="prodInfo">
-           				<ul>
-           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
-           					<li><label class="prodInfoList">정가</label>12,000원</li>
-           					<li><label class="prodInfoList">할인가</label>10,000원</li>
-           				</ul>
-					</div>
-				</div>
-				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
-					<img src="/SemiProject_team01/images/w-backpack11.jpg" class="img-fluid mx-auto d-block" alt="img6">
-					<div id="prodInfo">
-           				<ul>
-           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
-           					<li><label class="prodInfoList">정가</label>12,000원</li>
-           					<li><label class="prodInfoList">할인가</label>10,000원</li>
-           				</ul>
-					</div>
-				</div>
-				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
-					<img src="/SemiProject_team01/images/w-backpack13.jpg" class="img-fluid mx-auto d-block" alt="img7">
-					<div id="prodInfo">
-           				<ul>
-           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
-           					<li><label class="prodInfoList">정가</label>12,000원</li>
-           					<li><label class="prodInfoList">할인가</label>10,000원</li>
-           				</ul>
-					</div>
-				</div>
-				<div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 slideImg">
-					<img src="/SemiProject_team01/images/w-backpack15.jpg" class="img-fluid mx-auto d-block" alt="img8">
-					<div id="prodInfo">
-           				<ul>
-           					<li><label class="prodInfoList">제품명</label>화이트백팩</li>
-           					<li><label class="prodInfoList">정가</label>12,000원</li>
-           					<li><label class="prodInfoList">할인가</label>10,000원</li>
-           				</ul>
-					</div>
-				</div>
-      			</div>
-      			<a class="carousel-control-prev" href="#carousel-example" role="button" data-slide="prev">
-				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				<span class="sr-only">Previous</span>
-			</a>
-			<a class="carousel-control-next" href="#carousel-example" role="button" data-slide="next">
-				<span class="carousel-control-next-icon" aria-hidden="true"></span>
-				<span class="sr-only">Next</span>
-			</a>
-      		</div>
-      	</div>
+<div class="container my-4">
+
+  <!--Carousel Wrapper-->
+  <div id="multi-item-example" class="carousel slide carousel-multi-item" data-ride="carousel">
+
+
+    <!--Slides-->
+    <div class="carousel-inner" role="listbox">
+
+      <!--First slide-->
+      <div class="carousel-item active">
+        <div class="row">
+	        <c:forEach var="pvo" items="${requestScope.productList}" varStatus="status">
+		        <c:if test="${status.index > 3 && status.index < 8}">
+		        <div class="col-md-3" >
+		            <div class="card mb-2">
+		              <img style="width: 100%; height: 250px;" src="<%=ctxPath%>/images/${pvo.pimage1}" alt="Card image cap" onClick="#">
+		              <div class="card-body" style="height: 180px">
+		                <h6 class="card-title" style="font-weight: bold;">${pvo.pname}</h6>
+		                <p class="card-text" style="margin-bottom: 5px">
+		                <span style="text-decoration: line-through; color: #ccc; "><fmt:formatNumber value="${pvo.price}" pattern="#,###" /> 원</span><br>
+		                <span><fmt:formatNumber value="${pvo.saleprice}" pattern="#,###" /> 원</span></p>
+		                <button class="prodview-btn" type="button" onclick="goProdDetail(${pvo.pnum});" style="margin-top: 0;">View</button>
+
+		                
+		              </div>
+		            </div>
+		          </div>
+		       </c:if>
+	        </c:forEach>
+        </div>
       </div>
+      <!--/.First slide-->
+
+      <!--Second slide-->
+      <div class="carousel-item">
+        <div class="row">
+	        <c:forEach var="pvo" items="${requestScope.productList}" varStatus="status">
+		        <c:if test="${status.index > 7}">
+		        <div class="col-md-3">
+		            <div class="card mb-2">
+		              <img style="width: 100%; height: 250px;" src="<%=ctxPath%>/images/${pvo.pimage1}" alt="Card image cap">
+		              <div class="card-body" style="height: 180px">
+		                <h6 class="card-title" style="font-weight: bold;">${pvo.pname}</h6>
+		              <p class="card-text" style="margin-bottom: 5px">
+		                <span style="text-decoration: line-through; color: #ccc;"><fmt:formatNumber value="${pvo.price}" pattern="#,###" /> 원</span><br>
+		                <span><fmt:formatNumber value="${pvo.saleprice}" pattern="#,###" /> 원</span></p>
+		                <button class="prodview-btn" type="button" onclick="goProdDetail(${pvo.pnum});" style="margin-top: 0;">View</button>
+		              </div>
+		            </div>
+		          </div>
+		       </c:if>
+	        </c:forEach>
+        </div>
+      </div>
+      <!--/.Second slide-->
+      
+      <!--Third slide-->
+      <div class="carousel-item">
+        <div class="row">
+	        <c:forEach var="pvo" items="${requestScope.productList}" varStatus="status">
+		        <c:if test="${status.index < 4}">
+		        <div class="col-md-3" >
+		            <div class="card mb-2">
+		              <img style="width: 100%; height: 250px;" src="<%=ctxPath%>/images/${pvo.pimage1}" alt="Card image cap">
+		              <div class="card-body" style="height: 180px">
+		                <h6 class="card-title" style="font-weight: bold;">${pvo.pname}</h6>
+						<p class="card-text" style="margin-bottom: 5px">
+		                <span style="text-decoration: line-through; color: #ccc;"><fmt:formatNumber value="${pvo.price}" pattern="#,###" /> 원</span><br>
+		                <span><fmt:formatNumber value="${pvo.saleprice}" pattern="#,###" /> 원</span></p>
+         		        <button class="prodview-btn" type="button" onclick="goProdDetail(${pvo.pnum});" style="margin-top: 0;">View</button>
+		              </div>
+		            </div>
+		          </div>
+		       </c:if>
+	        </c:forEach>
+        </div>
+      </div>
+      <!--/.Third slide-->
+
+    </div>
+    <!--/.Slides-->
+
+<!--Indicators-->
+    <ol class="carousel-indicators" style="position: relative;">
+      <li style="border:solid 1px gray;" data-target="#multi-item-example" data-slide-to="0" class="active"></li>
+      <li style="border:solid 1px gray;" data-target="#multi-item-example" data-slide-to="1"></li>
+      <li style="border:solid 1px gray;" data-target="#multi-item-example" data-slide-to="2"></li>
+    </ol>
+    <!--/.Indicators-->
+  </div>
+  <!--/.Carousel Wrapper-->
+
+
+</div>
 
 
 
 <!-- 신상품 이미지 Carousel -->
-<div id="demo" class="carousel slide" data-ride="carousel" style="margin-top: 100px">
+<div id="demo" class="carousel slide" data-ride="carousel" style="margin-top: 150px">
 
   <!-- Indicators -->
   <ul class="carousel-indicators">

@@ -1,7 +1,5 @@
 package product.model;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,8 +11,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import member.model.MemberVO;
-import order.model.OrderDetailVO;
 
 
 
@@ -37,7 +33,7 @@ public class ProductDAO implements InterProductDAO {
 		}
 	}
 	
-
+	
 	// 사용한 자원을 반납하는 close() 메소드 생성하기 
 	   private void close() {
 	      try {
@@ -55,6 +51,7 @@ public class ProductDAO implements InterProductDAO {
 	public List<HashMap<String, String>> getCategory() throws SQLException {
 		List<HashMap<String, String>> categoryList = new ArrayList<>(); 
 	      
+		
 	      try {
 	          conn = ds.getConnection();
 	          
@@ -525,7 +522,6 @@ public class ProductDAO implements InterProductDAO {
 		      
 		      try {
 		          conn = ds.getConnection();
-		          
 		          String sql = "select cnum, cname, snum, pnum, pname, pimage1, price, saleprice\n"+
 		        		  	   "from \n"+
 		        		  	   "( \n"+
@@ -576,7 +572,7 @@ public class ProductDAO implements InterProductDAO {
 		      } finally {
 		         close();
 		      }      
-		      
+		      System.out.println(prodList);
 		      return prodList;
 		}
 
@@ -674,6 +670,68 @@ public class ProductDAO implements InterProductDAO {
 		      return prodList;
 		}
 
+
+		// 홈에 신상품 이미지 슬라이드 출력을 위해 신상품 select 해오기
+		@Override
+		public List<ProductVO> selectBESTonly(int snum) throws SQLException {
+
+			List<ProductVO> prodList = new ArrayList<>();
+		      
+		      try {
+		          conn = ds.getConnection();
+		          
+		          String sql = "select cnum, cname, snum, pnum, pname, pimage1, price, saleprice\n"+
+		        		  	   "from \n"+
+		        		  	   "( \n"+
+		        		  	   "select row_number() over(order by pnum asc) AS RNO,         \n"+
+		        		  	   "    C.cnum, C.cname, pnum, pname, pcompany, pimage1, price, saleprice, S.sname, snum  \n"+
+		        		  	   "from tbl_product P  \n"+
+		        		  	   "JOIN tbl_category C  \n"+
+		        		  	   "ON P.fk_cnum = C.cnum  \n"+
+		        		  	   "JOIN tbl_spec S  \n"+
+		        		  	   "ON P.fk_snum = S.snum\n"+
+		        		  	   "where S.snum = ?\n"+
+		        		  	   ") V\n"+
+		        		  	   "where RNO between 1 and 12\n"+
+		        		  	   "order by pnum desc";
+		          
+		          pstmt = conn.prepareStatement(sql);
+		          
+		          pstmt.setInt(1, snum);
+		          
+		          
+		          rs = pstmt.executeQuery();
+		          
+		          while( rs.next() ) {
+		             
+		             ProductVO pvo = new ProductVO();
+		             CategoryVO categvo = new CategoryVO();
+		             SpecVO spvo = new SpecVO();
+		            		 
+		             pvo.setFk_cnum(rs.getInt("cnum")); 	// 카테고리번호
+		             categvo.setCname(rs.getString("cname")); //카테고리명
+		             pvo.setCategvo(categvo);
+		             spvo.setSnum(rs.getInt("snum"));	// 제품스펙명
+		             pvo.setSpvo(spvo);
+		             pvo.setPnum(rs.getInt("pnum"));     // 제품번호
+		             pvo.setPname(rs.getString("pname")); // 제품명
+		             pvo.setPimage1(rs.getString("pimage1"));   // 제품이미지1   이미지파일명
+		             pvo.setPrice(rs.getInt("price"));        // 제품 정가
+		             pvo.setSaleprice(rs.getInt("saleprice"));    // 제품 판매가
+		               
+		             
+		             prodList.add(pvo);
+		          }// end of while-----------------------------------------
+		          
+		      } finally {
+		         close();
+		      }      
+		      
+		      return prodList;
+		
+		}
+
+		
 		
 		
 

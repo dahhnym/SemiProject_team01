@@ -34,16 +34,6 @@ div#pagebar-div{
 
 <script type="text/javascript">
 
-var lenProd = 8;
-var start = 1;
-var cnum = 1;
-
-$(document).ready(function(){
-
-	
-
-
-}); //end of $(document).ready(function() --------------------
 
 
 <%-- 제품 이미지 클릭시 제품 상세 페이지 이동--%>
