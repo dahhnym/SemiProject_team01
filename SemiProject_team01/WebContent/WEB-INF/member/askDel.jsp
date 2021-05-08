@@ -17,41 +17,37 @@
 
 <script>
 	$(function(){
-		var bool = false;
-		
-		$("button#btnDelAccount").click(function(){
-			var frm = document.personalInfoFrm;
-			frm.action="deleteMember.to";
+
+		$("button#btnDelete").click(function(){
+			var frm = document.delFrm;
+			frm.action="delAccount.to";
+			frm.method="POST";
 			frm.submit();
 		});
 	
-		$("button#btnCancelDelAccount").click(function(){
-			var frm = document.personalInfoFrm;
-			frm.action="personalInfo.to";
-			frm.submit();
-		});
 	});
 </script>
 
-<div class="surveyContainer">
+<div class="personalInfoContainer">
    <div class="contents">
       <h2>
 	      <span style="font-weight: bold;"><c:out value="${sessionScope.loginuser.userid}"/></span> 님의 계정정보&nbsp;&nbsp;
       </h2>
    </div>
-   <div id="surveyMenu">
+   <div id="personalInfoMenu">
       <span id="viewInfo" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalInfo.to'">내 정보보기</span>
       <span id="delAccount" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalDel.to'">회원탈퇴</span>
    </div><br>
-   <div id="surveyContains">
-	   <form name="surveyFrm">
-	   		<h4 style="font-weight: bold;">정말로 탈퇴하시겠습니까?</h4>
-	   		<h5 style="margin-bottom: 50px;">회원탈퇴 시 삭제한 정보는 복구할 수 없으며,<br>탈퇴 후 재가입 시 동일 ID 사용불가합니다.</h5>
-	   		<span style="display:block; height: 50px;">
-		   		<button type="button" class="btn btn-secondary" id="btnDelAccount" >탈퇴하기</button>
-		   		<button type="button" class="btn btn-secondary" id="btnCancelDelAccount" >취소</button>
-	   		</span>
-	   </form>
+   <div id="personalInfoContains">
+		<h4 style="font-weight: bold;">정말로 탈퇴하시겠습니까?</h4>
+		<h5 style="margin-bottom: 50px;">회원탈퇴시 삭제된 정보는 복구할 수 없으며, 탈퇴후 재가입시 동일ID는 사용불가 합니다.</h5>
+		<span style="display:block; height: 50px;">
+			<button type="button" class="btn btn-secondary" id="btnDelete" >탈퇴하기</button>
+			<button type="button" class="btn btn-secondary" id="btnCancelDel" onclick="location.href='<%=ctxPath%>/member/personalInfo.to'" >취소</button>
+		</span>
+		<form name="delFrm">
+			<input type="hidden" name="userid" id="userid" value="${sessionScope.loginuser.userid}"/>
+		</form>
    </div>
 </div>
 

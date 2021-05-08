@@ -48,6 +48,24 @@ public class MemberVO {
 		this.adagreements = adagreements;
 	}
 
+	
+	public MemberVO(String userid, String pwd, String name, String email, String mobile, String postcode,
+			        String address, String detailaddress, String extraaddress, String gender, String birthday) {
+		
+		this.userid = userid;
+		this.pwd = pwd;
+		this.name = name;
+		this.email = email;
+		this.mobile = mobile;
+		this.postcode = postcode;
+		this.address = address;
+		this.detailaddress = detailaddress;
+		this.extraaddress = extraaddress;
+		this.gender = gender;
+		this.birthday = birthday;
+	}
+	
+	
 	///////////////////////////////////////////////////////////////////////////////////
 	
 	
