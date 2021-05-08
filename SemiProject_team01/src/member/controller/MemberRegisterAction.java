@@ -50,10 +50,14 @@ public class MemberRegisterAction extends AbstractController {
 			
 			try {
 				int n = dao.registerMember(member, clientip);
-			
+				MemberVO loginuser = dao.getLoginuser(member);
+
 				if(n==1) {	// 회원가입 성공
 					request.setAttribute("userid", userid);
 					request.setAttribute("pwd", pwd);
+					
+					HttpSession session = request.getSession();
+					session.setAttribute("loginuser", loginuser);
 					
 					String message = userid+"님 ladies and gents 에 가입을 환영합니다!";
 					String loc = request.getContextPath()+"/home.to";  // 로그인된 상태로 홈으로 이동
