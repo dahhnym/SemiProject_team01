@@ -20,13 +20,16 @@ public class CommentRegisterAction extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String fk_userid = request.getParameter("fk_userid");
-		String pnum = request.getParameter("pnum");
+		/* fk_userid = fk_userid.replaceAll("(?<=.{3})." , "*"); */
+		
+		String pnum = request.getParameter("fk_pnum");
 		String rvcontent = request.getParameter("rvcontent");
 		
 		// **** 크로스 사이트 스크립트 공격에 대응하는 안전한 코드(시큐어 코드) 작성하기 **** // 
 		rvcontent = MyUtil.secureCode(rvcontent);
-		
 		rvcontent = rvcontent.replaceAll("\r\n", "<br>");
+		
+		System.out.println(rvcontent);
 		
 		PurchaseReviewsVO reviewsvo = new PurchaseReviewsVO();
 		reviewsvo.setFk_userid(fk_userid);

@@ -15,6 +15,8 @@ public class ListAction_front extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+		super.goBackURL(request);
+		
 		super.getCategoryList(request);
 		String cnum = request.getParameter("cnum");
 		String cname = request.getParameter("cname");

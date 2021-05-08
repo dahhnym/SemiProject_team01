@@ -673,7 +673,7 @@ public class ProductDAO implements InterProductDAO {
 
 		// 홈에 신상품 이미지 슬라이드 출력을 위해 신상품 select 해오기
 		@Override
-		public List<ProductVO> selectBESTonly(int snum) throws SQLException {
+		public List<ProductVO> selectBESTonly(Map<String, String> paraMap) throws SQLException {
 
 			List<ProductVO> prodList = new ArrayList<>();
 		      
@@ -692,12 +692,14 @@ public class ProductDAO implements InterProductDAO {
 		        		  	   "ON P.fk_snum = S.snum\n"+
 		        		  	   "where S.snum = ?\n"+
 		        		  	   ") V\n"+
-		        		  	   "where RNO between 1 and 12\n"+
+		        		  	   "where RNO between ? and ?\n"+
 		        		  	   "order by pnum desc";
 		          
 		          pstmt = conn.prepareStatement(sql);
 		          
-		          pstmt.setInt(1, snum);
+		          pstmt.setString(1, paraMap.get("snum"));
+		          pstmt.setString(2, paraMap.get("start"));
+		          pstmt.setString(3, paraMap.get("end"));
 		          
 		          
 		          rs = pstmt.executeQuery();
