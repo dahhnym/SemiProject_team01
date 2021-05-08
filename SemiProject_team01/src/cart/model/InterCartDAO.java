@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import product.model.ProductDetailVO;
+import product.model.ProductVO;
 
 
 
@@ -60,12 +61,11 @@ public interface InterCartDAO {
 	// 주문번호 채번해오기
 	int getSeq_tbl_order() throws SQLException;
 
-	// 주문 테이블에 insert (선택, 전체 주문 테이블)
-	int orderAdd(Map<String, Object> paraMap) throws SQLException;
+	// 장바구니 제품 정보 알아오기
+	List<CartVO> selectProdInfo(String pdetailnum) throws SQLException;
 
-	
-	// 장바구니, 위시리스트 한개씩 insert
-	int orderOneAdd(Map<String, String> paraMap) throws SQLException;
+	// 위시리스트 제품 정보 알아오기
+	List<WishListVO> selectWishProdInfo(String pdetailnum) throws SQLException;
 
 
 
