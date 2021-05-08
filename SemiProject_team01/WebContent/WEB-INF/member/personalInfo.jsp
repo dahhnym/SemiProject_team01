@@ -21,7 +21,7 @@
 		
 		$(document).on("click","button#btnPersionInfo",function(){
 			var pwd = $("input#pwd").val().trim();
-			
+
 			if(pwd==""){
 				$("span#password").show();
 				$("span#password").html("현재 비밀번호를 입력해주세요.");
@@ -40,7 +40,6 @@
 			if(bool) {
 				var frm = document.personalInfoFrm;
 				frm.action="altInfo.to";
-				frm.method="POST";
 				frm.submit();
 			}
 			
@@ -55,8 +54,8 @@
       </h2>
    </div>
    <div id="personalInfoMenu">
-      <span id="viewInfo" class="subhead" onclick="<%=ctxPath%>/member/personalInfo.to">내 정보보기</span>
-      <span id="delAccount" class="subhead" onclick="<%=ctxPath%>/member/personalDel.to">회원탈퇴</span>
+      <span id="viewInfo" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalInfo.to'">내 정보보기</span>
+      <span id="delAccount" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalDel.to'">회원탈퇴</span>
    </div><br>
    <div id="personalInfoContains">
 	   <form name="personalInfoFrm">

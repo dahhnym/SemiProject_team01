@@ -55,8 +55,8 @@
       </h2>
    </div>
    <div id="personalDelMenu">
-      <span id="viewInfo2" class="subhead" onclick="<%=ctxPath%>/member/personalInfo.to">내 정보보기</span>
-      <span id="delAccount2" class="subhead" onclick="<%=ctxPath%>/member/personalDel.to">회원탈퇴</span>
+      <span id="viewInfo2" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalInfo.to'">내 정보보기</span>
+      <span id="delAccount2" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalDel.to'">회원탈퇴</span>
    </div><br>
    <div id="personalDelContains">
 	   <form name="personalDelFrm">

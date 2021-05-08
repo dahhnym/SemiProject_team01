@@ -33,8 +33,8 @@
       </h2>
    </div>
    <div id="personalInfoMenu">
-      <span id="viewInfo" class="subhead">내 정보보기</span>
-      <span id="delAccount" class="subhead">회원탈퇴</span>
+      <span id="viewInfo" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalInfo.to'">내 정보보기</span>
+      <span id="delAccount" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalDel.to'">회원탈퇴</span>
    </div><br>
    <div id="personalInfoContains">
 	   <form name="surveyFrm">

@@ -33,7 +33,6 @@
 		} else if("${sessionScope.loginuser.gender}"=="2") {
 			$("input#gender").val("2");	
 		}
-
 		$("input#emailID").val("${sessionScope.loginuser.email}".substr(0,"${sessionScope.loginuser.email}".indexOf('@')));
 		$("input#emailAddress").val("${sessionScope.loginuser.email}");
 		$("input#ph2").val("${sessionScope.loginuser.mobile}".substr(3));
@@ -76,10 +75,9 @@
 				frm.submit();
 			} 
 		});
-
 	});// end of $(function() --------------------------------------------------
 	
-	// register 버튼 클릭시, 유효성 검사
+	// register 버튼 클릭시, 유효성 검사	==> 에러문구 안뜨는 이유 *정정사항
 	function goCheck(){	
 		
 		// 비밀번호 체크
@@ -127,7 +125,6 @@
 				});	
 			}
 		});	
-
 		// 전화번호 체크
 		ph2Check();
 		$("input#ph2").blur(function(){
@@ -249,7 +246,6 @@
 		$("span#genderCheck").html("");
 		bool=false;
 	}
-
 	
 	// 이메일 아이디 체크 함수
 	function emailIDCheck(){
@@ -342,9 +338,7 @@
 		$("span#postcodeCheck").hide();
 		bool=false;
 	}	
-
 	
-
 	///////////////////////////////////////////////////////////////////////////////////////
 	var b_sendCode = false;	// 인증번호 발송여부 확인용
 	
@@ -440,19 +434,16 @@
         new daum.Postcode({
             oncomplete: function(data) {
                 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
                 // 각 주소의 노출 규칙에 따라 주소를 조합한다.
                 // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
                 var addr = ''; // 주소 변수
                 var extraAddr = ''; // 참고항목 변수
-
                 //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
                 if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
                     addr = data.roadAddress;
                 } else { // 사용자가 지번 주소를 선택했을 경우(J)
                     addr = data.jibunAddress;
                 }
-
                 // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
                 if(data.userSelectedType === 'R'){
                     // 법정동명이 있을 경우 추가한다. (법정리는 제외)
@@ -474,7 +465,6 @@
                 } else {
                     document.getElementById("extraAddress").value = '';
                 }
-
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 document.getElementById("postcode").value = data.zonecode;
                 document.getElementById("address").value = addr;
@@ -494,8 +484,8 @@
       </h2>
    </div>
    <div id="personalInfoMenu">
-      <span id="viewInfo" class="subhead">내 정보보기</span>
-      <span id="delAccount" class="subhead">회원탈퇴</span>
+      <span id="viewInfo" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalInfo.to'">내 정보보기</span>
+      <span id="delAccount" class="subhead" onclick="location.href='<%=ctxPath%>/member/personalDel.to'">회원탈퇴</span>
    </div><br>
    <div id="altInfoContains">
 	   <form name="altInfoFrm">
