@@ -39,7 +39,7 @@ public interface InterMemberDAO {
 	// 멤버수정하기
 	int altMemberInfo(MemberVO member) throws SQLException;
 
-	// 수정한 유저 session에 저장하기
+	// session에 저장하기
 	MemberVO getLoginuser(MemberVO member) throws SQLException;
 
 	// 회원탈퇴
