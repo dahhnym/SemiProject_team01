@@ -4,8 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <% String ctxPath = request.getContextPath(); %>  
 <c:set var="sum" value="0"/>  
-<c:forEach items="${requestScope.cartList}" var="cart">
-	<c:set var="sum" value="${sum+(cart.pvo.saleprice*cart.oqty)}"/>
+<c:forEach items="${requestScope.orderList}" var="ord">
+	<c:set var="sum" value="${sum+(ord.pvo.saleprice*ord.odrqty)}"/>
 </c:forEach>
 <jsp:include page="../header.jsp"/>
 <!DOCTYPE html>
@@ -94,7 +94,8 @@ $(function(){
 	    	$("[name=shipZip]").val(zip);
 	    	$("[name=addr3]").val(addr1);
 	    	$("[name=addr4]").val(addr2);
-	    	$("[name=extraAddress2]").val(extraAddress);
+	    	$("[name=extraAddress2]").val(extraAddress);	      
+	
     	}
     	else {
     		$("input#shipName").val("");
@@ -191,20 +192,25 @@ $(function(){
 	
          
     // 결제 총 금액 계산 *****************************
-    var sum = $('[name=sum]').val();
-    var delivery = $('[name=delivery]').val();
-    var usePoint = $('input#usePoint').val().trim();
-    var totalPrice = sum+delivery-usePoint;
-    $("input#totalPrice").val(totalPrice);
+    var sum = parseInt($('[name=sum]').val());
+    var delivery = parseInt($('[name=delivery]').val());
+    
+    var usePoint = parseInt($('input#usePoint').val().trim());
+    
+    if(isNaN(usePoint)){
+    	usePoint=0;
+    }
+   var totalPrice = sum+delivery-usePoint;
+   const TP = totalPrice.toLocaleString('ko-KR');
+   
+    $("input.totalPrice").val(totalPrice);
+    $("input#totalPrice").val(TP);
 	
  
 	
 
          
          
-         
-	
-
 
 	// 결제방법 선택 시 선택 및 선택 외 버튼들 css변경해주기
 	$("[name=payment]").click(function(){
@@ -317,46 +323,13 @@ function openZipSearch2() {
 
 
 
-
-//!!!!!!!!!!! ==== 결제하기 눌렀을 때 ==== !!!!!!!!!!!**********아직 미완성********
-function goCheckOut(){
-	 //// 최종적으로 필수입력사항에 모두 입력이 되었는지 검사한다. ////
- var bFlagRequiredInfo = false;
- 
- $(".requiredInfo").each(function(index, item){
- 	var val=$(item).val().trim();
-    if(val == "") {
-       bFlagRequiredInfo = true;
-       alert("*표시된 필수입력사항은 모두 입력하셔야 합니다.");
-       return false; // break 라는 뜻이다.
-    }
- });
-	
- /// 이용약관 체크했는지 검사
- var checkboxCheckedLength = $("input:checkbox[name=agree]:checked").length;
- 
- if(checkboxCheckedLength == 0) {
-    alert("이용약관에 동의하셔야 합니다.");
-    return; // 종료
- }
-
- if(!bFlagRequiredInfo && checkboxCheckedLength==2) {
- 	alert("주문이 완료되었습니다");
-    var frm = document.orderFrm;
-    frm.action = "orderInfo.to";
-    frm.method = "post";
-    frm.submit();
- }
-}
-
-
 //장바구니 개별 삭제하기 
-function goDel(cartnum) {		
+function goDel(ordnum) {		
 	var $target = $(event.target);
 	var pname = $target.parent().parent().find(".cname").text();
 //	console.log(pname);
 	var bool = confirm("주문목록에서 ["+pname+"] 상품을 삭제하시겠습니까?");
-//	alert(cartnum);
+//	alert(ordnum);
 	if(bool){
 		$.ajax({
 			url:"<%= ctxPath%>/cart/deleteCartOne.to",
@@ -381,6 +354,97 @@ function goDel(cartnum) {
 
 
 
+//!!!!!!!!!!! ==== 결제하기 눌렀을 때 ==== !!!!!!!!!!!**********아직 미완성********
+function goCheckOut(){
+	 //// 최종적으로 필수입력사항에 모두 입력이 되었는지 검사한다. ////
+ var bFlagRequiredInfo = false;
+ 
+ $(".requiredInfo").each(function(index, item){
+ 	var val=$(item).val().trim();
+    if(val == "") {
+       bFlagRequiredInfo = true;
+       alert("*표시된 필수입력사항은 모두 입력하셔야 합니다.");
+       return false; // break 라는 뜻이다.
+    }
+ });
+	
+ /// 이용약관 체크했는지 검사
+ var checkboxCheckedLength = $("input:checkbox[name=agree]:checked").length;
+ 
+ if(checkboxCheckedLength == 0) {
+    alert("이용약관에 동의하셔야 합니다.");
+    return; // 종료
+ }
+ 
+
+ if(!bFlagRequiredInfo && checkboxCheckedLength==2) {
+	    
+             /// === java 단으로 보내야할 최종 데이터 확인용 === //
+             var odrname = $("#orderName").val();
+             var odrmobile = $("#ordererHp1").val()+"-"+$("#ordererHp2").val()+"-"+$("#ordererHp3").val();
+             var odremail = $("[name=orderEmail]").val();
+             var odrpostcode = $('[name=orderZip]').val();
+             var odraddress = $('[name=addr1]').val();
+             var odrdtaddress = $('[name=addr2]').val();
+             var odrextddress = $('[name=extraAddress]').val();
+             var fk_paymentno = $("[name=payment]").val();
+             var deliname = $("input#shipName").val();
+             var delimobile = $("#shipHp1").val()+"-"+$("#shipHp2").val()+"-"+$("#shipHp3").val();
+             var delipostcode = $("[name=shipZip]").val();
+             var deliaddress = $("[name=addr3]").val();
+             var delidtaddress =$("[name=addr4]").val();
+             var deliextddress = $("[name=extraAddress2]").val();
+             var delimsg = $("select[name=shippingMsg] option:checked").text();
+             var usePoint = $("#usePoint").val();
+             var rvsPoint = Math.floor($("#rvsPoint").val());
+             
+   console.log(odrname+odrmobile+odremail+odrpostcode+odraddress+odrdtaddress+odrextddress+fk_paymentno+deliname+delimobile+delipostcode+deliaddress+delidtaddress+delimsg+usePoint+rvsPoint);
+             
+             $.ajax({
+	           	 url:"<%=request.getContextPath()%>/order/orderAdd.to",
+	           	 type:"post",
+	           	 data:{"odrname":odrname,
+	           		 "odrmobile":odrmobile,
+	           		 "odremail":odremail,
+	           		 "odrpostcode":odrpostcode,
+	           		 "odraddress":odraddress,
+	           		"odrdtaddress":odrdtaddress,
+	           		"odrextddress":odrextddress,
+	           		"fk_paymentno":fk_paymentno,
+	           		"deliname":deliname,
+	           		"delimobile":delimobile,
+	           		"delipostcode":delipostcode,
+	           		"deliaddress":deliaddress,
+	           		"delidtaddress":delidtaddress,
+	           		"deliextddress":deliextddress,
+	           		"delimsg":delimsg,
+	           		"usePoint":usePoint,
+	           		"rvsPoint":rvsPoint
+	           		},
+	           	dataType:"json",
+	           	success:function(json){
+	           		if(json.isSuccess==1){
+	           			location.href = "<%= request.getContextPath()%>/orderInfo.up";
+	           			alert("주문이 완료되었습니다");
+	           		    var frm = document.orderFrm;
+	           		    frm.action = "orderInfo.to";
+	           		    frm.method = "post";
+	           		    frm.submit();
+	           		}
+	           	},
+	           	error: function(request, status, error){
+	                   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	                } 
+	           	 
+             });
+	  
+	 
+ 
+ }
+ 
+ 
+ 
+}
 
 
 
@@ -415,15 +479,15 @@ function goDel(cartnum) {
 		</thead>
 		<tbody>
 		
-			<c:forEach items="${requestScope.cartList}" var="cart" varStatus="status">
+			<c:forEach items="${requestScope.orderList}" var="ord" varStatus="status">
 				<tr id="prodInfo">
 					<td><%-- 장바구니에서 해당 제품 삭제하기 --%> 
-		               <span class="del" style="cursor: pointer; font-size:11pt; text-decoration: underline;" onClick="goDel('${cart.cartnum}');">삭제</span>  
+		               <span class="del" style="cursor: pointer; font-size:11pt; text-decoration: underline;" onClick="goDel('${ord.odrdetailno}');">삭제</span>  
 		            </td>
-					<td><a href=""><img class="pimage1" src="<%=ctxPath%>/images/${cart.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
-					<td align="left"><span class="cname"><a href="">${cart.pvo.pname}</a></span><br>[옵션: ${cart.pdetailvo.optionname}]</td>
-					<td>${cart.oqty}</td>
-					<td><fmt:formatNumber value="${cart.pvo.saleprice}" type="number"/>원</td>
+					<td><a href="<%=ctxPath%>/Info.to?pnum=${ord.pvo.pnum}"><img class="pimage1" src="<%=ctxPath%>/images/${ord.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
+					<td align="left"><span class="cname"><a href="<%=ctxPath%>/Info.to?pnum=${ord.pvo.pnum}">${ord.pvo.pname}</a></span><br>[옵션: ${ord.pdtvo.optionname}]</td>
+					<td>${ord.odrqty}</td>
+					<td><fmt:formatNumber value="${ord.pvo.saleprice}" type="number"/>원</td>
 					<td align="center">
 						<div id="pointbox">
 							<c:if test="${sessionScope.loginuser.level == 1}">
@@ -439,16 +503,16 @@ function goDel(cartnum) {
 						</div>
 						
 						<c:if test="${sessionScope.loginuser.level == 1}">
-							<fmt:formatNumber value="${cart.pvo.saleprice*cart.oqty*0.01}" type="number"/>P
-							<input type="hidden" value="${cart.pvo.saleprice*cart.oqty*0.01}"/>
+							<fmt:formatNumber value="${ord.pvo.saleprice*ord.odrqty*0.01}" type="number"/>P
+							<input type="hidden" value="${ord.pvo.saleprice*ord.odrqty*0.01}"/>
 						</c:if>
 						<c:if test="${sessionScope.loginuser.level == 2}">
-							<fmt:formatNumber value="${cart.pvo.saleprice*cart.oqty*0.03}" type="number"/>P
-							<input type="hidden" value="${cart.pvo.saleprice*cart.oqty*0.03}"/>
+							<fmt:formatNumber value="${ord.pvo.saleprice*ord.odrqty*0.03}" type="number"/>P
+							<input type="hidden" value="${ord.pvo.saleprice*ord.odrqty*0.03}"/>
 						</c:if>
 						<c:if test="${sessionScope.loginuser.level == 3}">
-							<fmt:formatNumber value="${cart.pvo.saleprice*cart.oqty*0.05}" type="number"/>P
-							<input type="hidden" value="${cart.pvo.saleprice*cart.oqty*0.05}"/>
+							<fmt:formatNumber value="${ord.pvo.saleprice*ord.odrqty*0.05}" type="number"/>P
+							<input type="hidden" value="${ord.pvo.saleprice*ord.odrqty*0.05}"/>
 						</c:if>
 						
 					</td>
@@ -459,12 +523,12 @@ function goDel(cartnum) {
 						</c:if>
 						<c:if test="${(sum) < 50000}">
 							<span>[조건]</span>
-							<fmt:formatNumber value="2500" type="number" />원<input type="hidden" class="delivery" value="2500"/>
+							<input type="hidden" class="delivery" value="2500"/>
 							<c:set var="delivery" value="2500"/>
 						</c:if>
 					</td>
 					<td>
-						<fmt:formatNumber value="${(cart.pvo.saleprice*cart.oqty)}" type="number" />
+						<fmt:formatNumber value="${(ord.pvo.saleprice*ord.odrqty)}" type="number" />
 						원
 					</td>
 					
@@ -475,10 +539,10 @@ function goDel(cartnum) {
 									<input type="hidden" name="sum" value="${sum}"/> 
 					+&nbsp;배송비 
 						<c:if test="${(sum) >= 50000}"> 
-							<span>[무료]</span><c:set var="delivery" value="0"/><input type="hidden" class="delivery" value="0"/>
+							<span>[무료] 0</span><c:set var="delivery" value="0"/><input type="hidden" class="delivery" value="0"/>
 						</c:if>
 						<c:if test="${(sum) < 50000}">
-							<fmt:formatNumber value="2500" type="number" />원<input type="hidden" class="delivery" value="2500"/>
+							[조건]&nbsp;<fmt:formatNumber value="2500" type="number" />원<input type="hidden" class="delivery" value="2500"/>
 							<c:set var="delivery" value="2500"/>
 						</c:if>
 					 = 합계 : <span id="sum"><fmt:formatNumber value="${sum+delivery}" type="number" />원
@@ -548,9 +612,9 @@ function goDel(cartnum) {
          	</tr>
          	<tr>
          		<td>
-	             	<input type="text" id="x" name="ordererHp1" size="6" maxlength="3" style="text-align:center;" value="010" class="requiredInfo" />&nbsp;-&nbsp;
-	             	<input type="text" id="ordererHp2" name="ordererHp2" size="6" maxlength="4" style="text-align:center; class="requiredInfo" />&nbsp;-&nbsp;
-	             	<input type="text" id="ordererHp3" name="ordererHp3" size="6" maxlength="4" style="text-align:center;class="requiredInfo" />
+	             	<input type="text" id="ordererHp1" name="ordererHp1" size="6" maxlength="3" style="text-align:center;" value="010" class="requiredInfo" />&nbsp;-&nbsp;
+	             	<input type="text" id="ordererHp2" name="ordererHp2" size="6" maxlength="4" style="text-align:center;" class="requiredInfo"  />&nbsp;-&nbsp;
+	             	<input type="text" id="ordererHp3" name="ordererHp3" size="6" maxlength="4" style="text-align:center;" class="requiredInfo"  />
              	</td>
     	<tr>
 	         	<th>이메일</th>
@@ -627,7 +691,7 @@ function goDel(cartnum) {
 	        <tr>	         	
 	         	<td>
 	         		<select class="orderStatus" name="shippingMsg" style="margin-left:0px;">
-						<option value="" selected>&nbsp;&nbsp;배송 요청사항을 입력해주세요&nbsp;&nbsp;</option>
+						<option value="" selected id=>&nbsp;&nbsp;배송 요청사항을 입력해주세요&nbsp;&nbsp;</option>
 						<option value="opt_1">문 앞에 놓아주세요</option>
 						<option value="opt_2">경비(관리)실에 맡겨주세요</option>
 						<option value="opt_3">택배함에 넣어주세요</option>
@@ -706,14 +770,32 @@ function goDel(cartnum) {
 		<tr>
 			<td style="text-align:left;">포인트 사용</td>
 			<td style="text-align:right;">
-			<input type="text" id="usePoint" style="border:none; text-align: right;" value="0"/>
+			<input type="text" id="usePoint" style="border:none; text-align: right;" value="(-) 0"/>
 			P</td>
+		</tr>
+		<tr>
+			<td style="text-align:left;">포인트 적립</td>
+			<td style="text-align:right;">(+)
+			<c:if test="${sessionScope.loginuser.level == 1}">
+				<fmt:formatNumber value="${sum*0.01}" type="number"/>P
+				<input type="hidden" id="rvsPoint" value="${sum*0.01}"/>
+			</c:if>
+			<c:if test="${sessionScope.loginuser.level == 2}">
+				<fmt:formatNumber value="${sum*0.03}" type="number"/>P
+				<input type="hidden" id="rvsPoint" value="${sum*0.03}"/>
+			</c:if>
+			<c:if test="${sessionScope.loginuser.level == 3}">
+				<fmt:formatNumber value="${sum*0.05}" type="number"/>P
+				<input type="hidden" id="rvsPoint" value="${sum*0.05}"/>
+			</c:if>
+			</td>
 		</tr>
 		<tr>
 			<td style="text-align:left; font-size:13pt; font-weight:bold;">최종 결제금액</td>
 			<td style="text-align:right; font-size:15pt; font-weight:bold;"> 
-				<input style="border:none; text-align: right;" id="totalPrice"></input>원
-				<input type="hidden" class="totalprice" value="${sum+delivery}"/>
+				<input style="border:none; text-align: right;" id="totalPrice"/>
+				원
+				<input type="hidden" class="totalprice" />
 			</td>
 		</tr>
 	</table>

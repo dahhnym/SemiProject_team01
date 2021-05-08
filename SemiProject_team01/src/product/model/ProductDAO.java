@@ -14,6 +14,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import member.model.MemberVO;
+import order.model.OrderDetailVO;
 
 
 
@@ -364,183 +365,7 @@ public class ProductDAO implements InterProductDAO {
 	}
 
 
-	// 보류중인 리뷰 보여주기
-	@Override
-	public List<ProductVO> pendingReview(String userid) throws SQLException {
-		
-		List<ProductVO> pdrvList = new ArrayList<>();
-		
-		try {
-			 conn = ds.getConnection();
-			 
-			 String sql = "select rno, pname, pimage1, optionname\n" + 
-			 		"from " + 
-			 		"(" + 
-			 		"    select rownum AS rno, pimage1, pname, optionname\n" + 
-			 		"    from \n" + 
-			 		"    (\n" + 
-			 		"        select pimage1, pname, optionname \n" + 
-			 		"        from tbl_product A join tbl_proddetail B\n" + 
-			 		"        on A.pnum=B.fk_pnum\n" + 
-			 		"        where pnum = (select fk_pnum\n" + 
-			 		"        from tbl_odrdetail\n" + 
-			 		"        where fk_userid = ? and odrdetailno != (select fk_odrdetailno from tbl_review where fk_userid = ?))\n" + 
-			 		"    )C\n" + 
-			 		")\n";
-			 pstmt = conn.prepareStatement(sql);
-			 
-			 pstmt.setString(1,userid);
-			 pstmt.setString(2,userid);
-			
-			 rs = pstmt.executeQuery();
-			 
-			 
-			 
-			 while(rs.next()) {
-				 
-				 ProductVO pvo = new ProductVO();
-				 pvo.setPname(rs.getString(1));
-				 pvo.setPimage1(rs.getString(2));
-				 
-				 pdrvList.add(pvo);
-			 }// end of while(rs.next())---------------------------------------
 
-			 
-		} finally {
-			close();
-		}
-		
-		return pdrvList;
-	}
-
-
-	// 보류중인 리뷰 갯수 세오기
-	@Override
-	public int pdrvListNo(String userid) throws SQLException {
-		int pdrvListNo = 0;
-		try {
-			 conn = ds.getConnection();
-			 
-			 String sql="select count(*)\n" + 
-			 		"from(\n" + 
-			 		"select rno, pname, pimage1, optionname\n" + 
-			 		"from \n" + 
-			 		"(\n" + 
-			 		"    select rownum AS rno, pimage1, pname, optionname\n" + 
-			 		"    from \n" + 
-			 		"    (\n" + 
-			 		"        select pimage1, pname, optionname \n" + 
-			 		"        from tbl_product A join tbl_proddetail B\n" + 
-			 		"        on A.pnum=B.fk_pnum\n" + 
-			 		"        where pnum = (select fk_pnum\n" + 
-			 		"        from tbl_odrdetail\n" + 
-			 		"        where fk_userid = ? and odrdetailno != (select fk_odrdetailno from tbl_review where fk_userid = ? ))\n" + 
-			 		"    )C\n" + 
-			 		")\n" + 
-			 		")";
-			 pstmt = conn.prepareStatement(sql);
-
-			 pstmt.setString(1,userid);
-			 pstmt.setString(2,userid);
-			 
-			 rs = pstmt.executeQuery();
-			 rs.next();
-			 pdrvListNo=rs.getInt(1);
-			 
-		} finally {
-			close();
-		}
-		return pdrvListNo;
-	}
-
-	// 작성한 리뷰 보여주기
-		@Override
-		public List<ProductVO> writtenReview(String userid) throws SQLException {
-			
-			List<ProductVO> wtrvList = new ArrayList<>();
-			
-			try {
-				 conn = ds.getConnection();
-				 
-				 String sql = "select rno, pname, pimage1, optionname\n" + 
-				 		"from " + 
-				 		"(" + 
-				 		"    select rownum AS rno, pimage1, pname, optionname\n" + 
-				 		"    from \n" + 
-				 		"    (\n" + 
-				 		"        select pimage1, pname, optionname \n" + 
-				 		"        from tbl_product A join tbl_proddetail B\n" + 
-				 		"        on A.pnum=B.fk_pnum\n" + 
-				 		"        where pnum = (select fk_pnum\n" + 
-				 		"        from tbl_odrdetail\n" + 
-				 		"        where fk_userid = ? and odrdetailno = (select fk_odrdetailno from tbl_review where fk_userid = ?))\n" + 
-				 		"    )C\n" + 
-				 		")\n";
-				 pstmt = conn.prepareStatement(sql);
-				 
-				 pstmt.setString(1,userid);
-				 pstmt.setString(2,userid);
-				
-				 rs = pstmt.executeQuery();
-				 
-				 
-				 
-				 while(rs.next()) {
-					 
-					 ProductVO pvo = new ProductVO();
-					 pvo.setPname(rs.getString(1));
-					 pvo.setPimage1(rs.getString(2));
-					 
-					 wtrvList.add(pvo);
-				 }// end of while(rs.next())---------------------------------------
-
-				 
-			} finally {
-				close();
-			}
-			
-			return wtrvList;
-		}
-
-
-		// 작성한 리뷰 갯수 세오기
-		@Override
-		public int wtrvListNo(String userid) throws SQLException {
-			int wtrvListNo = 0;
-			try {
-				 conn = ds.getConnection();
-				 
-				 String sql="select count(*)\n" + 
-				 		"from(\n" + 
-				 		"select rno, pname, pimage1, optionname\n" + 
-				 		"from \n" + 
-				 		"(\n" + 
-				 		"    select rownum AS rno, pimage1, pname, optionname\n" + 
-				 		"    from \n" + 
-				 		"    (\n" + 
-				 		"        select pimage1, pname, optionname \n" + 
-				 		"        from tbl_product A join tbl_proddetail B\n" + 
-				 		"        on A.pnum=B.fk_pnum\n" + 
-				 		"        where pnum = (select fk_pnum\n" + 
-				 		"        from tbl_odrdetail\n" + 
-				 		"        where fk_userid = ? and odrdetailno = (select fk_odrdetailno from tbl_review where fk_userid = ? ))\n" + 
-				 		"    )C\n" + 
-				 		")\n" + 
-				 		")";
-				 pstmt = conn.prepareStatement(sql);
-
-				 pstmt.setString(1,userid);
-				 pstmt.setString(2,userid);
-				 
-				 rs = pstmt.executeQuery();
-				 rs.next();
-				 wtrvListNo=rs.getInt(1);
-				 
-			} finally {
-				close();
-			}
-			return wtrvListNo;
-		}
 
 		// 페이징처리를 위해서 전 제품에 대한 총페이지 개수 알아오기(select) 
 		@Override
@@ -688,8 +513,9 @@ public class ProductDAO implements InterProductDAO {
 			
 			return prodList;
 		
-		
 		}
-
+		
+		
+		
 }
 
