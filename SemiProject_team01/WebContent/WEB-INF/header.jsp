@@ -118,12 +118,12 @@ $(document).ready(function(){
 	                <li><a href="<%=ctxPath%>/product/prodListBySpec.to?snum=3&cnum=4">클러치백</a></li>
 	            </ul>
 	        </li>
-	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/List.to?cnum=1">토트백</a>
-	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/List.to?cnum=2">숄더백</a></li>
-	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/List.to?cnum=3">백팩</a></li>
-	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/List.to?cnum=4">클러치백</a></li>
+	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/product/List.to?cnum=1">토트백</a>
+	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/product/List.to?cnum=2">숄더백</a></li>
+	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/product/List.to?cnum=3">백팩</a></li>
+	        <li class="nav-main"><a class="navmenu" href="<%=ctxPath%>/product/List.to?cnum=4">클러치백</a></li>
 	        <li class="nav-main">
-	        	<a class="navmenu" href="<%=ctxPath%>/List.to?cnum=5">악세사리</a>
+	        	<a class="navmenu" href="<%=ctxPath%>/product/List.to?cnum=5">악세사리</a>
 	        </li>
 	    </ul>
 	</div>

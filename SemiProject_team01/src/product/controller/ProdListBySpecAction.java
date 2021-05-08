@@ -52,6 +52,11 @@ public class ProdListBySpecAction extends AbstractController {
 		
 		int totalPage = pdao.getTotalPage(cnum);
 		
+		if(Integer.parseInt(currentShowPageNo)>totalPage) {
+			currentShowPageNo="1";
+			paraMap.put("currentShowPageNo", currentShowPageNo);
+		}
+		
 		String pageBar = "";
 		
 		int blockSize = 5;
@@ -70,20 +75,19 @@ public class ProdListBySpecAction extends AbstractController {
         // pageNo - 1 == 11 -1 == 10 ==> currentShowPageNo
         
         if(pageNo != 1) {
-        	pageBar += "&nbsp;<a class='pagebar-style' href='List.to?cnum="+cnum+"&currentShowPageNo=1'>[맨처음]</a>&nbsp;";
-        	pageBar += "&nbsp;<a class='pagebar-style' href='List.to?cnum="+cnum+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a>&nbsp;";
+        	pageBar += "&nbsp;<a class='pagebar-style' href='List.to?cnum="+cnum+"&currentShowPageNo=1'><i class='fas fa-angle-double-left' style='font-size:12px'></i></a>&nbsp;";
+        	pageBar += "&nbsp;<a class='pagebar-style' href='List.to?cnum="+cnum+"&currentShowPageNo="+(pageNo-1)+"'><i class='fas fa-angle-left' style='font-size:12px'></i></a>&nbsp;";
         
         }
 		
-        pageBar += "&nbsp;<a class='pagebar-style' href='List.to?cnum="+cnum+"&currentShowPageNo="+totalPage+">[마지막]</a>&nbsp;";
-        
         
         while( !(loop > blockSize || pageNo > totalPage)){
         	
         	if( pageNo == Integer.parseInt(currentShowPageNo)) {
-        		pageBar += "&nbsp;<span class='pagebar-style' style='font-weight: bold; padding: 2px 4px;'>"+pageNo+"<span>&nbsp;";
-        	} else {
-        		pageBar += "&nbsp;<a class='pagebar-style' href='List.to?'cnum="+cnum+"&currentShowPageNo="+pageNo+">"+pageNo+"</a>&nbsp;";
+        		pageBar += "&nbsp;<span class='pagebar-style' style='font-weight: bold; padding: 2px 4px;'>"+pageNo+"</span>&nbsp;";
+        	} 
+        	else {
+        		pageBar += "&nbsp;<a class='pagebar-style' href='List.to?cnum="+cnum+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a>&nbsp;";
         	}
         	
         	loop++;
@@ -95,12 +99,12 @@ public class ProdListBySpecAction extends AbstractController {
         // pageNo ==> 11
         
         if( !(pageNo > totalPage)) {
-	        pageBar += "&nbsp;<a href='List.to?cnum="+cnum+"&currentShowPageNo="+pageNo+">[다음]</a>&nbsp;";
-	        pageBar += "&nbsp;<a href='List.to?cnum="+cnum+"&currentShowPageNo="+totalPage+">[마지막]</a>&nbsp;";
+	        pageBar += "&nbsp;<a href='List.to?cnum="+cnum+"&currentShowPageNo="+pageNo+"'><i class='fas fa-angle-right' style='font-size:12px'></i></a>&nbsp;";
+	        pageBar += "&nbsp;<a href='List.to?cnum="+cnum+"&currentShowPageNo="+totalPage+"'><i class='fas fa-angle-double-right' style='font-size:12px'></i></a>&nbsp;";
         }
 		
-        //System.out.println(pageNo);
-        //System.out.println("확인용 currentShowPageNo "+currentShowPageNo);
+        System.out.println(pageNo);
+        System.out.println("확인용 currentShowPageNo "+currentShowPageNo);
         request.setAttribute("pageBar", pageBar);
         
         
