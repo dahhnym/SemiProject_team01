@@ -34,10 +34,11 @@ public class AltInfoAction extends AbstractController {
 			String gender = request.getParameter("gender"); 
 			String birthday = request.getParameter("birthday"); 
 					
-			MemberVO member = new MemberVO(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday); 
-			
+			MemberVO member = new MemberVO(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday); 			
 			InterMemberDAO dao = new MemberDAO();
+			
 			try {
+				
 				int n = dao.altMemberInfo(member);
 				MemberVO loginuser = dao.getLoginuser(member);
 
