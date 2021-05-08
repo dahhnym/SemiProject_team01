@@ -10,6 +10,8 @@
 	var b_check = false;
 
 	$(function(){
+		setTimeout(function(){location.reload();},1000);	// 새로고침
+		
 		$("span.confirm").hide();
 		
 		$("button#changePwd").click(function(){

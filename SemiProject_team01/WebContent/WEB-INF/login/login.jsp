@@ -13,6 +13,8 @@
  	var loginuser = "${sessionScope.loginuser}"
  	
 	$(function(){
+		setTimeout(function(){location.reload();},1000);	// 새로고침
+		
 		$("div#confirm").html("");
 		
 		if(saveid != null) {

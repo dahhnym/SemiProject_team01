@@ -9,6 +9,8 @@
 	var bool = false;
 
 	$(function(){
+		setTimeout(function(){location.reload();},1000);	// 새로고침
+		
 		$("div#etcEmailAddress").hide();
 		$("div.infoConfirm").hide();
 		
