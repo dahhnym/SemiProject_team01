@@ -12,6 +12,8 @@ public class BoardDetailViewAction extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 
+		// 사용자가 작성한 글 자세히 보여주는 Action단
+		
 		String boardno = request.getParameter("boardno");
 		
 		InterCsBoardDAO bdao = new CsBoardDAO();

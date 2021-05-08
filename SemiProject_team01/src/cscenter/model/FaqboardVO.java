@@ -2,10 +2,13 @@ package cscenter.model;
 
 public class FaqboardVO {
 	//자식
-	private int faqNo;
-	private String faqtitle;
-	private String faqcontent;
-	private int fk_fcNo;
+	
+	// 자주묻는 질문
+	
+	private int faqNo; //자.묻 번호
+	private String faqtitle; //자.묻 제목
+	private String faqcontent; //자.묻 내용
+	private int fk_fcNo; //자.묻 카테고리번호
 	
 	//부모 클래스
 	private FaqCategoryVO fcvo;

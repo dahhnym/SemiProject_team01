@@ -28,24 +28,47 @@ td.label {
 td.content {
 font-size: 17pt;
 }
-
+textarea#commentContents {font-size: 12pt;}
+	
+	div#viewComments {width: 80%;
+	           		  margin: 3% 0 0 0; 
+	                  text-align: left;
+	                  max-height: 300px;
+	                  overflow: auto;
+	                  /* border: solid 1px red; */
+	}
+	
+	span.markColor {color: #ff0000; }
+	
+	div.customDisplay {display: inline-block;
+	                   margin: 1% 3% 0 0;
+	}
+	                
+	div.spacediv {margin-bottom: 5%;}
+	
+	div.commentDel {font-size: 8pt;
+	                font-style: italic;
+	                cursor: pointer; 
+	 }
+	
+	div.commentDel:hover {background-color: navy;
+	                      color: white;	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("span.error").hide();
 		
+		
 		var loginuserid = "${bvo.mvo.name}";
 		console.log("login" + loginuserid);
-		if(${sessionScope.loginuser.userid eq 'admin'}) {
-			$("form#commentFrm").css("display","inline-block");
-			goCommentListView();
-		} else if ("${sessionScope.loginuser.name}" == "${bvo.mvo.name}") {
-			goCommentListView();
+		if(${sessionScope.loginuser.userid eq 'admin'}) { // 로그인 한 사용자가 관리자일 때
+			$("form#commentFrm").css("display","inline-block"); // 답변을 쓸 수 있는 form의 style을 none->inline-block으로 바꿔준다.
+			$("div.btn-sumit").css("display","none"); // 사용자가 글을 수정, 삭제할 수 있는 버튼은 관리자일 때 보일 수 없게한다.
 		}
-			
+			goCommentListView(); // 작성된 답변 보여주기 
 		
 		
-		$("button.btnCommentOK").click(function(){	  		   
+		$("button.btnCommentOK").click(function(){	  		// 답변 등록 이벤트   
 	  		   var commentContents = $("textarea#commentContents").val().trim();
 	  		   
 	  		   if(commentContents == "") {
@@ -132,7 +155,7 @@ font-size: 17pt;
 					 } // end of if ----------------------------------------
 					 
 					 else {
-						 html += "<div>등록된 답변이 없습니다.</div>";
+						 html += "<div style='padding-bottom:10px;'><h3 style='color:#DAD9FF;'>등록된 답변이 없습니다.</h3></div>";
 					 }// end of else ---------------------------------------
 					 
 					 $("div#viewComments").html(html);
@@ -179,14 +202,14 @@ font-size: 17pt;
 			   
 		   }// end of function delMyReview(review_seq) {}--------------------------  
 		   
-	function goUpdate() {
+	function goUpdate() { //문의게시글 수정
 		var frm = document.form;
 		frm.action = "<%=request.getContextPath()%>/cscenter/boardUpdate.to";
 		frm.method="post";
 		frm.submit();
 	}
 	
-	function goDelete() {
+	function goDelete() { // 문의게시글 삭제
 		var frm = document.form;
 		frm.action = "<%=request.getContextPath()%>/cscenter/boardDelete.to";
 		frm.method="post";
@@ -206,12 +229,12 @@ font-size: 17pt;
 								<option selected value="${bvo.cbscvo.cbbcvo.bigcateno}" >${bvo.cbscvo.cbbcvo.bigcatename}</option>
 							</select>
 						</td>
-						<td>
+						<td> <%-- 사용자가 작성한 문의글의 카테고리가 배송전변경/취소 또는 배송/교환/반품 일 때 소분류카테고리 select가 보일 수 있게한다. --%>
 							<c:if test="${bvo.cbscvo.cbbcvo.bigcateno == '2' || bvo.cbscvo.cbbcvo.bigcateno == '3'}">
 								<select class='w3-select w3-border' id='fk_smallcateno' name='fk_smallcateno' style="display:inline-block;" disabled>
 									<option selected value="${bvo.fk_smallcateno}" >${bvo.cbscvo.smallcatename}</option>
 								</select>
-							</c:if>
+							</c:if><%-- 사용자가 작성한 문의글의 카테고리가 상품문의 또는 입금확인/입금자변경 일 때 소분류카테고리 select가 보이지않게한다. --%>
 							<c:if test="${bvo.cbscvo.cbbcvo.bigcateno == '1' || bvo.cbscvo.cbbcvo.bigcateno == '4'}">
 								<select class='w3-select w3-border' id='fk_smallcateno' name='fk_smallcateno' style="display:none;" disabled>
 								</select>
@@ -235,7 +258,7 @@ font-size: 17pt;
 						<td class="content"><span data-toggle="modal" data-target="#myModal">${bvo.boardfile}</span></td>
 					</tr>
 			</table>
-				<div class="mb-3">
+				<div class="mb-3"><%-- 모달로 이미지 미리보기 --%>
 						<div class="modal fade" id="myModal">
 					    <div class="modal-dialog">
 					      <div class="modal-content">
@@ -258,7 +281,7 @@ font-size: 17pt;
 			<div id="viewComments" style="display:none">
 		    	<%-- 여기가 제품사용 후기 내용이 들어오는 곳이다. --%>
 		    </div> 
-			<div align="center">
+			<div align="center" class="btn-sumit">
 				<button type="button" class="btn btn-outline-secondary " id="btnSave" onclick="goUpdate();">수정</button>
 				<button type="button" class="btn btn-outline-secondary" id="btnList" onclick="goDelete();">삭제</button>
 			</div>
@@ -269,7 +292,7 @@ font-size: 17pt;
 		    	<div>
 		    		<textarea cols="85" class="customHeight" name="contents" id="commentContents"></textarea>
 		    	</div>
-		    	<div>
+		    	<div align='center' style="padding-top:20px;">
 		    		<button type="button" class="btn btn-secondary btnCommentOK">등록</button>
 		    	</div>
 		    	<input type="hidden" name="boardno" value="${requestScope.boardno}" />

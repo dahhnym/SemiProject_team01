@@ -2,10 +2,12 @@ package cscenter.model;
 
 public class BoardAdminCommentVO {
 	
-	private int bcommentno;
-	private String bcontent;
-	private int fk_boardno;
-	private String commDate;
+	// 관리자가 작성한 답변 테이블
+	
+	private int bcommentno; // 답변번호
+	private String bcontent;  // 답변내용
+	private int fk_boardno;	// 게시글 번호
+	private String commDate;	//작성일자
 	
 	public String getCommDate() {
 		return commDate;

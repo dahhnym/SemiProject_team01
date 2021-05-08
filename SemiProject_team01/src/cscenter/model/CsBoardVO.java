@@ -4,17 +4,19 @@ import member.model.MemberVO;
 
 public class CsBoardVO {
 
-	private int boardno;
-	private String boardtitle;
-	private String boardcontent;
-	private String boardpwd;
-	private String boardregistdate;
-	private String boardfile;
-	private String fk_userid;
-	private String fk_smallcateno;
+	//문의글
 	
-	private CsBoardSmallCategoryVO cbscvo;
-	private MemberVO mvo;
+	private int boardno; //글번호
+	private String boardtitle; //글제목
+	private String boardcontent; //글내용
+	private String boardpwd; //문의글비밀번호
+	private String boardregistdate; //작성일자
+	private String boardfile; //첨부파일
+	private String fk_userid; //작성자
+	private String fk_smallcateno; //소분류카테고리번호
+	
+	private CsBoardSmallCategoryVO cbscvo; //소분류카테고리VO
+	private MemberVO mvo; //작성자VO
 
 	public CsBoardVO() {}
 

@@ -83,8 +83,9 @@ public class CsBoardDAO implements InterCsBoardDAO {
 	      try {
 		           conn = ds.getConnection();
 		           
-		           String sql = " select smallcateno, smallcatename " + 
-						           	  " from tbl_smallcategory " + 
+		           String sql = " select smallcateno, smallcatename, bigcatename " + 
+						           	  " from tbl_smallcategory JOIN tbl_bigcategory " +
+						           	  " ON fk_bigcateno = bigcateno " + 
 						           	  " where fk_bigcateno = ? ";
 		           
 		           
@@ -96,10 +97,13 @@ public class CsBoardDAO implements InterCsBoardDAO {
 		           while(rs.next()) {
 		        	   CsBoardVO boardvo = new CsBoardVO();
 		        	   CsBoardSmallCategoryVO smallvo = new CsBoardSmallCategoryVO();
-		        	   
+		        	   CsBoardBigCategoryVO bigvo = new CsBoardBigCategoryVO();
 		        	   
 		        	   smallvo.setSmallcateno(rs.getInt(1));       	   
 		        	   smallvo.setSmallcatename(rs.getString(2));
+		        	   bigvo.setBigcatename(rs.getString(3));
+		        	   
+		        	   smallvo.setCbbcvo(bigvo);
 		        	   boardvo.setCbscvo(smallvo);
 		        	   boardList.add(boardvo);
 	           }// end of while----------------

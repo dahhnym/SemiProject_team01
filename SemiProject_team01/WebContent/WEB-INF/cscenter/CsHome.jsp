@@ -36,7 +36,7 @@
 						   	    "</thead>" +
 						   	    "<tbody>";
 		   			$.each(json, function(index, item){
-		   				cnt++;
+		   				cnt++; <%-- 탭을 클릭하여 카테고리를 변경할 때마다 페이지의 전환 없이 글 목록을 보여주는 ajax --%>
 					   html += "<tr data-toggle='collapse' data-target='#"+(item.fccode+index)+"'>"+
 					   					"<td>"+cnt+"</td>"+
 					   					"<td>"+item.fcname+"</td>"+

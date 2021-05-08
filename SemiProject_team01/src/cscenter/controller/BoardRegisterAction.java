@@ -13,11 +13,14 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import common.controller.AbstractController;
 import cscenter.model.*;
+import member.model.MemberVO;
 
 public class BoardRegisterAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		// 사용자가 작성한 글 등록
 		
 		String method = request.getMethod();
 		
@@ -25,8 +28,17 @@ public class BoardRegisterAction extends AbstractController {
 			super.setViewPage("/WEB-INF/cscenter/CsBoardWrite.jsp");
 		} else {
 			
-			MultipartRequest mtrequest = null;
+			// 로그인 또는 로그아웃을 하면 시작페이지로 가는 것이 아니라 방금 보았던 그 페이지로 그대로 가기 위한 것임. 
+			super.goBackURL(request);
+
+			// == 관리자(admin)로 로그인했을 때만 조회가 가능하도록 한다 ==
 			HttpSession session = request.getSession();
+			
+			MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+			
+			if( loginuser != null ) {
+			
+			MultipartRequest mtrequest = null;
             
             ServletContext svlCtx = session.getServletContext();
             String imagesDir = svlCtx.getRealPath("/images");
@@ -88,8 +100,18 @@ public class BoardRegisterAction extends AbstractController {
 			}
 			
 			
+		}else {
+			//로그인 안한 경우
+			String message = "로그인하세요.";
+	        String loc = "javascript:history.back()";
+	         
+	        request.setAttribute("message", message);
+	        request.setAttribute("loc", loc);
+	         
+	      //super.setRedirect(false);
+	        super.setViewPage("/WEB-INF/msg.jsp");
 		}
 
-	}
+	}}
 
 }

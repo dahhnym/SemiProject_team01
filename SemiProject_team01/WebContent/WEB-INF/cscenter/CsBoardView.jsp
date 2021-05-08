@@ -11,6 +11,8 @@
 	}
 </style>
 <script type="text/javascript">
+
+
 	$(function() {
 		
 		
@@ -40,7 +42,7 @@
 <div class="container_b containers">
 <br><br><br>
 <h1 align="center" style="font-weight:bold;">고객센터</h1><br>
-<h2 align="center"><a class="menu_cs" href="<%=request.getContextPath()%>/cscenter/csHome.to">문의 게시판</a></h2><br> 
+<h2 align="center"><a class="menu_cs" href="<%=request.getContextPath()%>/cscenter/csHome.to">${requestScope.bigcatename}</a></h2><br> 
 <div>
 <c:if test="${not empty requestScope.BoardList}">
 <table class="table">
