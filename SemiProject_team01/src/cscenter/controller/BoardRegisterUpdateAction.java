@@ -12,17 +12,19 @@ import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import common.controller.AbstractController;
-import cscenter.model.*;
+import cscenter.model.CsBoardDAO;
+import cscenter.model.CsBoardVO;
+import cscenter.model.InterCsBoardDAO;
 
-public class BoardRegisterAction extends AbstractController {
+public class BoardRegisterUpdateAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		String method = request.getMethod();
+String method = request.getMethod();
 		
 		if("GET".equalsIgnoreCase(method)) {
-			super.setViewPage("/WEB-INF/cscenter/CsBoardWrite.jsp");
+			super.setViewPage("/WEB-INF/cscenter/BoardUpdate.jsp");
 		} else {
 			
 			MultipartRequest mtrequest = null;
@@ -42,6 +44,7 @@ public class BoardRegisterAction extends AbstractController {
 			String fk_bigcateno = mtrequest.getParameter("fk_bigcateno");
 			fk_bigcateno = fk_bigcateno.trim();
 			String fk_smallcateno = mtrequest.getParameter("fk_smallcateno");
+			String boardno = mtrequest.getParameter("boardno");
 			String boardtitle = mtrequest.getParameter("boardtitle");
 			String fk_userid = mtrequest.getParameter("fk_userid");
 			String boardpwd = mtrequest.getParameter("boardpwd");
@@ -57,22 +60,22 @@ public class BoardRegisterAction extends AbstractController {
 			
 			
 			InterCsBoardDAO bdao = new CsBoardDAO();
-			CsBoardVO board = new CsBoardVO(fk_smallcateno, boardtitle, fk_userid, boardpwd, boardcontent, boardfile);
+			CsBoardVO board = new CsBoardVO(Integer.parseInt(boardno), fk_smallcateno, boardtitle, fk_userid, boardpwd, boardcontent, boardfile);
 			
 			
 			try {
-				int n = bdao.registerBoard(board);
+				int n = bdao.updateBoard(board, fk_userid, boardno);
 				
 				if(n == 1) {
-					 String message = "글 등록 완료"; 
-	        		 String loc = request.getContextPath() + "/cscenter/csBoardView.to";
+					 String message = "글 수정완료"; 
+	        		 String loc = request.getContextPath() + "/cscenter/csBoardView.to?fk_bigcateno="+fk_bigcateno;
 	        		 
 	        		 request.setAttribute("message", message); request.setAttribute("loc", loc);
 					 
 					 super.setRedirect(false); //false는 forward 방식
 					 super.setViewPage("/WEB-INF/msg.jsp");
 				} else {
-					 String message = "글 등록 실패"; 
+					 String message = "글 수정 실패"; 
 	        		 String loc = "javascript:history.back()";
 	        		 
 	        		 request.setAttribute("message", message); request.setAttribute("loc", loc);

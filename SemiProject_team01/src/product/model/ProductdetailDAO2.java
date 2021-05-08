@@ -74,5 +74,44 @@ public class ProductdetailDAO2 implements InterProductdetailDAO2 {
 	}
 
 	
+	@Override
+	public List<ProductDetailVO> GetSmallCategoryList(String pdetailnum) throws SQLException {
+		List<ProductDetailVO> detailList = new ArrayList<>();
+	      try {
+		           conn = ds.getConnection();
+		           
+		           String sql = 	" select pdetailnum, pnum, optionname, pname, saleprice " + 
+						           		"from tbl_proddetail join tbl_product " + 
+						           		"on fk_pnum = pnum " + 
+						           		"where pdetailnum = ? ";
+		           
+		           
+		           pstmt = conn.prepareStatement(sql);
+		           pstmt.setString(1, pdetailnum);
+		           
+		           rs = pstmt.executeQuery();
+		           
+		           while(rs.next()) {
+		        	   ProductDetailVO detailvo = new ProductDetailVO();
+		        	   ProductVO pvo = new ProductVO();
+		        	   
+		        	   detailvo.setPdetailnum(rs.getInt(1));
+		        	   detailvo.setFk_pnum(rs.getInt(2));
+		        	   detailvo.setOptionname(rs.getString(3));
+		        	   
+		        	   pvo.setPname(rs.getString(4));
+		        	   pvo.setSaleprice(rs.getInt(5));
+		        	   
+		        	   detailvo.setPdvo(pvo);
+		        	   
+		        	   detailList.add(detailvo);
+	           }// end of while----------------
+	           
+	      } finally {
+	         close();
+	      }
+	      return detailList;
+	}
+	
 
 }

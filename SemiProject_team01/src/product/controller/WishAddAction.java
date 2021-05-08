@@ -20,7 +20,8 @@ public class WishAddAction extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String pnum = request.getParameter("pnum");
-		
+		String oqty = request.getParameter("oqty");
+		String fk_pdetailnum = request.getParameter("fk_pdetailnum");
 		String userid = request.getParameter("userid");
 		
 		InterWishDAO wdao = new WishDAO();
@@ -28,6 +29,8 @@ public class WishAddAction extends AbstractController {
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("userid", userid);
 		paraMap.put("pnum", pnum);
+		paraMap.put("oqty", oqty);
+		paraMap.put("fk_pdetailnum", fk_pdetailnum);
 		
 		int n = wdao.wishAdd(paraMap);
 		// n => 1 이라면 정상등록 아니라면 등록실패

@@ -15,8 +15,9 @@ public class ListAction_front extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		super.getCategoryList(request);
+		super.goBackURL(request);
 		
+		super.getCategoryList(request);
 		String cnum = request.getParameter("cnum");
 		String cname = request.getParameter("cname");
 		String pnum = request.getParameter("pnum");
@@ -28,6 +29,10 @@ public class ListAction_front extends AbstractController {
 			currentShowPageNo = "1";
 		}
 		
+		// 한 페이지당 화면상에 보여줄 제품의 개수는 12로 한다. sizePerPage 는 ProductDAO 에서 상수로 설정해 두었음.
+		
+		// === GET 방식이므로 사용자가 웹브라우저 주소창에서 currentShowPageNo 에 숫자 아닌 문자를 입력한 경우 또는 
+	    // int 범위를 초과한 숫자를 입력한 경우라면 currentShowPageNo 는 1 페이지로 만들도록 한다. ==== // 
 		try {
 			Integer.parseInt(currentShowPageNo);
 		} catch(NumberFormatException e) {
@@ -36,12 +41,9 @@ public class ListAction_front extends AbstractController {
 		
 		InterProductDAO pdao = new ProductDAO();
 		
-		String sizePerPage = "12"; // 한 페이지당 화면상에 보여줄 제품의 개수는 12 으로 한다.
-		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("cnum", cnum);
 		paraMap.put("cname", cname);
-		paraMap.put("sizePerPage", sizePerPage);
 		paraMap.put("currentShowPageNo", currentShowPageNo);
 		
 		
@@ -78,12 +80,12 @@ public class ListAction_front extends AbstractController {
 		pageNo = ( (Integer.parseInt(currentShowPageNo) - 1)/blockSize ) * blockSize + 1 ;
         
         // *** [맨처음][이전]만들기 ***
-        // pageNo - 1 == 11 -1 == 10 ==> currentShowPageNo
         
         if(pageNo != 1) {
+
         	pageBar += "&nbsp;<a class='pagebar-style' href='List.to?cnum="+cnum+"&currentShowPageNo=1'><i class='fas fa-angle-double-left' style='font-size:12px'></i></a>&nbsp;";
         	pageBar += "&nbsp;<a class='pagebar-style' href='List.to?cnum="+cnum+"&currentShowPageNo="+(pageNo-1)+"'><i class='fas fa-angle-left' style='font-size:12px'></i></a>&nbsp;";
-        
+       
         }
 		     
         

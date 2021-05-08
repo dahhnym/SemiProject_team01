@@ -227,7 +227,7 @@ public class ProductDAO2 implements InterProductDAO2 {
 			conn = ds.getConnection();
 			
 			String sql = " delete from tbl_review "
-					   + " where reniewno = ? ";
+					   + " where reviewno = ? ";
 					   
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, review_seq);
