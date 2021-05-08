@@ -407,9 +407,141 @@ $("input.prodOqty").bind("spinstop",function(){
     });
 	
 
- 
- 
+ 	// 선택상품 주문 클릭시
+    $("button#seperateorder").click(function(){
+    	
+    	goOrder();
+    	
+    	var frm = document.cartform;
+
+    //	console.log("확인용 => " + frm.pnum.value);
+	//	console.log("확인용1"+frm.pname.value);
+
+		frm.action="<%=ctxPath%>/order.to";
+		frm.method="post";
+		frm.submit();
+
+    });
+    	
+    // 전체 상품 주문 클릭시	
+	$("button#orderAll").click(function(){
+		
+		goOrderAll();
+		var frm = document.cartform;
+
+    	console.log("확인용 => " + frm.pnum.value);
+    	
+		frm.action="<%=ctxPath%>/order.to";
+		frm.method="post";
+		frm.submit();
+
+	})
+    
+
+	// 상품 개별 주문하기(장바구니)
+
+	$("button.cart_order").click(function(){
 	
+		var pdetailnum= $(this).val();
+		
+		$.ajax({
+			 url: "<%= ctxPath%>/cart/selectPnum.to"
+		   , type:"get"
+		   , data: {"pdetailnum":pdetailnum}
+		   , dataType:"json"
+		   , success:function(json){
+			   var html = "";
+				if(json.length > 0){	
+			    	$.each(json, function(index, item){
+			    		html+= "<form name='cartform' >";
+						html+="<input type='hidden' name='pnum' value='"+item.pnum+"'/>";
+						html+="<input type='hidden' name='oqty' value='"+item.oqty+"'/>";
+						html+="<input type='hidden' name='saleprice' value='"+item.saleprice+"'>";
+						html+="<input type='hidden' name='totalPrice' value='"+(item.saleprice*item.oqty)+"' />";
+						html+="<input type='hidden' name='pdetailnum' value='"+item.pdetailnum+"'>";
+						html+="<input type='hidden' name='optionname' value='"+item.optionname+"'>";
+						html+="<input type='hidden' name='cartnum' value='"+item.cartnum+"'>";
+						html+="<input type='hidden' name='saleprice' value='"+item.saleprice+"'>";
+						html+="<input type='hidden' name='pimage' value='"+item.pimage+"'>";
+						html+="</form>";
+		    		});
+					
+					$("div.cartform").html(html);
+				}
+				
+					
+					var frm = document.cartform;
+
+			    //	console.log("확인용 => " + frm.pnum.value);
+					frm.action="<%=ctxPath%>/order.to";
+					frm.method="post";
+					frm.submit();
+	
+				
+			},
+			 error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		     }  
+			
+		});	
+		
+	});
+
+    
+    // 위시리스트 개별 주문
+    $("button.wish_order").click(function(){
+    	
+    	
+	var pdetailnum= $(this).val();
+		alert(pdetailnum);
+		
+		$.ajax({
+			 url: "<%= ctxPath%>/cart/selectWishPnum.to"
+		   , type:"get"
+		   , data: {"pdetailnum":pdetailnum}
+		   , dataType:"json"
+		   , success:function(json){
+			   var html = "";
+				if(json.length > 0){	
+			    	$.each(json, function(index, item){
+			    		html+= "<form name='wishform' >";
+						html+="<input type='hidden' name='pnum' value='"+item.pnum+"'/>";
+						html+="<input type='hidden' name='oqty' value='"+item.oqty+"'/>";
+						html+="<input type='hidden' name='saleprice' value='"+item.saleprice+"'>";
+						html+="<input type='hidden' name='totalPrice' value='"+(item.saleprice*item.oqty)+"' />";
+						html+="<input type='hidden' name='pdetailnum' value='"+item.pdetailnum+"'>";
+						html+="<input type='hidden' name='optionname' value='"+item.optionname+"'>";
+						html+="<input type='hidden' name='cartnum' value='"+item.cartnum+"'>";
+						html+="<input type='hidden' name='saleprice' value='"+item.saleprice+"'>";
+						html+="<input type='hidden' name='pimage' value='"+item.pimage+"'>";
+						html+="</form>";
+		    		});
+					
+					$("div.wishform").html(html);
+				}
+				
+					
+					var frm = document.wishform;
+
+			   // 	console.log("확인용 => " + frm.pnum.value);
+				
+			    	frm.action="<%=ctxPath%>/order.to";
+					frm.method="post";
+					frm.submit();
+	
+			},
+			 error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		     }  
+			
+		});	
+    	
+ 	
+    	
+    });
+    
+    
+
 }); // end of $(document).ready(function(){})-------
 
 	
@@ -421,7 +553,7 @@ $("input.prodOqty").bind("spinstop",function(){
 	//	alert(cartnum);
 		var oqty = $("input.oqty").eq(index).val();
 		var fk_pdetailnum = $("input.pdetailnum").eq(index).val();
-		alert(fk_pdetailnum);
+	//	alert(fk_pdetailnum);
 	//	alert(oqty);
 		 var regExp=/^[0-9]+$/;
 		 
@@ -657,15 +789,23 @@ $("input.prodOqty").bind("spinstop",function(){
 					var totalPriceArr = new Array();
 					var pdetailnumArr = new Array();
 					var optionnameArr = new Array();
+					var cartnumArr = new Array();
+					var salepriceArr = new Array();
+					var pnameArr = new Array();
+					var pimageArr = new Array();
 					
 					for(var i=0; i<allCnt; i++) {
 						
 						if( $("input:checkbox[name=pnum]").eq(i).is(":checked") ) {
-							pnumArr.push( $("input:checkbox[name=pnum]").eq(i).val() );
+							pnumArr.push( $("input:checkbox[name=pnum]").eq(i).val());
 							oqtyArr.push( $("input.oqty").eq(i).val() );
-							totalPriceArr.push( $("input.totalPrice").eq(i).val() );
-							pdetailnumArr.push( $("input.pdetailnum").eq(i).val() );
-							optionnameArr.push( $("input.optionname").eq(i).val() );
+							totalPriceArr.push( $("input.totalPrice").eq(i).val());
+							pdetailnumArr.push( $("input.pdetailnum").eq(i).val());
+							optionnameArr.push( $("input.optionname").eq(i).val());
+							cartnumArr.push($("input.cartnum").eq(i).val());
+							salepriceArr.push($("input.saleprice").eq(i).val());
+							pnameArr.push($("input.pname").eq(i).val());
+							pimageArr.push($("input.pimage").eq(i).val());
 						}
 						
 					}// end of for---------------------------
@@ -677,61 +817,75 @@ $("input.prodOqty").bind("spinstop",function(){
 
 					}// end of for---------------
 					
-						var str_pnum = pnumArr.join();
-						var str_oqty = oqtyArr.join();
-						var str_totalPrice = totalPriceArr.join();
-						var str_pdetailnum = pdetailnumArr.join();
-						var str_optionname=optionnameArr.join();
-					
-						$.ajax({
-							
-							url: "<%= request.getContextPath()%>/cart/orderSelect.to",
-							type:"post",
-							data:{"pnum_es":str_pnum
-								, "oqty_es":str_oqty
-								, "totalPrice_es":str_totalPrice
-								, "sumtotalPrice":sumtotalPrice
-								, "pdetailnum_es":str_pdetailnum
-								, "optionname_es":str_optionname},
-							dataType:"json",
-							success: function(json){
-								if(json.isSuccess ==1){
-									location.href="<%= request.getContextPath()%>/order.to"
-								}
-							},
-						 	 error: function(request, status, error){
-				               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-				            } 
-						});
-
+						var pnum = pnumArr.join();
+						var oqty = oqtyArr.join();
+						var totalPrice = totalPriceArr.join();
+						var pdetailnum = pdetailnumArr.join();
+						var optionname = optionnameArr.join();
+						var cartnum = cartnumArr.join();
+						var saleprice = salepriceArr.join();
+						var pname= pnameArr.join();
+						var pimage=pimageArr.join();
+						
+						console.log(pnum);
+						console.log(oqty);
+						console.log(totalPrice);
+						console.log(pdetailnum);
+						console.log(optionname);
+						console.log(cartnum);
+						console.log(saleprice);
+						console.log(pname);
+						console.log(pimage);
+						
+						var html = "<form name='cartform' >";
+						html+="<input type='hidden' name='pnum' value='"+pnum+"'/>";
+						html+="<input type='hidden' name='oqty' value='"+oqty+"'/>";
+						html+="<input type='hidden' name='saleprice' value='"+saleprice+"'>";
+						html+="<input type='hidden' name='totalPrice' value='"+totalPrice+"' />";
+						html+="<input type='hidden' name='pdetailnum' value='"+pdetailnum+"'>";
+						html+="<input type='hidden' name='optionname' value='"+optionname+"'>";
+						html+="<input type='hidden' name='cartnum' value='"+cartnum+"'>";
+						html+="<input type='hidden' name='pname' value='"+pname+"'>";
+						html+="<input type='hidden' name='pimage' value='"+pimage+"'>";
+						html+="</form>";
+						
+						$("div.cartform").html(html);
 			}
 			
 		}// end of function goOrder()---------------------
-		
+	
 	
 		
-		// 선택상품 주문하기
-		function orderAll(){
+		// 전체상품 주문하기
+		function goOrderAll(){
 			
 			$("input:checkbox[name=pnum]").prop("checked", true);
 			
 			
 			        var allCnt = $("input:checkbox[name=pnum]").length;
 		   		
-		   			var pnumArr = new Array();
+			        var pnumArr = new Array();
 					var oqtyArr = new Array();
 					var totalPriceArr = new Array();
 					var pdetailnumArr = new Array();
 					var optionnameArr = new Array();
+					var cartnumArr = new Array();
+					var salepriceArr = new Array();
+					var pnameArr = new Array();
+					var pimageArr = new Array();
 					
 					for(var i=0; i<allCnt; i++) {
 						
 						if( $("input:checkbox[name=pnum]").eq(i).is(":checked") ) {
-							pnumArr.push( $("input:checkbox[name=pnum]").eq(i).val() );
+							pnumArr.push( $("input:checkbox[name=pnum]").eq(i).val());
 							oqtyArr.push( $("input.oqty").eq(i).val() );
-							totalPriceArr.push( $("input.totalPrice").eq(i).val() );
-							pdetailnumArr.push( $("input.pdetailnum").eq(i).val() );
-							optionnameArr.push( $("input.optionname").eq(i).val() );
+							totalPriceArr.push( $("input.totalPrice").eq(i).val());
+							pdetailnumArr.push( $("input.pdetailnum").eq(i).val());
+							optionnameArr.push( $("input.optionname").eq(i).val());
+							cartnumArr.push($("input.cartnum").eq(i).val());
+							salepriceArr.push($("input.saleprice").eq(i).val());
+							pnameArr.push($("input.pname").eq(i).val());
+							pimageArr.push($("input.pimage").eq(i).val());
 						}
 						
 					}// end of for---------------------------
@@ -746,97 +900,36 @@ $("input.prodOqty").bind("spinstop",function(){
 			
 						// 전달해야할 데이터는 현재 배열로 되어져 있는데  이것을  문자열 string 타입으로 변경한다.
 
-						var str_pnum = pnumArr.join();
-						var str_oqty = oqtyArr.join();
-						var str_totalPrice = totalPriceArr.join();
-						var str_pdetailnum = pdetailnumArr.join();
-						var str_optionname=optionnameArr.join();
-					
-						$.ajax({
-							
-							url: "<%= request.getContextPath()%>/cart/orderSelect.to",
-							type:"post",
-							data:{"pnum_es":str_pnum
-								, "oqty_es":str_oqty
-								, "totalPrice_es":str_totalPrice
-								, "sumtotalPrice":sumtotalPrice
-								, "pdetailnum_es":str_pdetailnum
-								, "optionname_es":str_optionname},
-							dataType:"json",
-							success: function(json){
-								if(json.isSuccess ==1){
-									location.href="<%= request.getContextPath()%>/order.to"
-								}
-							},
-						 	 error: function(request, status, error){
-				               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-				            } 
-						});
-
-			
+						var pnum = pnumArr.join();
+						var oqty = oqtyArr.join();
+						var totalPrice = totalPriceArr.join();
+						var pdetailnum = pdetailnumArr.join();
+						var optionname = optionnameArr.join();
+						var cartnum = cartnumArr.join();
+						var saleprice = salepriceArr.join();
+						var pname= pnameArr.join();
+						var pimage=pimageArr.join();
+						
+						var html = "<form name='cartform' >";
+						html+="<input type='hidden' name='pnum' value='"+pnum+"'/>";
+						html+="<input type='hidden' name='oqty' value='"+oqty+"'/>";
+						html+="<input type='hidden' name='saleprice' value='"+saleprice+"'>";
+						html+="<input type='hidden' name='totalPrice' value='"+totalPrice+"' />";
+						html+="<input type='hidden' name='pdetailnum' value='"+pdetailnum+"'>";
+						html+="<input type='hidden' name='optionname' value='"+optionname+"'>";
+						html+="<input type='hidden' name='cartnum' value='"+cartnum+"'>";
+						html+="<input type='hidden' name='pname' value='"+pname+"'>";
+						html+="<input type='hidden' name='pimage' value='"+pimage+"'>";
+						html+="</form>";
+	
+						$("div.cartform").html(html);
 			
 		}// end of function orderAll()--------------------
 		
+
 		
 		
-		
-		function cartOrder(pnum,pdetailnum,optionname,oqty,totalPrice){
-			
-			
-			$.ajax({
-				
-				url: "<%= request.getContextPath()%>/cart/orderOne.to",
-				type:"post",
-				data:{"pnum":pnum
-					, "oqty":oqty
-					, "totalPrice":totalPrice
-					, "pdetailnum":pdetailnum
-					, "optionname":optionname},
-				dataType:"json",
-				success: function(json){
-					if(json.isSuccess ==1){
-						location.href="<%= request.getContextPath()%>/order.to"
-					}
-				},
-			 	 error: function(request, status, error){
-	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	            } 
-			});
-			
-		}
-		
-		
-		function cartOrder(pnum,pdetailnum,optionname,oqty,totalPrice){
-			
-			console.log(pnum);
-			console.log(pdetailnum);
-			console.log(optionname);
-			console.log(oqty);
-			console.log(totalPrice);
-			
-			$.ajax({
-				
-				url: "<%= request.getContextPath()%>/cart/orderOne.to",
-				type:"post",
-				data:{"pnum":pnum
-					, "oqty":oqty
-					, "totalPrice":totalPrice
-					, "pdetailnum":pdetailnum
-					, "optionname":optionname},
-				dataType:"json",
-				success: function(json){
-					if(json.isSuccess ==1){
-						location.href="<%= request.getContextPath()%>/order.to"
-					}
-				},
-			 	 error: function(request, status, error){
-	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	            } 
-			});
-			
-		}
-		
-		
+
 		
 
 </script>
@@ -927,9 +1020,11 @@ $("input.prodOqty").bind("spinstop",function(){
 												<a href="<%=ctxPath%>/Info.to?pnum=${cart.fk_pnum}">
 													<strong class="cname">${cart.pvo.pname}</strong>	
 												</a>
+												<input type="hidden" class="pname" value="${cart.pvo.pname}"/>
 												<input type="hidden" class="pnum" value="${cart.fk_pnum}"/>
 												<input type="hidden" class="pdetailnum" value="${cart.fk_pdetailnum}"/>
 												<input type="hidden" class="cartnum" value="${cart.cartnum}"/>
+												<input type="hidden" class="pimage" value="${cart.pvo.pimage1}"/>
 											</li>
 											<li class="xans-record-" >[옵션: ${cart.pdetailvo.optionname}]<input type="hidden" class="optionname" value="${cart.pdetailvo.optionname}"/><br>
 											
@@ -997,7 +1092,7 @@ $("input.prodOqty").bind("spinstop",function(){
 										</td>
 										<td scope="col">
 												<c:if test="${(sum) >= 50000}"> 
-													<span>무료</span><c:set var="delivery" value="0"/><input type="hidden" class="delivery" value="0"/>
+													<span>[무료]</span><c:set var="delivery" value="0"/><input type="hidden" class="delivery" value="0"/>
 												</c:if>
 												<c:if test="${(sum) < 50000}">
 													<fmt:formatNumber value="2500" type="number" />원<input type="hidden" class="delivery" value="2500"/>
@@ -1007,10 +1102,11 @@ $("input.prodOqty").bind("spinstop",function(){
 										<td scope="col" class="total">
 											<strong><fmt:formatNumber value="${(cart.pvo.saleprice*cart.oqty)}" type="number" /> 원</strong>
 											<input type="hidden" class="totalPrice" value="${(cart.pvo.saleprice*cart.oqty)}"/>
+											<input type="hidden" class="saleprice" value="${cart.pvo.saleprice}"/>
 										
 										</td>
 										<td scope="col" class="button">
-												<button id="cart_order" class="btn_option" onclick="cartOrder('${cart.fk_pnum}','${cart.fk_pdetailnum}','${cart.pdetailvo.optionname}','${cart.oqty}','${(cart.pvo.saleprice*cart.oqty)}')">주문하기</button><br>
+												<button class="btn_option cart_order" value="${cart.fk_pdetailnum}" >주문하기</button><br>
 										    	<button id="prodtowish" class="btn_option" onclick="moveToWish('${cart.cartnum}','${cart.fk_pnum}','${cart.fk_pdetailnum}')">위시리스트담기</button><br>
 										    	<button id="proddelete" class="btn_option" style="margin-bottom: 5px;" onclick="deleteCartOne('${cart.cartnum}')">삭제</button>
 										
@@ -1067,8 +1163,8 @@ $("input.prodOqty").bind("spinstop",function(){
 			</c:if>
 			
 			<div style="margin: 30px 0px;">
-				<button id="allorder" class="btnLarge" style="background-color: #000; color: #fff; margin-left: 380px; margin-right: 20px;" onclick="orderAll()">전체상품주문 </button>
-				<button  id="seperateorder" class="btnLarge" style="background-color: #eee; color: #000;" onclick="goOrder()">선택상품주문 </button>
+				<button id="orderAll" class="btnLarge" style="background-color: #000; color: #fff; margin-left: 380px; margin-right: 20px;" >전체상품주문 </button>
+				<button  id="seperateorder" class="btnLarge" style="background-color: #eee; color: #000;">선택상품주문 </button>
 				<span class="btn_right"><a  href="<%= request.getContextPath()%>/home.to"><button id="shoppingcon" class="btnLarge">쇼핑계속하기 </button></a></span>
 			</div>
 		
@@ -1124,7 +1220,15 @@ $("input.prodOqty").bind("spinstop",function(){
 											<a href="<%=ctxPath%>/Info.to?pnum=${wish.fk_pnum}">
 												<strong class="wname">${wish.pvo.pname}</strong>	
 											</a>
-											<input type="hidden" value="${wish.wnum}"/>
+											<input type="hidden" name="cartnum" class="wnum" value="${wish.wnum}"/>
+											<input type="hidden" name="pname" class="pname" value="${wish.pvo.pname}"/>
+											<input type="hidden" name="pnum" class="pnum" value="${wish.fk_pnum}"/>
+											<input type="hidden" name="pdetailnum" class="pdetailnum" value="${wish.fk_pdetailnum}"/>
+											<input type="hidden" name="pimage1" class="pimage1" value="${wish.pvo.pimage1}"/>
+											<input type="hidden" name="oqty" class="oqty" value="1" />
+											<input type="hidden" name="saleprice" class="saleprice" value="${wish.pvo.saleprice}" />
+										<input type="hidden" name="optionname" class="optionname" value="${wish.pdetailvo.optionname}" />	
+											
 										</li>
 										<c:if test="${wish.fk_pdetailnum !=0}">
 											<li class="xans-record-" ><input type="hidden" class="wpdetailnum" value="${wish.fk_pdetailnum}"/>[옵션: ${wish.pdetailvo.optionname}]<br />
@@ -1188,7 +1292,7 @@ $("input.prodOqty").bind("spinstop",function(){
 									</td>
 									<td scope="col">
 										<span><c:if test="${wish.pvo.saleprice >=50000} ">
-												0
+												[무료]
 												</c:if>
 												<c:if test="${wish.pvo.saleprice < 50000}">
 												<fmt:formatNumber  value="2500" type="number" />원
@@ -1205,7 +1309,7 @@ $("input.prodOqty").bind("spinstop",function(){
 											</c:if>
 									</td>
 							    	<td scope="col" class="button">
-										<button id="prod_order" class="btn_option wishToOrder" value="${wish.fk_pnum}"  onclick="cartOrder('${wish.fk_pnum}','${wish.fk_pdetailnum}','${wish.pdetailvo.optionname}','${wish.oqty}','${(wish.pvo.saleprice*wish.oqty)}')">주문하기</button><br>
+										<button class="btn_option wish_order" value="${wish.fk_pdetailnum}">주문하기</button><br>
 								    	<button id="prodtowish" class="btn_option orderOrCart" onclick="moveToCart('${wish.wnum}','${wish.fk_pnum}','${wish.fk_pdetailnum}')">장바구니담기</button><br>
 								    	<button id="proddelete" class="btn_option" onclick="deleteWishOne('${wish.wnum}')" >삭제</button>	
 							 		</td>
@@ -1246,6 +1350,8 @@ $("input.prodOqty").bind("spinstop",function(){
 
 </div>
 
-	
+<div class="cartform">
+</div>	
 
+<div class="wishform"></div>
 <jsp:include page="../footer.jsp"/>
