@@ -11,6 +11,7 @@ public class PersonalInfoAction extends AbstractController {
 		
 		// super.setRedirect(false);
 	    super.setViewPage("/WEB-INF/member/personalInfo.jsp");
+
 		
 	}
 
