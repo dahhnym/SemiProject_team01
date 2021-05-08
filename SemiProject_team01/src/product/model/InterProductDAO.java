@@ -52,6 +52,9 @@ public interface InterProductDAO {
 	// 특정 제품 스펙의 카테고리별 제품 select 해오기
 	List<ProductVO> selectByBothSpecCateg(Map<String, String> paraMap) throws SQLException;
 
+	// 홈에 신상품 이미지 슬라이드 출력을 위해 신상품 select 해오기
+	List<ProductVO> selectBESTonly(int snum) throws SQLException;
+
 	
 	
 }

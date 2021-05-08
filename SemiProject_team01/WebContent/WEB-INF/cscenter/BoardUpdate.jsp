@@ -18,14 +18,15 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 	$(document).ready(function() {
 		$("span.error").hide();
 		
-		if("${empty requestScope.fk_bigcateno}"){
-			//카테고리를 선택한 것이 아닌 전체보기에서 글쓰기 버튼을 눌렀을 때는
-			//상품문의가 기본적으로 선택되게한다.
-			$("select#fk_bigcateno").val("1");
-		} else {
-			//선택한 카테고리가 자동적으로 selected 되도록 한다.
-			$("select#fk_bigcateno").val("${requestScope.fk_bigcateno}");
+		$("select#fk_bigcateno").val("${bvo.cbscvo.fk_bigcateno}");
+		
+		if("${bvo.cbscvo.fk_bigcateno}" == "1" || "${bvo.cbscvo.fk_bigcateno}" == "4") {
+			$("select#fk_smallcateno").css("display","none");
+		}else{
+			$("select#fk_smallcateno").css("display","inline-block");
 		}
+		$("select#fk_smallcateno").val("${bvo.fk_smallcateno}");
+		
 		
 		
 		$("select#fk_bigcateno").bind("change", function(){
@@ -74,18 +75,28 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 	
 	function goRegister() {
 		
-		$("input#fk_userid").val("${sessionScope.loginuser.userid}");
+		if($("input#boardpwd").val().trim() == "") {
+			$("span.error").show();
+			$("input#boardpwd").focus();
+			return;
+		} else {
+			$("span.error").hide();
+			$("input#fk_userid").val("${sessionScope.loginuser.userid}");
+			var frm = document.boardForm;
+	        frm.action = "<%= request.getContextPath()%>/cscenter/boardRegisterUpdate.to";      // submit 한 경우이니까... 경로이동시 action을 사용한다.
+	        frm.method = "post";
+	        frm.submit();
+		}
 		
-		var frm = document.boardForm;
-        frm.action = "<%= request.getContextPath()%>/cscenter/boardRegister.to";      // submit 한 경우이니까... 경로이동시 action을 사용한다.
-        frm.method = "post";
-        frm.submit();
+		
+		
+		
 	}
 </script>
 <div class="container container_b">
 
 <br><br><h2 align="center">문의 게시판</h2><br><br><br>
-<span></span>
+
 			<form name="boardForm" role="form" enctype="multipart/form-data">
 				<div class="mb-3">
 					<label for="title">카테고리&nbsp;&nbsp;</label>
@@ -95,41 +106,33 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 						<option value="3">배송/교환/반품</option>
 						<option value="4">입금확인/입금자변경</option>
 					</select>&nbsp;
-					<c:if test="${requestScope.fk_bigcateno == '1' || requestScope.fk_bigcateno == '4'}">
-						<select class='w3-select w3-border' id='fk_smallcateno' name='fk_smallcateno' style="display:none;">
+						<select class='w3-select w3-border' id='fk_smallcateno' name='fk_smallcateno'>
 							<c:forEach var="list" items="${requestScope.boardList}" varStatus="status">
 								<option value="${list.cbscvo.smallcateno}">${list.cbscvo.smallcatename}</option>
 							</c:forEach>
 						</select>
-					</c:if>
-					<c:if test="${requestScope.fk_bigcateno == '2' || requestScope.fk_bigcateno == '3'}">
-						<select class='w3-select w3-border' id='fk_smallcateno' name='fk_smallcateno' style="display:inline-block;">
-							<c:forEach var="list" items="${requestScope.boardList}" varStatus="status">
-								<option value="${list.cbscvo.smallcateno}">${list.cbscvo.smallcatename}</option>
-							</c:forEach>
-						</select>
-					</c:if>
 				</div>
 				<div class="mb-3">
 					<label for="title">제목</label>
-					<input type="text" class="form-control" name="boardtitle" id="boardtitle" placeholder="제목을 입력해 주세요">
+					<input type="text" class="form-control" name="boardtitle" id="boardtitle" value="${bvo.boardtitle}">
 				</div>
 				<div class="mb-3">
 					<label for="reg_id">작성자</label>&nbsp;&nbsp;
-					<input type="text" class="form-control" name="fk_userid" id="fk_userid" value = "${sessionScope.loginuser.name}" readonly>
+					<input type="text" class="form-control" name="fk_userid" id="fk_userid" value ="${sessionScope.loginuser.name}" readonly>
 					<label for="reg_id">&nbsp;&nbsp;&nbsp;비밀번호( 숫자 6자 )</label>&nbsp;&nbsp;
 					<input type="password" class="form-control" name="boardpwd" id="boardpwd">&nbsp;&nbsp;
 					<span style="color:red;"class="error">비밀번호를 입력하세요</span>
 				</div>
 				<div class="mb-3">
 					<label for="content">내용</label>
-					<textarea class="form-control" rows="10" name="boardcontent" id="boardcontent" placeholder="내용을 입력해 주세요" ></textarea>
+					<textarea class="form-control" rows="10" name="boardcontent" id="boardcontent">${bvo.boardcontent}</textarea>
 				</div>
 				<div class="mb-3">
 					<label for="reg_id" style="padding-right:15px;">파일</label>
 					<input type="file" name="boardfile" id="boardfile">
 				</div>
 				<br>
+				<input type="hidden" name="boardno" id ="boardno" value="${requestScope.boardno}"/>
 			</form>
 			<div align="center">
 				<button type="button" class="btn btn-outline-secondary " id="btnSave" onclick="goRegister();">등록</button>

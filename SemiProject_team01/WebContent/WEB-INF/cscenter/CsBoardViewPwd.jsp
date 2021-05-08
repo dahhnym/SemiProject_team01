@@ -30,50 +30,58 @@ input#boardpwd {
 			}
 				
 		});
+		
+		$("button#btncheck").bind("click", function() {
+			
+			if(${sessionScope.loginuser.userid eq 'admin'}) {
+				var frm = document.pwdForm;
+	   			//console.log("확인용 => " + Frm.boardno.value);
+	   			frm.action ="<%=request.getContextPath()%>/cscenter/boardDetailView.to";
+	   			frm.method="post";
+	   			frm.submit();
+			} else {
+				$.ajax({
+				   url:"/SemiProject_team01/cscenter/boardViewCheckUser.to",
+				   type:"post",
+				   data:{"boardpwd" : $("input#boardpwd").val(), "boardno" : "${requestScope.boardno}" },
+			   	   dataType:"json",
+			   	   success:function(json) {
+			   		   if(json.n == 1) {
+			   			var frm = document.pwdForm;
+			   			//console.log("확인용 => " + Frm.boardno.value);
+			   			frm.action ="<%=request.getContextPath()%>/cscenter/boardDetailView.to";
+			   			frm.method="post";
+			   			frm.submit();
+			   		   } else {
+			   			   alert("비밀번호가 일치하지 않습니다.");
+			   			   location.href="javascript:location.reload(true)";
+			   		   }
+			   	   },error: function(request, status, error){
+				      alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				   }
+			   	   
+			   });// end of ajax--------------------
+			}
+			
+			   
+
+		});
 	});
-	
-	function goBoardDetailView() {
-		
-		$.ajax({
-			   url:"/SemiProject_team01/cscenter/boardViewCheckUser.to",
-			   type:"post",
-			   data:{"boardpwd" : $("input#boardpwd").val(), "boardno" : "${requestScope.boardno}" },
-		   	   dataType:"json",
-		   	   success:function(json) {
-		   		   if(json.n == 1) {
-		   				goBoardDetail();
-		   		   } else {
-		   			   alert("알 수 없는 에러 발생");
-		   			   location.href="javascript:location.reload(true)";
-		   		   }
-		   	   },error: function(request, status, error){
-			      alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-			   }
-		   	   
-		   });// end of ajax--------------------
-		
-	}
-	
-	function goBoardDetail() {
-		var frm = document.pwdForm;
-		frm.action = "<%= request.getContextPath()%>/cscenter/boardDetailView.to";
-        frm.method = "post";
-        frm.submit();
-	}
 
 </script>
 <br><br><br>
 <h1 align="center" style="font-weight:bold;">고객센터</h1><br><br>
 <h2 align="center">문의 게시판</h2><br> <br> 
-<form class="pwdForm">
+<form name="pwdForm">
 	<div align="center"><br>
 		<label for="reg_id" style="padding-bottom: 3px;">비밀번호( 숫자 6자 )</label><br>
 		<span style="color:red;"class="error">비밀번호를 입력하세요</span><br><br>
-		<input type="password" class="form-control" name="boardpwd" id="boardpwd" style="text-align: center;">&nbsp;&nbsp;
+		<input type="password" class="form-control" name="boardpwd" id="boardpwd" style="text-align: center;"/>&nbsp;&nbsp;
 	</div>
 	<br>
 	<div  align="center">
-	<button type="button" class="btn btn-outline-secondary " id="btnSave" onclick="goBoardDetailView();">확인</button>
+	<button type="button" class="btn btn-outline-secondary " id="btncheck">확인</button>
 	</div>
+	<input type="hidden" name="boardno" value="${requestScope.boardno}"/>
 </form>
 <jsp:include page="../footer.jsp"/>
