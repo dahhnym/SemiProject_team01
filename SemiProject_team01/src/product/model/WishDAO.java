@@ -24,7 +24,7 @@ public class WishDAO implements InterWishDAO {
 		try {
 			Context initContext = new InitialContext();
 		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
-		    ds = (DataSource)envContext.lookup("jdbc/myoracle");
+		    ds = (DataSource)envContext.lookup("jdbc/semioracle");
 		} catch(NamingException e) {
 			e.printStackTrace();
 		}
@@ -66,10 +66,10 @@ public class WishDAO implements InterWishDAO {
 			 if(rs.next()) {
 					// 어떤 제품을 추가로 위시리스트에 넣고자 하는 경우
 					 
-					 int cartnum =  rs.getInt("cartnum");
+					 int cartnum =  rs.getInt("wnum");
 					 
 					 sql = " update tbl_wishlist set oqty = oqty + 1 "
-					 	 + " where cartnum = ? ";
+					 	 + " where wnum = ? ";
 					 
 					 pstmt = conn.prepareStatement(sql);
 					 pstmt.setInt(1, cartnum);
@@ -80,13 +80,13 @@ public class WishDAO implements InterWishDAO {
 				 else {
 					// 위시리스트에 존재하지 않는 새로운 제품을 넣고자 하는 경우
 					
-					sql = " insert into tbl_wishlist(wnum, fk_userid, fk_pnum, oqty) "
-					    + " values(seq_tbl_cart_wnum.nextval, ?, ?, 1) ";
+					sql = " insert into tbl_wishlist(wnum, fk_userid, fk_pnum, oqty, fk_pdetailnum) "
+					    + " values(seq_wish_wnum.nextval, ?, ?, 1, ?) ";
 					
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, paraMap.get("userid"));
 					pstmt.setInt(2, Integer.parseInt(paraMap.get("pnum")));
-					
+					pstmt.setInt(3,  Integer.parseInt(paraMap.get("fk_pdetailnum")));
 					n = pstmt.executeUpdate();
 				 }
 			 

@@ -24,7 +24,8 @@ public class CartAddAction extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String pnum = request.getParameter("pnum");
-		
+		String oqty = request.getParameter("oqty");
+		String fk_pdetailnum = request.getParameter("fk_pdetailnum");
 		String userid = request.getParameter("userid");
 		
 		InterCartDAO2 cdao2 = new CartDAO2();
@@ -32,6 +33,8 @@ public class CartAddAction extends AbstractController {
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("userid", userid);
 		paraMap.put("pnum", pnum);
+		paraMap.put("fk_pdetailnum", fk_pdetailnum);
+		paraMap.put("oqty", oqty);
 		
 		int n = cdao2.cartAdd(paraMap);
 		// n => 1 이라면 정상등록 아니라면 등록실패

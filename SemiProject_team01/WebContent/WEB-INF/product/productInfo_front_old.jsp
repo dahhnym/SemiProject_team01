@@ -15,6 +15,7 @@
  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script> -->
 <style type="text/css">
 /*** 제품 상세 페이지 ***/
 #prod-content-container{
@@ -263,7 +264,7 @@ span.rvch {
 		   // jQuery에서 사용하는 것으로써,
 		   // form태그의 선택자.serialize(); 을 해주면 form 태그내의 모든 값들을 name값을 키값으로 만들어서 보내준다. 
 		   var queryString = $("form[name=commentFrm]").serialize();
-		   console.log(queryString);
+		   // console.log(queryString);
 		   // contents=very%20Good&fk_userid=seoyh&fk_pnum=57
 		   // %20 은 공백이다.
 		 
@@ -294,17 +295,18 @@ span.rvch {
 	 		   }
 		   });
 		   
-	   });
+	   }); 
     
-	// 수량입력 spinner
-    $("input.oqty").spinner({
-        spin:function(event,ui){
-           if(ui.value<1){ //ui는 input태그를 말함
-              $(this).spinner("value",1);
-              return false;
-           }
-        }
-     });
+    
+    // 수량입력 spinner
+    $( "#spinner" ).spinner({
+		spin:function(event,ui){
+			if(ui.value<1){ //ui는 input태그를 말함
+				$(this).spinner("value",1);
+				return false;
+			}
+		}
+	});
     
     var html ="";
     var cnt = 0;
@@ -339,31 +341,34 @@ span.rvch {
     	}
     });
     
-
-   
+    
+    
+    
+    
+    
     
   });	// $(function(){}) -------------
   
   // Function Declartion
   function goCart(pnum) {
 	  
-	if( ${empty sessionScope.loginuser}) {
-		alert("장바구니에 등록하려면 먼저 로그인해야합니다!!");
-		return;
-	}
-	$.ajax({
-		url:"<%= request.getContextPath()%>/product/cartAdd.to",
-		   type:"post",
-		   data:{"userid":"${sessionScope.loginuser.userid}"
-			    ,"pnum":pnum, "oqty":$("input.oqty").val(), "fk_pdetailnum" : $("select").val()},
-		   dataType:"json",
-		   success:function(json){
-			   alert(json.msg);
-		   },
-		   error: function(request, status, error){
-				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		   }
-	});
+	  if( ${empty sessionScope.loginuser}) {
+			alert("장바구니에 등록하려면 먼저 로그인해야합니다!!");
+			return;
+		}
+		$.ajax({
+			url:"<%= request.getContextPath()%>/product/cartAdd.to",
+			   type:"post",
+			   data:{"userid":"${sessionScope.loginuser.userid}"
+				    ,"pnum":pnum, "oqty":$("input.oqty").val(), "fk_pdetailnum" : $("select").val()},
+			   dataType:"json",
+			   success:function(json){
+				   swal(json.msg);
+			   },
+			   error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			   }
+		});
   }
 	function goWish(pnum) {
 		  
@@ -379,7 +384,7 @@ span.rvch {
 				    ,"pnum":pnum, "oqty":$("input.oqty").val(), "fk_pdetailnum" : $("select").val()},
 			   dataType:"json",
 			   success:function(json){
-				   alert(json.msg);
+				   swal(json.msg);
 			   },
 			   error: function(request, status, error){
 					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -390,57 +395,57 @@ span.rvch {
   // 특정 제품의 제품후기글들을 보여주는 함수
   function goCommentListView() {
    
-  $.ajax({
-	  url:"<%= request.getContextPath()%>/product/commentList.to",
-	  type:"GET",
-	  data:{"fk_pnum":"${requestScope.pvo2.pnum}"},
-	  dataType:"json",
-	  success:function(json){
-		 /*
-		    [{"contents":"제품후기내용물","name":"작성자이름","writeDate":"작성일자","userid":"사용자아이디","review_seq":제품후기글번호}
-		    ,{"contents":"제품후기내용물","name":"작성자이름","writeDate":"작성일자","userid":"사용자아이디","review_seq":제품후기글번호} 
-		    ]  
-		 */ 
-		 var html = "";
-		 
-		 if(json.length > 0) {
-			 $.each(json, function(index, item){
-				 var writeuserid = item.userid;
-				 var loginuserid = "${sessionScope.loginuser.userid}";
-				 
-				 html +=  "<div> <span class='markColor'>▶</span> "+item.contents+"</div>"
-		               +  "<div class='customDisplay'>"+item.name+"</div>"      
-		               +  "<div class='customDisplay'>"+item.writeDate+"</div>";
-		               
-		         if( loginuserid == "" ) {
-		        	 html += "<div class='customDisplay spacediv'>&nbsp;</div>";
-		         }     
-		         else if( loginuserid != "" && writeuserid != loginuserid ) {
-		        	 html += "<div class='customDisplay spacediv'>&nbsp;</div>";
-		         }
-		         else if( loginuserid != "" && writeuserid == loginuserid ) {
-		        	 html += "<div class='customDisplay spacediv commentDel' onclick='delMyReview("+item.review_seq+")'>후기삭제</div>"; 
-		         }
-				 
-			 });
-		 } // end of if ----------------------------------------
-		 
-		 else {
-			 html += "<div>등록된 상품후기가 없습니다.</div>";
-		 }// end of else ---------------------------------------
-		 
-		 $("div#viewComments").html(html);
-		 
-		// == "div#sideinfo" 의 height 값 설정해주기 == 
-		var contentHeight =	$("div#content").height();
-		//	alert(contentHeight);
-		$("div#sideinfo").height(contentHeight);
-		 
-	  },
-	  error: function(request, status, error){
-		   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	  }
-  });
+	  $.ajax({
+		  url:"<%= request.getContextPath()%>/product/commentList.to",
+		  type:"GET",
+		  data:{"fk_pnum":"${requestScope.pvo2.pnum}"},
+		  dataType:"json",
+		  success:function(json){
+			 /*
+			    [{"contents":"제품후기내용물","name":"작성자이름","writeDate":"작성일자","userid":"사용자아이디","review_seq":제품후기글번호}
+			    ,{"contents":"제품후기내용물","name":"작성자이름","writeDate":"작성일자","userid":"사용자아이디","review_seq":제품후기글번호} 
+			    ]  
+			 */ 
+			 var html = "";
+			 
+			 if(json.length > 0) {
+				 $.each(json, function(index, item){
+					 var writeuserid = item.userid;
+					 var loginuserid = "${sessionScope.loginuser.userid}";
+					 
+					 html +=  "<div> <span class='markColor'>▶</span> "+item.contents+"</div>"
+			               +  "<div class='customDisplay'>"+item.name+"</div>"      
+			               +  "<div class='customDisplay'>"+item.writeDate+"</div>";
+			               
+			         if( loginuserid == "" ) {
+			        	 html += "<div class='customDisplay spacediv'>&nbsp;</div>";
+			         }     
+			         else if( loginuserid != "" && writeuserid != loginuserid ) {
+			        	 html += "<div class='customDisplay spacediv'>&nbsp;</div>";
+			         }
+			         else if( loginuserid != "" && writeuserid == loginuserid ) {
+			        	 html += "<div class='customDisplay spacediv commentDel' onclick='delMyReview("+item.review_seq+")'>후기삭제</div>"; 
+			         }
+					 
+				 });
+			 } // end of if ----------------------------------------
+			 
+			 else {
+				 html += "<div>등록된 상품후기가 없습니다.</div>";
+			 }// end of else ---------------------------------------
+			 
+			 $("div#viewComments").html(html);
+			 
+			// == "div#sideinfo" 의 height 값 설정해주기 == 
+			var contentHeight =	$("div#content").height();
+			//	alert(contentHeight);
+			$("div#sideinfo").height(contentHeight);
+			 
+		  },
+		  error: function(request, status, error){
+			   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		  }
+	  });
    
   }// end of function goCommentListView() {}------------------------------
 	   
@@ -481,6 +486,16 @@ span.rvch {
 
 <div id="prod-content-container">
 
+	<!-- 페이지 경로 네비게이션 바 (예시)Home > Best상품  > 토트백-->
+	<nav id="info-list" aria-label="breadcrumb">
+	  <ol class="breadcrumb">
+	    <li class="breadcrumb-item"><a href="#">Home</a></li>
+	    <li class="breadcrumb-item"><a href="#">Library</a></li>
+	    <li class="breadcrumb-item active" aria-current="page">Data</li>
+	  </ol>
+	</nav>
+	
+	
 	<div id="prod-page-top">
 		<div id="imagebox" class="proddetailmain" style="padding: 10px; ">
 			<img id="mainimage" src="<%=ctxPath%>/images/${requestScope.pvo2.pimage1}" />
@@ -500,13 +515,8 @@ span.rvch {
 			
 			<form action="#">
 			  <fieldset>
-			    <span id="opt-title" style="display:inline-block; margin-bottom: 5px"><b>색상</b></span>
-			    <select name="option" id="option1">
+			    <span id="opt-title" style="display:inline-block; margin-bottom: 5px"><b>색상</b></span><select name="option" id="option1">
 			      <option selected id="choption" value="0">-[필수]색상선택-</option>
-			    <!--   <option value="1">블랙</option>
-			      <option value="2">딥그린</option>
-			      <option value="3">브라운</option> -->
-			      
 			      <c:forEach var="option" items="${requestScope.optionList}" >
 			      	<option value="${option.pdetailnum}">${option.optionname}</option>
 			      </c:forEach>
@@ -524,6 +534,15 @@ span.rvch {
 			    			</tr>
 			    		</thead>
 			    		<tbody>
+			    			<tr>
+			    				<td>${requestScope.pvo2.pname}<!-- 옵션명 추가 --></td>
+			    				<td>
+			    					<p>
+									  <input id="spinner" name="value" style="width: 20px; height: 15px;">
+									</p>
+			    				</td>
+			    				<td>주문총액<!-- (주문총액 DB에서 가져오기) --></td>
+			    			</tr>
 			    		</tbody>
 			    	</table>
 			      </div>
@@ -541,14 +560,29 @@ span.rvch {
 	<div id="bestproductdiv">
 		<table>
 			<tr>
-				   <td><a href="<%=ctxPath%>/Info.to?pnum=46"><img src="/SemiProject_team01/images/남자백팩6메인.PNG" style="width:130px; height:150px; margin-left:75px;"></image></a></td>
-				</tr>
-				<tr>
-					<td style="padding-left: 100px;"><span id="tbltextname">남자 백팩3</span></td>
-				</tr>
-				<tr>
-					<td style="padding-left: 100px;"><span id="tblbestprice">65000원</span></td>
-				</tr>
+			    <td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"/></td>
+				<td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"/></td>
+				<td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"/></td>
+				<td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"/></td>
+				<td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"/></td>
+				<td><img src="/SemiProject_team01/images/${requestScope.pvo2.pimage1}" style="width:130px; height:150px; margin-left:75px;"/></td>
+			</tr>
+			<tr>
+				<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
+				<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
+				<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
+				<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
+				<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
+				<td style="padding-left: 100px;"><span id="tbltextname">${requestScope.pvo2.pname}</span></td>
+			</tr>
+			<tr>
+				<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
+				<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
+				<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
+				<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
+				<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
+				<td style="padding-left: 100px;"><span id="tblbestprice">${requestScope.pvo2.saleprice}원</span></td>
+			</tr>
 		</table>
 	</div>
 	
@@ -565,10 +599,10 @@ span.rvch {
 	    <div id="home" class="tab-pane fade in active" style="padding-top: 20px; padding-left: 90px;">
 	     <img src="/SemiProject_team01/images/${requestScope.pvo2.pimage2}" style="display: block; width:60%; padding-top: 50px; margin-left: auto; margin-right: auto;">
 	    </div>
-	    <div id="menu1" class="tab-pane fade" align="center">
+	    <div id="menu1" class="tab-pane fade">
 	      <h2>상품리뷰</h2>
 	      <div id="viewComments">
-    	<%-- 여기가 제품사용 후기 내용이 들어오는 곳이다. --%>
+   				<%-- 여기가 제품사용 후기 내용이 들어오는 곳이다. --%>
 		    </div> 
 		    <form name="commentFrm">
 		    	<div>
@@ -578,12 +612,57 @@ span.rvch {
 		    		<button type="button" class="customHeight btnCommentOK">후기등록</button>
 		    	</div>
 		    	<input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}" />
-		    	<input type="hidden" name="fk_pnum" value="${requestScope.pvo2.pnum}" />
+		    	<input type="hidden" name="fk_pnum" value="${requestScope.pvo.pnum}" />
 		    </form>
-		   </div>
+		    </div>
 	    <div id="menu2" class="tab-pane fade"  >
 	    <br>
+	      <table style="margin-left: auto; margin-right: auto; margin-top: 50px;">
+	      	<tr>
+	      		<td class="qasortno"><span class="qasorttext">No</span></td>
+	      		<td class="qasortac"><span class="qasorttext">답변상태</span></td>
+	      		<td class="qasorttitle"><span class="qasorttext">제목</span></td>
+	      		<td class="qasortwriter"><span class="qasorttext">작성자</span></td>
+	      		<td class="qasortdate"><span class="qasorttext">작성일</span></td>
+	      	</tr>
+	      	<tr>
+	      		<td class="qasorttdno"><span class="qasorttext">1</span></td>
+	      		<td class="qasorttdac"><span class="qasorttext">답변대기중</span></td>
+	      		<td class="qasorttdtitle"><span class="qasorttext">배송관련 문의 드립니다.</span></td>
+	      		<td class="qasorttdwriter"><span class="qasorttext">sdf***</span></td>
+	      		<td class="qasorttddate"><span class="qasorttext">2021-05-02</span></td>
+	      	</tr>
+	      	<tr>
+	      		<td class="qasorttdno"><span class="qasorttext">2</span></td>
+	      		<td class="qasorttdac"><span class="qasorttext">답변대기중</span></td>
+	      		<td class="qasorttdtitle"><span class="qasorttext">반품관련 문의 드립니다.</span></td>
+	      		<td class="qasorttdwriter"><span class="qasorttext">sef***</span></td>
+	      		<td class="qasorttddate"><span class="qasorttext">2021-05-01</span></td>
+	      	</tr>
+	      	<tr>
+	      		<td class="qasorttdno"><span class="qasorttext">3</span></td>
+	      		<td class="qasorttdac"><span class="qasorttext">답변완료</span></td>
+	      		<td class="qasorttdtitle"><span class="qasorttext">교환관련 문의 드립니다.</span></td>
+	      		<td class="qasorttdwriter"><span class="qasorttext">wef***</span></td>
+	      		<td class="qasorttddate"><span class="qasorttext">2021-04-30</span></td>
+	      	</tr>
+	      	<tr>
+	      		<td class="qasorttdno"><span class="qasorttext">4</span></td>
+	      		<td class="qasorttdac"><span class="qasorttext">답변완료</span></td>
+	      		<td class="qasorttdtitle"><span class="qasorttext">반품관련 문의 드립니다.</span></td>
+	      		<td class="qasorttdwriter"><span class="qasorttext">xod***</span></td>
+	      		<td class="qasorttddate"><span class="qasorttext">2021-04-29</span></td>
+	      	</tr>
+	      	<tr>
+	      		<td class="qasorttdno"><span class="qasorttext">5</span></td>
+	      		<td class="qasorttdac"><span class="qasorttext">답변완료</span></td>
+	      		<td class="qasorttdtitle"><span class="qasorttext">교환관련 문의 드립니다.</span></td>
+	      		<td class="qasorttdwriter"><span class="qasorttext">wos***</span></td>
+	      		<td class="qasorttddate"><span class="qasorttext">2021-04-28</span></td>
+	      	</tr>
+	      	
 	      
+	      </table>
 	      
 	    </div>
 	    <div id="menu3" class="tab-pane fade">
