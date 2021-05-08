@@ -50,6 +50,9 @@ public interface InterOrderDAO {
 	// 작성한 리뷰 갯수 세오기
 	public int wtrvListNo(String userid) throws SQLException ;
 
+	// 주문번호( 시퀀스 seq_tbl_order 값)을 채번해오는 것.
+	public int getSeq_tbl_order() throws SQLException ;
+
 		
 
 }

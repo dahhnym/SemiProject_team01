@@ -24,9 +24,10 @@ public class OrderInfoAction extends AbstractController {
         InterOrderDAO odao = new OrderDAO();
         
         // 주문코드 알아오기
-        int odrcode = odao.getOdrcode(loginuser.getUserid());
+        int odrcode =Integer.parseInt(request.getParameter("odrcode"));
         
         // 주문정보 알아오기
+        
         OrderVO orderInfo = odao.selectOrderInfo(odrcode);
         
         request.setAttribute("orderInfo", orderInfo);
