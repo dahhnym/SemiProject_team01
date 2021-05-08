@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import common.controller.AbstractController;
 import product.model.*;
 
-public class ProdDisplayJSONAction2 extends AbstractController { 
+public class ProdByCategDisplayJSONAction extends AbstractController { 
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

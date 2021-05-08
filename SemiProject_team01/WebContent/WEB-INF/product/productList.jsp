@@ -8,6 +8,11 @@
 <link rel="stylesheet" href="<%=ctxPath%>/css/kimdanim.css" />
 
 <style>
+
+#content-container{
+	width: 70%;
+}
+
 	div#sortby {
 		width: 1500px;
 		margin-left: auto;
@@ -30,37 +35,38 @@
 
 <script type="text/javascript">
 
-var lenNEW = 8;
+var lenProd = 8;
 var start = 1;
+var cnum = 1;
 
 $(document).ready(function(){
 
-	$("span#totalNEWCount").hide();
-	$("span#countNEW").hide();
+	$("span#totalProdCount").hide();
+	$("span#countProd").hide();
 	
-		displayNEW(start);
+		displayProd(start);
 	
 	$(window).scroll(function(){
 	
 		if($(window).scrollTop() + 200 >= $(document).height() - $(window).height()){
 		
-			var totalNEWCount =   Number( $("span#totalNEWCount").text() );
-	        var countNEW = Number( $("span#countNEW").text() );
+			var totalProdCount =   Number( $("span#totalProdCount").text() );
+	        var countProd = Number( $("span#countProd").text() );
 	        
-	         if( totalNEWCount != countNEW ) {
-	            start = start + lenNEW;
-	            displayNEW(start);
+	         if( totalProdCount != countProd ) {
+	            start = start + lenProd;
+	            displayProd(start);
 	         }
 			
 		} 
 		
 		 if( $(window).scrollTop() == 0){
 			 //다시 처음부터 시작하도록 한다.
-			 $("div#displayNEW").empty();
+			 $("div#displayProd").empty();
 			 $("span#end").empty();
-			 $("span#countNEW").text("0");
+			 $("span#countProd").text("0");
 			 start = 1;
-			 displayNEW(start);
+			 displayProd(start); 
 		 }	
 	
 	
@@ -70,13 +76,13 @@ $(document).ready(function(){
 }); //end of $(document).ready(function() --------------------
 
 // Function Declaration
-function displayNEW(start) { 
+function displayProd(start) { 
   $.ajax({
-     url:"<%=ctxPath%>/product/prodDisplayJSON2.to?cnum=${map.cnum}", 
+     url:"<%=ctxPath%>/product/prodDisplayJSON.to", 
   //   type:"GET",
      data:{"cnum": cnum
          ,"start":start
-         ,"len":lenNEW},
+         ,"len":lenProd},
      dataType:"JSON",
      success:function(json){
         
@@ -85,7 +91,7 @@ function displayNEW(start) {
          if(start == "1" && json.length == 0) {
             html += "현재 상품 준비중....";
             
-            $("div#displayNEW").html(html);
+            $("div#displayProd").html(html);
           }   
            
          else if( json.length > 0 ) {
@@ -107,14 +113,14 @@ function displayNEW(start) {
               }
            }); // end of $.each(json, function(index, item){})------------
         
-           // NEW 상품 결과를 출력하기
-           $("div#displayNEW").append(html);
+           // Prod 상품 결과를 출력하기
+           $("div#displayProd").append(html);
         
-           // countNEW 에 지금까지 출력된 상품의 개수를 누적해서 기록한다.
-           $("span#countNEW").text( Number($("span#countNEW").text()) + json.length ); 
+           // countProd 에 지금까지 출력된 상품의 개수를 누적해서 기록한다.
+           $("span#countProd").text( Number($("span#countProd").text()) + json.length ); 
            
-           // 스크롤을 계속해서  countNEW 값과 totalNEWCount 값이 일치하는 경우 
-           if( $("span#countNEW").text() == $("span#totalNEWCount").text() ) { 
+           // 스크롤을 계속해서  countProd 값과 totalProdCount 값이 일치하는 경우 
+           if( $("span#countProd").text() == $("span#totalProdCount").text() ) { 
               $("span#end").html("더이상 조회할 제품이 없습니다.");
            }
            
@@ -126,7 +132,7 @@ function displayNEW(start) {
      }
   });
   
-}// end of function displayNEW( ){}-----------------------------
+}// end of function displayProd( ){}-----------------------------
 	
 
 <%-- 제품 이미지 클릭시 제품 상세 페이지 이동--%>
@@ -136,7 +142,7 @@ function goProdDetail(imgs) {
 
 </script>
 
-
+<div id="content-container">
 	<div id="sortby">
 	<br><br><br>
 		<!-- <nav id="sortby-nav">
@@ -147,18 +153,17 @@ function goProdDetail(imgs) {
 				<li>리뷰순</li>
 			</ul>
 		</nav> -->
-		<div class="hr-sect itemtitle">BEST Arrival</div>
 
 	   <div>
-	      <div id="displayNEW"></div>
+	      <div id="displayProd"></div>
 	   
 	      <div style="margin: 20px 0;">
-	        <span id="totalNEWCount">${requestScope.totalHITCount}</span>
-	         <span id="countNEW">0</span>
+	        <span id="totalProdCount">${requestScope.totalHITCount}</span>
+	         <span id="countProd">0</span>
 	      </div>
 	   </div> 
 	 	
 	</div>
-	
+</div>	
 
 <jsp:include page="../footer.jsp" />

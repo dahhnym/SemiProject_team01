@@ -1,32 +1,23 @@
 package member.controller;
 
 import java.sql.SQLException;
-import java.util.Enumeration;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.*;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
 import member.model.InterMemberDAO;
 import member.model.MemberDAO;
 import member.model.MemberVO;
 
-public class MemberRegisterAction extends AbstractController {
+public class AltInfoAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		/*
-		 * HttpSession session = request.getSession(); session.setAttribute("userid",
-		 * request.getParameter("userid")); // 세션 아이디 저장
-		 */
-				
 		String method = request.getMethod();
-					
-		if("post".equalsIgnoreCase(method)) {	// 회원가입 폼 DB 에 넣기
-			String clientip = request.getRemoteAddr();
-			
+		
+		if("post".equalsIgnoreCase(method)) {
 			String userid = request.getParameter("userid");
 			String pwd = request.getParameter("pwd"); 
 			String name = request.getParameter("name");
@@ -42,21 +33,23 @@ public class MemberRegisterAction extends AbstractController {
 			String extraaddress = request.getParameter("extraAddress"); 
 			String gender = request.getParameter("gender"); 
 			String birthday = request.getParameter("birthday"); 
-			String adagreements = request.getParameter("checkedAgreements3"); 
-			
-			MemberVO member = new MemberVO(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday, adagreements); 
+					
+			MemberVO member = new MemberVO(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday); 
 			
 			InterMemberDAO dao = new MemberDAO();
-			
 			try {
-				int n = dao.registerMember(member, clientip);
-			
-				if(n==1) {	// 회원가입 성공
+				int n = dao.altMemberInfo(member);
+				MemberVO loginuser = dao.getLoginuser(member);
+
+				if(n==1) {	// 수정성공
+					HttpSession session = request.getSession();
+					session.setAttribute("loginuser", loginuser);
+					
 					request.setAttribute("userid", userid);
 					request.setAttribute("pwd", pwd);
 					
-					String message = userid+"님 ladies and gents 에 가입을 환영합니다!";
-					String loc = request.getContextPath()+"/home.to";  // 로그인된 상태로 홈으로 이동
+					String message = userid+"님의 회원정보를 수정했습니다!";			// *이게 왜 안뜨지.. ==> 정정사항
+					String loc = request.getContextPath()+"/member/altInfo.to";  // 수정된 창 띄우기
 					
 					request.setAttribute("message", message);
 					request.setAttribute("loc", loc);
@@ -65,7 +58,7 @@ public class MemberRegisterAction extends AbstractController {
 					super.setViewPage("/WEB-INF/msg.jsp");	// 팝업 띄우기			
 				}
 				else {
-					String message = "회원가입 실패";
+					String message = "수정 실패";
 					String loc = "javascript:history.back()";  // 자바스크립트를 이용한 이전페이지로 이동하는 것.
 					
 					request.setAttribute("message", message);
@@ -77,12 +70,14 @@ public class MemberRegisterAction extends AbstractController {
 			} catch(SQLException e) {
 				e.printStackTrace();
 			}
-			
-		} else {	// 회원가입창 띄우기			
+		} else {
 			// super.setRedirect(false);
-			super.setViewPage("/WEB-INF/member/memberRegister.jsp");	
+		    super.setViewPage("/WEB-INF/member/altInfo.jsp");
 		}
-			
+
+		
+		// super.setRedirect(false);
+	    super.setViewPage("/WEB-INF/member/altInfo.jsp");
 	}
-	
+
 }

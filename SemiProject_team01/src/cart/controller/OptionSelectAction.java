@@ -57,5 +57,5 @@ public class OptionSelectAction extends AbstractController {
 		super.setRedirect(false);
 		super.setViewPage("/WEB-INF/jsonview.jsp");
 	}
-
+	
 }

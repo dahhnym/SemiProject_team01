@@ -12,7 +12,7 @@ import common.controller.AbstractController;
 import product.model.*;
 
 public class ProdDisplayJSONAction extends AbstractController { 
-
+ 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
