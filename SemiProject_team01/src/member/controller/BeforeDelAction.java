@@ -5,15 +5,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
 
-public class MemberAccountAction extends AbstractController {
+public class BeforeDelAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+		//  super.setRedirect(false);
+			super.setViewPage("/WEB-INF/member/beforeDel.jsp");
 		
-	//	super.setRedirect(false);
-		super.setViewPage("/WEB-INF/member/memberAccount.jsp");
-		 
 	}
 
 }
