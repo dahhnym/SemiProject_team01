@@ -26,9 +26,6 @@ a.pagebar-style {
 	color: black;
 }
 
-div#pagebar-div{
-	border: solid 1px gray;
-}
 	
 </style>
 

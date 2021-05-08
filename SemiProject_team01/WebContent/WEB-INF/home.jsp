@@ -113,7 +113,7 @@ function displayNEW(start) {
 
 <%-- 제품 이미지 클릭시 제품 상세 페이지 이동--%>
 function goProdDetail(pnum) {
-	window.location.href = "<%=ctxPath%>/Info.to?pnum="+pnum;
+	window.location.href = "<%=ctxPath%>/product/Info.to?pnum="+pnum;
 }
 
 
