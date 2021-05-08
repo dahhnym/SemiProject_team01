@@ -36,6 +36,15 @@ public interface InterMemberDAO {
 	// 페이징 처리를 한 모든 회원 또는 검색한 회원 목록 보여주기
 	List<MemberVO> selectPagingMember(Map<String, String> paraMap) throws SQLException;
 
+	// 멤버수정하기
+	int altMemberInfo(MemberVO member) throws SQLException;
+
+	// 수정한 유저 session에 저장하기
+	MemberVO getLoginuser(MemberVO member) throws SQLException;
+
+	// 회원탈퇴
+	int delAccount(String userid) throws SQLException;
+
 
 
 	

@@ -17,7 +17,7 @@
 
 <script>
 	$(function(){
-		var bool = false;
+		var bool;
 		
 		$("span.confirm").hide();
 		$("tr#etc").hide();
@@ -80,74 +80,13 @@
 	// register 버튼 클릭시, 유효성 검사	==> 에러문구 안뜨는 이유 *정정사항
 	function goCheck(){	
 		
-		// 비밀번호 체크
-		pwdCheck();	
-		$("input#pwd").blur(function(){
-			pwdCheck();
-		});
-		
-		// 비밀번호 확인 체크
-		pwdCheck2();
-		$("input#pwd2").blur(function(){
-			pwdCheck2();
-		});
-		
-		// 이름 체크
-		nameCheck();
-		$("input#name").blur(function(){
-			nameCheck();
-		});
-		
-		// 생년월일 체크
-		birthdayCheck();
-		$("input#birthday").blur(function(){
-			birthdayCheck();
-		});
-		
-		// 성별 체크
-		genderCheck();
-		$("button#gender").blur(function(){
-			genderCheck();
-		});
-		
-		// 이메일 아이디 체크
-		emailIDCheck();
-		$("input#emailID").blur(function(){
-			emailIDCheck();
-		});		
-		
-		// 기타 이메일 주소 체크
-		$("select#selectedEmailAddress").change(function(){		
-			if($("select#selectedEmailAddress").val()=="기타"){	// select 기타 선정시
-				etcEmailAddressCheck();
-				$("input#etcEmailAddress").blur(function(){
-					etcEmailAddressCheck();
-				});	
-			}
-		});	
-		// 전화번호 체크
-		ph2Check();
-		$("input#ph2").blur(function(){
-			ph2Check();
-		});
-		
-		// 우편번호 체크
-		postcodeCheck();
-		$("input#postcode").blur(function(){
-			postcodeCheck();
-		});
-		
-	}// end of function goCheck() ------------------------------------------------------------------
-		
-	
-	// 비밀번호 체크 함수
-	function pwdCheck(){
+		// 비밀번호 체크 함수
 		var pwd = $("input#pwd").val().trim();
 		if(pwd==""){
 			$("span#pwdCheck").show();
 			$("span#pwdCheck").html("비밀번호를 입력해주세요.");
 			bool=true;
-			return;
+
 		} else {
 			// 비밀번호 8-15자리, 영문자,숫자,특수기호 혼합 정규표현식
 			var regExp= /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
@@ -161,11 +100,9 @@
 				bool=false;
 			}
 		}
-	}
-	
-	
-	// 비밀번호 체크 함수
-	function pwdCheck2(){
+		
+		
+		// 비밀번호 체크 함수
 		var pwd2 = $("input#pwd2").val().trim();
 		if(pwd2==""){
 			$("span#pwdCheck2").show();
@@ -184,11 +121,9 @@
 				bool=false;
 			}
 		}
-	}
-	
-	
-	// 이름 체크 함수
-	function nameCheck(){
+		
+		
+		// 이름 체크 함수
 		var name = $("input#name").val().trim();
 		if(name==""){
 			$("span#nameCheck").show();
@@ -200,11 +135,9 @@
 			$("span#nameCheck").hide();
 			bool=false;
 		}
-	}
-	
-	
-	// 생년월일 체크 함수
-	function birthdayCheck(){
+		
+		
+		// 생년월일 체크 함수
 		var birthday = $("input#birthday").val().trim();
 		if(birthday==""){
 			$("span#birthdayCheck").show();
@@ -226,29 +159,18 @@
 				bool=false;
 			}
 		}
-	}
-	
-	
-	// 성별 체크 함수
-	function genderCheck(){
+		
+		
+		// 성별 체크 함수
 		if($("input#gender").val().trim()==""){
 			$("span#genderCheck").show();
 			$("span#genderCheck").html("성별을 선택해주세요.");
 			bool=true;
 			return;
 		}
-	}
-	
-	
-	// 성별 값 input 입력함수
-	function genderInput(checkedbtn){
-		$("input#gender").val($(checkedbtn).attr('value'));	
-		$("span#genderCheck").html("");
-		bool=false;
-	}
-	
-	// 이메일 아이디 체크 함수
-	function emailIDCheck(){
+
+		
+		// 이메일 아이디 체크 함수
 		var emailID = $("input#emailID").val().trim();
 		if(emailID==""){
 			$("span#emailIDCheck").show();
@@ -260,42 +182,40 @@
 			$("span#emailIDCheck").hide();
 			bool=false;
 		}
-	}
-	
-	
-	// 기타 이메일 주소 체크 함수
-	function etcEmailAddressCheck(){
-		var etcEmailAddress = $("input#etcEmailAddress").val().trim();
-		var regExp=/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
-		var b = regExp.test(etcEmailAddress);
 		
-		if(etcEmailAddress==""){
-			$("span#etcEmailAddressCheck").show();
-			$("span#etcEmailAddressCheck").html("이메일 주소를 입력해주세요.");
-			$(this).focus();
-			bool=true;
-			return;
-		} else {
-			if(etcEmailAddress.includes("@")){
+		
+		// 기타 이메일 주소 체크
+		if($("select#selectedEmailAddress").val()=="기타"){	// select 기타 선정시
+			var etcEmailAddress = $("input#etcEmailAddress").val().trim();
+			var regExp=/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
+			var b = regExp.test(etcEmailAddress);
+			
+			if(etcEmailAddress==""){
 				$("span#etcEmailAddressCheck").show();
-				$("span#etcEmailAddressCheck").html("@ 제외 주소값만 입력해주세요.");
+				$("span#etcEmailAddressCheck").html("이메일 주소를 입력해주세요.");
+				$(this).focus();
 				bool=true;
 				return;
-			} else if(!b) {
-				$("span#etcEmailAddressCheck").show();
-				$("span#etcEmailAddressCheck").html("이메일 형식이 올바르지 않습니다. 다시 입력해주세요.");
-				bool=true;
-				return;
+				
 			} else {
-				$("span#etcEmailAddressCheck").hide();
-				bool=false;
+				if(etcEmailAddress.includes("@")){
+					$("span#etcEmailAddressCheck").show();
+					$("span#etcEmailAddressCheck").html("@ 제외 주소값만 입력해주세요.");
+					bool=true;
+					return;
+				} else if(!b) {
+					$("span#etcEmailAddressCheck").show();
+					$("span#etcEmailAddressCheck").html("이메일 형식이 올바르지 않습니다. 다시 입력해주세요.");
+					bool=true;
+					return;
+				} else {
+					$("span#etcEmailAddressCheck").hide();
+					bool=false;
+				}
 			}
 		}
-	}
-	
-	
-	// 전화번호 체크 함수
-	function ph2Check(){
+
+		// 전화번호 체크
 		var ph2 = $("input#ph2").val().trim();
 		if(ph2==""){
 			$("span#ph2Check").show();
@@ -317,10 +237,8 @@
 				bool=false;
 			}
 		}
-	}
-	
-	// 우편번호 체크 함수
-	function postcodeCheck(){
+		
+		// 우편번호 체크
 		var postcode = $("input#postcode").val().trim();
 		if(postcode==""){
 			$("span#postcodeCheck").show();
@@ -331,7 +249,15 @@
 			$("span#postcodeCheck").hide();
 			bool=false;
 		}
+		
+	}// end of function goCheck() ------------------------------------------------------------------
+
+	
+	// 성별 값 input 입력함수
+	function genderInput(checkedbtn){
+		$("input#gender").val($(checkedbtn).attr('value'));	
 	}
+	
 	
 	// 우편번호 찾기 클릭시 에러문구 삭제하기
 	function postcodeError(){
@@ -373,6 +299,7 @@
 		 					$("span#sendCodeCheck").show();
 		 					$("span#sendCodeCheck").html("인증번호가 발송되었습니다.").css("color","green");
 		 					b_sendCode=true;
+		 					bool=false;
 		 				} else {
 		 					// 인증코드가 발송되지 않았다면
 		 					$("span#sendCodeCheck").show();
@@ -385,6 +312,7 @@
 		            }    				
 				}); // end of $.ajax ----------------------------------------------
 			}
+			b10=bool;
 		}
 	}
 	
@@ -409,6 +337,7 @@
 	 					// 발송된 인증코드와 사용자가 입력해준 발송코드가 일치한다라면
 	 					$("span#sendCodeCheck").show();
 	 					$("span#sendCodeCheck").html("인증되었습니다.").css("color","green");
+	 					bool=false;
 	 				} else {
 	 					// 발송된 인증코드와 사용자가 입력해준 발송코드가 일치하지 않으면
 	 					alert("인증실패");
@@ -425,6 +354,7 @@
 			}); // end of $.ajax ----------------------------------------------
 			
 		}
+		b11=bool;
 		
 	}
 	
