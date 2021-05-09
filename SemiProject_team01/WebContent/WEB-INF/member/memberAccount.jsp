@@ -103,7 +103,7 @@
   	<div class="info">
       <div id="table">
          <div class="row">
-            <a class="cell col1" ><span>포인트</span></a>
+            <a class="cell col1" href="<%= request.getContextPath() %>/member/pointList.to"><span>포인트</span></a>
             <span class="cell col2" style="color: #00ace6; text-align: right; padding-right: 50px;">
             	<span style="color: #00ace6; font-weight: bold;"><c:out value="${sessionScope.loginuser.point}"/>&nbsp;P</span>
             </span>
