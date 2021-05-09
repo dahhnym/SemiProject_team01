@@ -40,6 +40,7 @@
 
 <script type="text/javascript">
 
+
 	$( function() {
 		
 		$('ul.tabs li').click(function(){							//선택자를 통해 tabs 메뉴를 클릭 이벤트를 지정해줍니다.
@@ -50,7 +51,7 @@
 
 			$(this).addClass('current');								////선택된 탭에 current class를 삽입해줍니다.
 			$("#" + tab_id).addClass('current');
-		})
+		});
 		
         var dateFormat = "mm/dd/yy",
         from = $( "#from" )
@@ -70,9 +71,32 @@
         .on( "change", function() {
           from.datepicker( "option", "maxDate", getDate( this ) );
       
-		          
+          }
+	
+          
+        $('input#odrcode').click(function(){
+      	  
+      	  var odrcode = $(this).val();
+			console.log(odrcode);
+
+      	  $.ajax({
+      		  url:"<%= ctxPath%>/orderInfo.to",
+        		type:"post",
+        		data:{"odrcode":odrcode},
+        		dataType: "json",
+    			success:function(json){ 
+    				location.href="<%= ctxPath%>/orderInfo.to";
+    				console.log(odrcode);
+    			},
+    			 error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		     	}  
+    			
+      	  });
+        
+        });
 		
-  	} ); // end of $( function()
+  	 ); // end of $( function()
 	
 	function getDate( element ) {
 	      var date;
@@ -84,7 +108,7 @@
 	 
 	      return date;
 	    }
-	  } ); // end of function getDate( element ) 
+	  } ; // end of function getDate( element ) 
 	  
 	
 
@@ -165,9 +189,8 @@
 		<c:if test="${not empty requestScope.orderList}">						
 		<tbody align="center">
 			<c:forEach items="${requestScope.orderList}" var="odr" varStatus="status">
-		
 			<tr id="prodInfo">
-				<td>${odr.ovo.orderdate}<br><a href="">[ ${odr.fk_odrcode} ]</a></td>
+				<td>${odr.ovo.orderdate}<br>[<input type="button" id="odrcode" style=";font-size:11pt; border:none; background-color:white; underline;" value="${odr.fk_odrcode}"/>]</td>
 				<td><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}"><img class="pimage1" src="<%=ctxPath%>/images/${odr.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
 				<td align="left"><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}">${odr.pvo.pname}</a><br>[옵션: ${odr.optionname} ]</td>
 				<td>${odr.odrqty}</td>

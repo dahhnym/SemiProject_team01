@@ -4,9 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <% String ctxPath = request.getContextPath(); %>  
 <c:set var="sum" value="0"/>  
-<c:forEach items="${requestScope.orderList}" var="ord">
-	<c:set var="sum" value="${sum+(ord.pvo.saleprice*ord.odrqty)}"/>
-</c:forEach>
+
 <jsp:include page="../header.jsp"/>
 <!DOCTYPE html>
 <html>
@@ -28,14 +26,15 @@
 
 <!-- 다음 우편번호 제이쿼리 -->
 <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
-
 <script type="text/javascript">
 
+var str_pnum="";
+var totalsum = $("[name=totalsum ]").val();
 $(function(){
 	
 	
 	///// ===== ***** 상품 목록 보여주기 ***** ===== /////
-
+	displayOdr();
 	
 	$("[name=checkAll]").click(function(){
 	    allCheck(this);
@@ -94,8 +93,7 @@ $(function(){
 	    	$("[name=shipZip]").val(zip);
 	    	$("[name=addr3]").val(addr1);
 	    	$("[name=addr4]").val(addr2);
-	    	$("[name=extraAddress2]").val(extraAddress);	      
-	
+	    	$("[name=extraAddress2]").val(extraAddress);	
     	}
     	else {
     		$("input#shipName").val("");
@@ -209,9 +207,6 @@ $(function(){
  
 	
 
-         
-         
-
 	// 결제방법 선택 시 선택 및 선택 외 버튼들 css변경해주기
 	$("[name=payment]").click(function(){
 		$(this).parent().find('[name=payment]').css('background-color','');
@@ -229,6 +224,95 @@ $(function(){
 
 
 //////////////////////////////////////////////////////////////////////////////////
+
+
+function displayOdr(){
+	
+	$.ajax({
+		url:"<%= request.getContextPath()%>/orderView.to",
+		tyle:"POST",
+		data:{"pnum":"${requestScope.pnum}",
+			"oqty":"${requestScope.oqty}",
+			"saleprice":"${requestScope.saleprice}",
+			"pdetailnum":"${requestScope.pdetailnum}",
+			"optionname":"${requestScope.optionname}",
+			"pname":"${requestScope.pname}",
+			"level":"${sessionScope.loginuser.level}"},
+		dataType:"JSON",
+		success:function(json){
+			var cnt=json.length;
+			var html = "";
+			var html2 ="";
+			$.each(json, function(index,item){
+				console.log("gl"+item.point);
+				 html+='<tr id="prodInfo">'
+				 			+'<td></td>'
+							+'<td><a href="<%=ctxPath%>/Info.to?pnum="'+item.pnum+'"><img class="pimage1" src="<%=ctxPath%>/images/${ord.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>'
+							+'<td align="left"><span class="cname"><a href="<%=ctxPath%>/Info.to?pnum='+item.pname+'">'+item.pname+'</a></span><br>[옵션: '+item.optionname+']</td>'
+							+'<td>'+item.oqty+'</td>'
+							+'<td>'+item.saleprice+'원</td>'		 //	물건 1개 값				
+							+'<td align="center">'
+								+'<div id="pointbox">'
+									+'<c:if test="${sessionScope.loginuser.level == 1}">'
+										+'<fmt:formatNumber value="1" type="number"/>'
+									+'</c:if>'
+									+'<c:if test="${sessionScope.loginuser.level == 2}">'
+									+'<fmt:formatNumber value="3" type="number"/>P'
+									+'</c:if>'
+									+'<c:if test="${sessionScope.loginuser.level == 3}">'
+									+'<fmt:formatNumber value="5" type="number"/>P'
+									+'</c:if>'
+									+'% 적립'
+									+'</div>'
+									+item.point+'P'
+									+'<input type="hidden" value="'+item.point+'"/>'
+									+'</td>'
+								+'<td>'
+									+item.delivery+'원'
+								+'</td>'
+								+'<td>'
+									+item.totalprice+'원'
+								+'</td>'
+							+'</tr>';
+							if(cnt==1){
+								var totalsum = item.sum+item.delivery;
+								html+='<tr>' 
+								+'<td id="sumtbl" colspan="8">상품구매금액 '+item.sum+'원'
+								+'<input type="hidden" name="sum" value="'+item.sum+'"/>'
+								+'+&nbsp;배송비&nbsp;'+item.delivery			
+								+'원'
+								+'= 합계 : <span id="sum">'+totalsum+'원'
+								+'</td></tr>';
+								
+								
+									}
+							cnt--;
+							
+
+							html2+="<input type='hidden' name='sum' value='"+item.sum+"'>";
+							html2+="<input type='hidden' name='totalsum' value='"+item.totalsum+"'>";
+							html2+="<input type='hidden' name='delivery' value='"+item.delivery+"'>";
+						
+
+			});
+
+		
+			$("table#prodInfo").find("tbody").html(html);
+			$("form#orderForm").append(html2);
+
+			
+			
+		},
+		error: function(request, status, error){
+			alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		}
+			
+	});
+	
+	console.log("홍"+str_pnum);
+}
+
+
 
 
 // == 물건 체크박스 함수 시작 == //
@@ -387,7 +471,7 @@ function goCheckOut(){
              var odraddress = $('[name=addr1]').val();
              var odrdtaddress = $('[name=addr2]').val();
              var odrextddress = $('[name=extraAddress]').val();
-             var fk_paymentno = $("[name=payment]").val();
+             var fk_payment = $("[name=payment]").val();
              var deliname = $("input#shipName").val();
              var delimobile = $("#shipHp1").val()+"-"+$("#shipHp2").val()+"-"+$("#shipHp3").val();
              var delipostcode = $("[name=shipZip]").val();
@@ -398,10 +482,25 @@ function goCheckOut(){
              var usePoint = $("#usePoint").val();
              var rvsPoint = Math.floor($("#rvsPoint").val());
              
-   console.log(odrname+odrmobile+odremail+odrpostcode+odraddress+odrdtaddress+odrextddress+fk_paymentno+deliname+delimobile+delipostcode+deliaddress+delidtaddress+delimsg+usePoint+rvsPoint);
+             var pnum = $("[name=pnum]").val();
+             var oqty = $("[name=oqty]").val();
+             var saleprice  = $("[name=saleprice]").val();
+             var pdetailnum  = $("[name=pdetailnum]").val();
+             var optionname = $("[name=optionname]").val();
+             var pname = $("[name=pname]").val();
+           console.log(pnum+"gg");
+           
+        //     var queryString = $("form[name=orderForm]").serialize();
+             
+             var sum = $("[name=sum]").val();
+             var totalsum = $("[name=totalsum]").val();
+             var delivery = $("[name=delivery]").val();
+             
+             
+   console.log(odrname+odrmobile+odremail+odrpostcode+odraddress+odrdtaddress+odrextddress+fk_payment+deliname+delimobile+delipostcode+deliaddress+delidtaddress+delimsg+usePoint+rvsPoint);
              
              $.ajax({
-	           	 url:"<%=request.getContextPath()%>/order/orderAdd.to",
+	           	 url:"<%=request.getContextPath()%>/orderAdd.to",
 	           	 type:"post",
 	           	 data:{"odrname":odrname,
 	           		 "odrmobile":odrmobile,
@@ -410,7 +509,7 @@ function goCheckOut(){
 	           		 "odraddress":odraddress,
 	           		"odrdtaddress":odrdtaddress,
 	           		"odrextddress":odrextddress,
-	           		"fk_paymentno":fk_paymentno,
+	           		"fk_payment":fk_payment,
 	           		"deliname":deliname,
 	           		"delimobile":delimobile,
 	           		"delipostcode":delipostcode,
@@ -419,18 +518,34 @@ function goCheckOut(){
 	           		"deliextddress":deliextddress,
 	           		"delimsg":delimsg,
 	           		"usePoint":usePoint,
-	           		"rvsPoint":rvsPoint
+	           		"rvsPoint":rvsPoint,
+	           		"userid":"${sessionScope.loginuser.userid}",
+	           		
+	           		//개별상품들 하나로 모아둔것
+					"pnum":pnum,
+					"oqty":oqty,
+					"saleprice":saleprice,
+					"pdetailnum":pdetailnum,
+					"optionname":optionname,
+					"pname":pname,
+					//"level":level,
+					"level":"${sessionScope.loginuser.level}",
+	
+	           		//최종값
+	           		"sum":sum,
+	           		"totalsum":totalsum,
+	           		"delivery":delivery,
+	           		
 	           		},
 	           	dataType:"json",
 	           	success:function(json){
 	           		if(json.isSuccess==1){
-	           			location.href = "<%= request.getContextPath()%>/orderInfo.up";
+		           		var frm = document.orderForm;
 	           			alert("주문이 완료되었습니다");
-	           		    var frm = document.orderFrm;
-	           		    frm.action = "orderInfo.to";
-	           		    frm.method = "post";
-	           		    frm.submit();
+	           		   location.href = "<%= request.getContextPath()%>/orderInfo.up";
+	           		    
 	           		}
+	           	
 	           	},
 	           	error: function(request, status, error){
 	                   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -452,7 +567,7 @@ function goCheckOut(){
    </script>
 
 </head>
-
+<div id="sum"></div>
 
 <form name="orderFrm">
 <div class="container">
@@ -478,79 +593,10 @@ function goCheckOut(){
 			</tr>
 		</thead>
 		<tbody>
-		
-			<c:forEach items="${requestScope.orderList}" var="ord" varStatus="status">
-				<tr id="prodInfo">
-					<td><%-- 장바구니에서 해당 제품 삭제하기 --%> 
-		               <span class="del" style="cursor: pointer; font-size:11pt; text-decoration: underline;" onClick="goDel('${ord.odrdetailno}');">삭제</span>  
-		            </td>
-					<td><a href="<%=ctxPath%>/Info.to?pnum=${ord.pvo.pnum}"><img class="pimage1" src="<%=ctxPath%>/images/${ord.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
-					<td align="left"><span class="cname"><a href="<%=ctxPath%>/Info.to?pnum=${ord.pvo.pnum}">${ord.pvo.pname}</a></span><br>[옵션: ${ord.pdtvo.optionname}]</td>
-					<td>${ord.odrqty}</td>
-					<td><fmt:formatNumber value="${ord.pvo.saleprice}" type="number"/>원</td>
-					<td align="center">
-						<div id="pointbox">
-							<c:if test="${sessionScope.loginuser.level == 1}">
-								<fmt:formatNumber value="1" type="number"/>
-							</c:if>
-							<c:if test="${sessionScope.loginuser.level == 2}">
-								<fmt:formatNumber value="3" type="number"/>P
-							</c:if>
-							<c:if test="${sessionScope.loginuser.level == 3}">
-								<fmt:formatNumber value="5" type="number"/>P
-							</c:if>
-							% 적립
-						</div>
-						
-						<c:if test="${sessionScope.loginuser.level == 1}">
-							<fmt:formatNumber value="${ord.pvo.saleprice*ord.odrqty*0.01}" type="number"/>P
-							<input type="hidden" value="${ord.pvo.saleprice*ord.odrqty*0.01}"/>
-						</c:if>
-						<c:if test="${sessionScope.loginuser.level == 2}">
-							<fmt:formatNumber value="${ord.pvo.saleprice*ord.odrqty*0.03}" type="number"/>P
-							<input type="hidden" value="${ord.pvo.saleprice*ord.odrqty*0.03}"/>
-						</c:if>
-						<c:if test="${sessionScope.loginuser.level == 3}">
-							<fmt:formatNumber value="${ord.pvo.saleprice*ord.odrqty*0.05}" type="number"/>P
-							<input type="hidden" value="${ord.pvo.saleprice*ord.odrqty*0.05}"/>
-						</c:if>
-						
-					</td>
-					<td>
-					<c:if test="${(sum) >= 50000}"> 
-							<span>[무료]</span>
-							<c:set var="delivery" value="0"/><input type="hidden" class="delivery" value="0"/>
-						</c:if>
-						<c:if test="${(sum) < 50000}">
-							<span>[조건]</span>
-							<input type="hidden" class="delivery" value="2500"/>
-							<c:set var="delivery" value="2500"/>
-						</c:if>
-					</td>
-					<td>
-						<fmt:formatNumber value="${(ord.pvo.saleprice*ord.odrqty)}" type="number" />
-						원
-					</td>
-					
-						</tr>
-			</c:forEach>
-			<tr>
-					<td id="sumtbl" colspan="8">상품구매금액&nbsp;<fmt:formatNumber value="${sum}" type="number" />원
-									<input type="hidden" name="sum" value="${sum}"/> 
-					+&nbsp;배송비 
-						<c:if test="${(sum) >= 50000}"> 
-							<span>[무료] 0</span><c:set var="delivery" value="0"/><input type="hidden" class="delivery" value="0"/>
-						</c:if>
-						<c:if test="${(sum) < 50000}">
-							[조건]&nbsp;<fmt:formatNumber value="2500" type="number" />원<input type="hidden" class="delivery" value="2500"/>
-							<c:set var="delivery" value="2500"/>
-						</c:if>
-					 = 합계 : <span id="sum"><fmt:formatNumber value="${sum+delivery}" type="number" />원
-									<input type="hidden" class="totalprice" value="${sum+delivery}"/>
-							</span>
-					</td>				
-				</tr>
 		</tbody>
+		
+		
+		
 	</table>	
 	
 	
@@ -939,5 +985,17 @@ function goCheckOut(){
 
 </div>
 </form>
+
+<div id="divorder">
+<form name='orderForm' id="orderForm">
+			<input type='hidden' name='pnum' value='${requestScope.pnum}'/>
+			<input type='hidden' name='oqty' value='${requestScope.oqty}' />
+			<input type='hidden' name='saleprice' value='${requestScope.saleprice}'>
+			<input type='hidden' name='pdetailnum' value='${requestScope.pdetailnum}'>
+			<input type='hidden' name='optionname' value='${requestScope.optionname}'>
+			<input type='hidden' name='pname' value='${requestScope.pname}'>
+			<input type='hidden' name='level' value='${sesseionScope.loginuser.level}'>			
+</form>
+</div>
 
 <jsp:include page="../footer.jsp"/> 

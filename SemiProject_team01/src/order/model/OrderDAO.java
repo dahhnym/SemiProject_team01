@@ -208,134 +208,148 @@ public class OrderDAO implements InterOrderDAO {
 	}
 
 
-	// 주문하기 진행 과정 
-	// 1. 주문테이블 update
-	// 2. 제품테이블에서 재고 줄이기
-	// 3. 장바구니 테이블에서 삭제하기
-	// 4. 회원 테이블에서 로그인한 사용자의 사용point를 감하고 적립point 더하기(update)(수동커밋처리) 
-	// 5. 주문 취소되는 경우 삭제하기 회원아이디,주문코드 검색해서 모든 주문 상세,주문테이블 삭제
+	////////////////// 주문하기 진행 과정 ///////////////////
 	
+	
+	
+	////
+	
+    // 1. tbl_order에서  생성하면 주문코드 반환
 	@Override
 	public int orderAdd(Map<String, Object> paraMap) throws SQLException {
-
 		int isSuccess = 0;
-	      int n1=0, n2=0, n3=0, n4=0, n5=0, n6=0;
+	      int n1=0, n2=0, n3=0, n4=0, n5=0;
 
 	      try {
 	    	  conn = ds.getConnection();
 	          
-	          conn.setAutoCommit(false);// 수동커밋
-	          
-	          
-	      // 1. tbl_order에서 userid, odrcode 비교해서 주문확인 후 내용 update하기
+	          conn.setAutoCommit(false);// 수동커믹
 	          
 	          // 우선은 userid 로만 받아서 하는 걸로 test 하기
 	          
-	          String sql = "update tbl_order set" + 
-	          		"        odrname = ? ," + 
-	          		"		odrmobile = ? ," + 
-	          		"		odremail = ? ," + 
-	          		"		odrpostcode = ? ," + 
-	          		"		odraddress = ? ," + 
-	          		"		odrdtaddress = ? ," + 
-	          		"		odrextddress = ? ," + 
-	          		"		fk_paymentno = ? ," + 
-	          		"		deliname = ? ," + 
-	          		"		delimobile = ? ," + 
-	          		"		delipostcode = ? ," + 
-	          		"		deliaddress = ? ," + 
-	          		"		delidtaddress = ? ," + 
-	          		"		deliextddress = ? ," + 
-	          		"		delimsg = ?" + 
-	          		"where fk_userid  = ? "+
-	          		"		and odrcode = ? ";
+	          String sql = " insert into tbl_order( fk_userid, totalcost, odrname, odrmobile,odremail,odrpostcode,odraddress,odrdtaddress,odrextddress,"+ 
+	          		"payment ,deliname,delimobile,delipostcode,deliaddress,delidtaddress,deliextddress,delimsg,odrcode) values\r\n" + 
+	          		"(?, ?,  ?, ?,  ?, ?, ?, ?, "+ 
+	          		"? , ?, ?, ?, ?, ?, ?, ?)";
 	          
 	          pstmt = conn.prepareStatement(sql);
-	          pstmt.setString(1, (String) paraMap.get("odrname"));
-	          pstmt.setString(2, (String) paraMap.get("odrmobile"));
-	          pstmt.setString(3, (String) paraMap.get("odremail"));
-	          pstmt.setString(4, (String) paraMap.get("odrpostcode"));
-	          pstmt.setString(5, (String) paraMap.get("odraddress"));
-	          pstmt.setString(6, (String) paraMap.get("odrdtaddress"));
-	          pstmt.setString(7, (String) paraMap.get("odrextddress"));
-	          pstmt.setString(8, (String) paraMap.get("fk_paymentno"));
-	          pstmt.setString(9, (String) paraMap.get("deliname"));
-	          pstmt.setString(10, (String) paraMap.get("delimobile"));
-	          pstmt.setString(11, (String) paraMap.get("delipostcode"));
-	          pstmt.setString(12, (String) paraMap.get("deliaddress"));
-	          pstmt.setString(13, (String) paraMap.get("delidtaddress"));
-	          pstmt.setString(14, (String) paraMap.get("delidtaddress"));
-	          pstmt.setString(15, (String) paraMap.get("delimsg"));
-	          pstmt.setString(16, (String) paraMap.get("userid"));
-	          pstmt.setInt(17, (Integer) paraMap.get("odrcode"));
 	          
-	          n1=pstmt.executeUpdate();
+	          pstmt.setString(1, (String) paraMap.get("userid"));
+	          pstmt.setString(2, (String) paraMap.get("totalsum"));
 	          
+	          pstmt.setString(3, (String) paraMap.get("odrname"));
+	          pstmt.setString(4, (String) paraMap.get("odrmobile"));
+	          pstmt.setString(5, (String) paraMap.get("odremail"));
+	          pstmt.setString(6, (String) paraMap.get("odrpostcode"));
+	          pstmt.setString(7, (String) paraMap.get("odraddress"));
+	          pstmt.setString(8, (String) paraMap.get("odrdtaddress"));
+	          pstmt.setString(9, (String) paraMap.get("odrextddress"));
 	          
-	          /*
-	      // pdetailnum을 어떻게 여러번 받아올 지 고민 해봐야함
-          // 2. 제품테이블에서 제품번호에 해당하는 잔고량을 주문량 만큼 감하기(수동커밋처리) 
-	         if(n1==1) {
-	             
-	             if(paraMap.get("cartnum") !=null && n1==1) {
-	             int cnt = 0;
-	             for(int i=0; i<pnumArr.length; i++) {
-	            	  sql = "update tbl_proddetail set pqty = pqty - ? \n"+
-	            			 "where pdetailnum = (\n"+
-	            			 "select fk_pdetailnum\n"+
-	            			 "from tbl_cart\n"+
-	            			 "where cartnum= ? and fk_userid= ? )";
-	             
-	                pstmt = conn.prepareStatement(sql);
-	                pstmt.setInt(1, Integer.parseInt(oqtyArr[i]) );
-	                pstmt.setString(2, pnumArr[i] );
-	                
-	                pstmt.executeUpdate();
-	                
-	                cnt++;
-	             	}// end of for----------------------
-	             
-		             if(cnt == pnumArr.length) {
-		                n2=1;
-		             }
+	          pstmt.setString(10, (String) paraMap.get("payment"));
+	          
+	          pstmt.setString(11, (String) paraMap.get("deliname"));
+	          pstmt.setString(12, (String) paraMap.get("delimobile"));
+	          pstmt.setString(13, (String) paraMap.get("delipostcode"));
+	          pstmt.setString(14, (String) paraMap.get("deliaddress"));
+	          pstmt.setString(15, (String) paraMap.get("delidtaddress"));
+	          pstmt.setString(16, (String) paraMap.get("deliextddress"));
+	          pstmt.setString(17, (String) paraMap.get("delimsg"));
+	          pstmt.setInt(18, (int) paraMap.get("odrcode"));
+	          	          
+		         n1 = pstmt.executeUpdate();
+		          System.out.println("~~~~~~n1 : " + n1);
+		        
+		         
+		 //2. 주문상세테이블에 insert하기 
+		 if(n1 == 1) {
+
+    	 String[] pnumArr = (String[]) paraMap.get("pnumArr");
+         String[] oqtyArr = (String[]) paraMap.get("oqtyArr");
+         String[] salepriceArr = (String[]) paraMap.get("salepriceArr");
+         String[] pdetailnumArr = (String[]) paraMap.get("pdetailnumArr");
+         String[] optionnameArr = (String[]) paraMap.get("optionnameArr");
+         String[] pnameArr = (String[]) paraMap.get("pnameArr");
+         
+         int cnt = 0; 
+         for(int i=0; i<pnumArr.length; i++) {
+
+	         sql = "insert into tbl_odrdetail (fk_userid,fk_pnum,fk_pdetailnum,odrqty,odrprice ,optionname,fk_odrcode)"+
+	          		 "values (?,to_number(?),to_number(?),to_number(?),to_number(?),? ,?)";
+	          
+	          pstmt = conn.prepareStatement(sql);
+	          pstmt.setString(1, (String) paraMap.get("userid"));
+	          pstmt.setString(2, pnumArr[i]);
+	          pstmt.setString(3, pdetailnumArr[i]);
+	          pstmt.setString(4, oqtyArr[i]);
+	          pstmt.setString(5, (String) paraMap.get("totalprice"));
+	          pstmt.setString(6, optionnameArr[i]);
+	          pstmt.setInt(7, (int) paraMap.get("odrcode"));
+	          
+	          pstmt.executeUpdate();
+              cnt++;
+          }// end of for----------------------
+          
+	          if(cnt == pnumArr.length) {
+	             n2=1;
+	          }
+	          System.out.println("~~~~~~n2 : " + n2);
+         }// end of if---------------------------
+
+          // 3. 제품테이블에서 제품번호에 해당하는 잔고량을 주문량 만큼 감하기(수동커밋처리) 
+         if(n2==1) {
+        	 
+        	 
+             String[] pdetailnumArr = (String[]) paraMap.get("pdetailnumArr");
+             String[] oqtyArr = (String[]) paraMap.get("oqtyArr");
+
+             
+             int cnt = 0;
+             for(int i=0; i<pdetailnumArr.length; i++) {
+            	  sql = "update tbl_proddetail set pqty = pqty - ? \n"+
+            			 "where pdetailnum = ?";
+             
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, Integer.parseInt(oqtyArr[i]) );
+                pstmt.setString(2, pdetailnumArr[i] );
+                
+                pstmt.executeUpdate();
+                
+                cnt++;
+             	}// end of for----------------------
+             
+	             if(cnt == pdetailnumArr.length) {
+	                n3=1;
 	             }
-	             
-	             else if(paraMap.get("cartnum") ==null && n1==1){
-	            	 // 바로 주문하기일 경우
+             }
+         System.out.println("~~~~~~n3: " + n3);
 	            	 
-	            	 
-	            	 
-	            	 
-	             }
-	             */
-	             
-	          // end of if----------------------------------------
-	         
+	            	
 	         
 	             
-	       // 3. 장바구니 테이블에서 cartnum 값에 해당하는 행들을 삭제(delete OR update)하기(수동커밋처리) 
+	       // 4. 장바구니 테이블에서 cartnum 값에 해당하는 행들을 삭제(delete OR update)하기(수동커밋처리) 
 	         if( paraMap.get("cartnum") != null && n1==1 ) {
 	               
 	             sql = " delete from tbl_cart "
 	                + " where cartnum in ("+ (String)paraMap.get("cartnum") +") ";
 
 	             pstmt = conn.prepareStatement(sql);
-	             n3 = pstmt.executeUpdate(); 
+	             n4 = pstmt.executeUpdate(); 
 	       
 	          }// end of if----------------------------
 	          
 	         if( paraMap.get("cartnum") == null && n1==1 ) {
 	             // "제품 상세 정보" 페이지에서 "바로주문하기" 를 한 경우 
 	             // 장바구니 번호인 cartnum 이 없는 것이다.
-	             n3 = 1;    
+	             n4 = 1;    
 	        
 	          }// end of if----------------------------
 	         
 	         
+	          System.out.println("~~~~~~n4 : " + n4);
+
 	         
 	         
-	         
-	      // 4. 회원 테이블에서 로그인한 사용자의 사용point를 감하고 적립point 더하기(update)(수동커밋처리) 
+	      // 5. 회원 테이블에서 로그인한 사용자의 사용point를 감하고 적립point 더하기(update)(수동커밋처리) 
 	         if(n4 > 0) {
 	             sql = " update tbl_member set point = point - ? + ? " 
 	                + " where userid = ? ";
@@ -346,41 +360,26 @@ public class OrderDAO implements InterOrderDAO {
 	             pstmt.setInt(2, Integer.parseInt((String)paraMap.get("rvsPoint")) );
 	             pstmt.setString(3, (String)paraMap.get("userid") );
 	             
-	             n4 = pstmt.executeUpdate();
+	             n5 = pstmt.executeUpdate();
 	             
-	             System.out.println("~~~~~~n4 : " + n4);
+	             System.out.println("~~~~~~n5 : " + n5);
 	          }// end of if----------------------------------
 	         
 	         
-	       // 5. **** 모든처리가 성공되었을시 commit 하기(commit) **** 
-	         if(n1*n3*n4 > 0) {
+	       // 6. **** 모든처리가 성공되었을시 commit 하기(commit) **** 
+	         if(n1*n2*n3*n4*n5 > 0) {
 	             
 	             conn.commit();
 	             
 	             conn.setAutoCommit(true); 
 	             // 자동커밋으로 전환
 	          
-	             System.out.println("n1*n3*n4 = " + (n1*n3*n4) );
+	             System.out.println("n1*n2*n3*n4*n5 = " + (n1*n2*n3*n4*n5) );
 	             
 	             isSuccess = 1;
 	          }
 	         
-	         // 6. **** 하나라도 처리가 실패 되었을시 delete 주문테이블(odrcode), 주문상세테이블(userid) 하기(commit) **** 
-	         else {
-	        	 // 주문상세테이블에서 삭제
-	        	 sql = "delete from tbl_odrdetail where userid=?";
-	        	   pstmt = conn.prepareStatement(sql);
-	  	         	pstmt.setString(1, (String) paraMap.get("userid"));
-	  	         	n5 = pstmt.executeUpdate();
-	  	         	
-	  	         // 주문테이블에서 삭제
-  	         	sql = "delete from tbl_order where odrcode=?";
-	        	   pstmt = conn.prepareStatement(sql);
-	  	         	pstmt.setString(1, (String) paraMap.get("odrcode"));
-	  	         	n6 = pstmt.executeUpdate();
-	  	         	
-	         }
-	         
+	      
 	      } catch(SQLException e) {
 	    	  
 	    	  // 8. **** SQL 장애 발생시 rollback 하기(rollback) **** 
@@ -388,19 +387,17 @@ public class OrderDAO implements InterOrderDAO {
 	    	  
 	    	  conn.rollback();
 		            
-		         conn.setAutoCommit(true); 
-		         // 자동커밋으로 전환
-		            
-		         isSuccess = 0;
+	         conn.setAutoCommit(true); 
+	         // 자동커밋으로 전환
+	            
+	         isSuccess = 0;
 		         
 	      } finally {
 	    	  close();
 	      }
 	      
 		return isSuccess;
-
-	
-	
+	   
 	}
 
 	// 주문코드 알아오기
@@ -766,6 +763,32 @@ public class OrderDAO implements InterOrderDAO {
 			return wtrvListNo;
 		}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+		@Override
+		public int getSeq_tbl_order() throws SQLException {
+			int seq = 0;
+		      
+		      try {
+		          conn = ds.getConnection();
+		          
+		          String sql = "select seq_order_odrcode.nextval AS seq \n"+
+		        		  "from dual";
+		          
+		          pstmt = conn.prepareStatement(sql);
+		          
+		          rs = pstmt.executeQuery();
+		          
+		          rs.next();
+		          
+		          seq = rs.getInt("seq");
+		          
+		      } finally {
+		         close();
+		      }
+		      
+		      return seq;
+		}
 	
 	
 	
