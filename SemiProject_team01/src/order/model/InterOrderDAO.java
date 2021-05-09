@@ -33,7 +33,7 @@ public interface InterOrderDAO {
 	int getCartnum(String userid) throws SQLException;
 
 	// 주문 내역 리스트 가져오기
-	List<OrderDetailVO> orderList(String userid) throws SQLException;
+	List<OrderDetailVO> orderList(int odrcode) throws SQLException;
 
 	// 한 주문에 대한 리스트 가져오기
 	public List<OrderDetailVO> orderList(String userid, int odrcode) throws SQLException;
@@ -52,6 +52,12 @@ public interface InterOrderDAO {
 
 	// 주문번호( 시퀀스 seq_tbl_order 값)을 채번해오는 것.
 	public int getSeq_tbl_order() throws SQLException ;
+
+	// 주문내역orderList.to 리스트 가져오기 (select)
+	List<OrderDetailVO> orderListView(String userid) throws SQLException;
+
+	// 취소 반품 교환 내역 
+	List<OrderDetailVO> orderCancelList(String userid) throws SQLException;
 
 		
 

@@ -112,8 +112,8 @@
 			<c:if test="${not empty requestScope.pdrvList}">
         	<c:forEach var="pdrv" items="${requestScope.pdrvList}">
         	    <tr class="orderInfo">
-        			<td><img src="<%=ctxPath%>/images/${pdrv.pvo.pimage1}"/></td>
-        			<td>${pdrv.pvo.pname}<br>${pdrv.optionname}</td>
+        			<td><a href="<%=ctxPath%>/Info.to?pnum=${pdrv.pvo.pnum}"><img class="pimage1" src="<%=ctxPath%>/images/${pdrv.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
+        			<td>${pdrv.pvo.pname}<br>[ ${pdrv.optionname} ]</td>
         			<td><input type="button" value="리뷰쓰기"></td>
         	    </tr>
         	</c:forEach>
@@ -143,7 +143,7 @@
         
         <tbody>		
 						
-        	<c:forEach var="wtrv" items="${requestScope.pdrvList}">        	
+        	<c:forEach var="wtrv" items="${requestScope.wtrvList}">        	
         	    <tr class="orderInfo">
         			<td><img src="<%=ctxPath%>/images/${wtrv.pvo.pimage1}"/></td>
         			<td>${wtrv.pvo.pname}<br>${wtrv.optionname}</td>

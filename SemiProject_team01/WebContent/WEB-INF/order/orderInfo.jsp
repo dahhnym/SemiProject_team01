@@ -11,6 +11,8 @@
 
 <script type="text/javascript">
 
+//alert(${orderInfo.payment});
+
 </script>
 
 <div class="container">
@@ -46,7 +48,7 @@
 		<hr>
 		<table>
 			<tr>
-				<th width="120px;">총 주문금액</th>
+				<th width="120px;">총 결제금액</th>
 				<td><a><fmt:formatNumber value="${orderInfo.totalcost}" type="number" />원</a></td>
 			</tr>
 			<tr>
@@ -77,7 +79,7 @@
 							<td><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}"><img class="pimage1" src="<%=ctxPath%>/images/${odr.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
 							<td align="left"><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}">${odr.pvo.pname}</a><br>[옵션: ${odr.optionname} ]</td>
 							<td>${odr.odrqty}</td>
-							<td><fmt:formatNumber value="${odr.odrprice}" type="number" />원</td>
+							<td><fmt:formatNumber value="${odr.pvo.saleprice}" type="number" />원</td>
 							<td>
 								<div id="pointbox">
 								<c:if test="${sessionScope.loginuser.level == 1}">
@@ -93,25 +95,36 @@
 								</div>
 								
 								<c:if test="${sessionScope.loginuser.level == 1}">
-									<fmt:formatNumber value="${odr.odrprice*odr.odrqty*0.01}" type="number"/>P
-									<input type="hidden" value="${odr.odrprice*odr.odrqty*0.01}"/>
+									<fmt:formatNumber value="${odr.odrprice*0.01}" type="number"/>P
 								</c:if>
 								<c:if test="${sessionScope.loginuser.level == 2}">
-									<fmt:formatNumber value="${odr.odrprice*odr.odrqty*0.03}" type="number"/>P
-									<input type="hidden" value="${odr.odrprice*odr.odrqty*0.03}"/>
+									<fmt:formatNumber value="${odr.odrprice*0.03}" type="number"/>P
 								</c:if>
 								<c:if test="${sessionScope.loginuser.level == 3}">
-									<fmt:formatNumber value="${odr.odrprice*odr.odrqty*0.05}" type="number"/>P
-									<input type="hidden" value="${odr.odrprice*odr.odrqty*0.05}"/>
+									<fmt:formatNumber value="${odr.odrprice*0.05}" type="number"/>P
 								</c:if>
 							</td>
+							<td><fmt:formatNumber value="${odr.odrprice}" type="number"/>원</td>
 						</tr>
 					</c:forEach>
 			</tbody>
 		</c:if>
-			
+<c:set var="sum" value="0"/>
+<c:forEach items="${requestScope.orderList}" var="odr">
+	<c:set var="sum" value="${sum+odr.odrprice}"/>
+</c:forEach>
+
+<c:set var="delivery" value="0"/>
+<c:if test="${(sum) < 50000}">
+	<c:set var="delivery" value="2500"/>
+</c:if>
+
+<c:set var="totalsum" value="${sum+delivery}"/>
+
 				<tr>
-					<td id="sumtbl" colspan="8">상품구매금액 원 + 배송비 원 - 포인트 P= 합계 : <span id="sum">원</span></td>				
+					<td id="sumtbl" colspan="8">상품구매금액 <fmt:formatNumber value="${sum}" type="number" />원 + 배송비&nbsp;					
+						<fmt:formatNumber value="${delivery}" type="number" />원
+					  - 포인트 0 P= 합계 : <span id="sum"><fmt:formatNumber value="${totalsum}" type="number" /> 원</span></td>				
 				</tr>
 			</tbody>
 		</table>	 
@@ -121,15 +134,15 @@
 		<table>
 			<tr>
 				<th width="120px;">받으시는 분</th>
-				<td>${orderInfo.payment}</td>
+				<td>${orderInfo.deliname}</td>
 			</tr>
 			<tr>
 				<th>우편번호</th>
-				<td>${orderInfo.payment}</td>
+				<td>${orderInfo.delipostcode}</td>
 			</tr>
 			<tr>
 				<th>주소</th>
-				<td>${orderInfo.delipostcode}&nbsp;${orderInfo.deliaddress}&nbsp;${orderInfo.delidtaddress}&nbsp;${orderInfo.deliextddress}</td>
+				<td>${orderInfo.deliaddress}&nbsp;${orderInfo.delidtaddress}&nbsp;${orderInfo.deliextddress}</td>
 			</tr>
 			<tr>
 				<th>연락처</th>

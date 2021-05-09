@@ -163,7 +163,7 @@ public class OrderVO {
 		return payment;
 	}
 
-	public void setPayment(String fk_payment) {
+	public void setPayment(String payment) {
 		this.payment = payment;
 	}
 

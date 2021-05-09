@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
-
+import member.model.MemberVO;
 import my.util.MyUtil;
 import order.model.InterOrderDAO;
 import order.model.OrderDAO;
@@ -22,14 +22,14 @@ public class ReviewListAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession();
-		
-		String userid = request.getParameter("userid");
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		String userid = loginuser.getUserid();
 		
 		InterOrderDAO odao = new OrderDAO();
 		List<OrderDetailVO> pdrvList = odao.pendingReview(userid);
-		int pdrvListNo = odao.pdrvListNo(userid);
 		request.setAttribute("pdrvList", pdrvList);		
-		
+	//	int pdrvListNo = odao.pdrvListNo(userid);
+
 		List<OrderDetailVO> wtrvList = odao.writtenReview(userid);
 		request.setAttribute("wtrvList", wtrvList);
 	/*	if( loginuser != null ) {*/

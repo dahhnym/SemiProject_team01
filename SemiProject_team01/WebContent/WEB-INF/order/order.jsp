@@ -94,7 +94,6 @@ $(function(){
 	    	$("[name=addr3]").val(addr1);
 	    	$("[name=addr4]").val(addr2);
 	    	$("[name=extraAddress2]").val(extraAddress);	
-	    	alert(delivery);
     	}
     	else {
     		$("input#shipName").val("");
@@ -245,8 +244,10 @@ function displayOdr(){
 			var cnt=json.length;
 			var html = "";
 			var html2 ="";
+			var html3="";
+			var pointsum=0;
+			var deli=0;
 			$.each(json, function(index,item){
-				console.log("gl"+item.point);
 				 html+='<tr id="prodInfo">'
 				 			+'<td></td>'
 							+'<td><a href="<%=ctxPath%>/Info.to?pnum="'+item.pnum+'"><img class="pimage1" src="<%=ctxPath%>/images/'+item.pimage+'" width= "90px;" height="90px;"/></a></td>'
@@ -270,12 +271,16 @@ function displayOdr(){
 									+'<input type="hidden" value="'+item.point+'"/>'
 									+'</td>'
 								+'<td>'
-									+item.delivery+'원'
+									+'[조건부 무료]'
 								+'</td>'
 								+'<td>'
 									+item.totalprice+'원'
 								+'</td>'
 							+'</tr>';
+							
+							pointsum+=item.point;
+							
+							
 							if(cnt==1){
 								var totalsum = item.sum+item.delivery;
 								html+='<tr>' 
@@ -286,22 +291,64 @@ function displayOdr(){
 								+'= 합계 : <span id="sum">'+totalsum+'원'
 								+'</td></tr>';
 								
+								if(item.sum<50000){
+									deli=2500;
+								}
+								
+								
+								html3+='<table style="width:100%;">'
+									+'<tr>'
+									+'<td style="text-align:left;">상품금액</td>'
+									+'<td style="text-align:right;">'
+									+item.sum+'원'
+									+'</tr>'
+									+'<tr>'
+									+'<td style="text-align:left;">배송비</td>'
+									+'<td style="text-align:right;">'
+									+item.delivery+'원'
+									+'</td>'
+									+'</tr>'
+									+'<tr>'
+									+'<td style="text-align:left;">포인트 사용</td>'
+									+'<td style="text-align:right;">'
+									+'<input type="text" id="usePoint" style="border:none; text-align: right;" value="(-) 0"/>'
+									+'P</td>'
+									+'</tr>'
+									+'<tr>'
+									+'<td style="text-align:left;">포인트 적립</td>'
+									+'<td style="text-align:right;">(+)&nbsp;'
+									+pointsum+'P'
+									+'</td>'
+									+'</tr>'
+									+'<tr>'
+									+'<td style="text-align:left; font-size:13pt; font-weight:bold;">최종 결제금액</td>'
+									+'<td style="text-align:right; font-size:15pt; font-weight:bold;">'
+									+totalsum+'원'
+									+'</td>'
+									+'</tr>'
+									+'</table>';
+								
 								
 									}
-							cnt--;
 							
 
 							html2+="<input type='hidden' name='sum' value='"+item.sum+"'>";
 							html2+="<input type='hidden' name='totalsum' value='"+item.totalsum+"'>";
 							html2+="<input type='hidden' name='delivery' value='"+item.delivery+"'>";
 						
+							
+							
+							
+							
+							
+						cnt--;
 
 			});
 
 		
 			$("table#prodInfo").find("tbody").html(html);
 			$("form#orderForm").append(html2);
-
+			$("div#final").html(html3);
 			
 			
 		},
@@ -791,61 +838,7 @@ function goCheckOut(){
 		<span style="font-size:15pt; font-weight: bold;">주문 금액</span>
 	</div>
 	<hr>
-	
-	<table style="width:100%;">
-		<tr>
-			<td style="text-align:left;">상품금액</td>
-			<td style="text-align:right;">
-				<fmt:formatNumber value="${sum}" type="number" />원
-				<input type="hidden" name="sum" value="${sum}"/></td>
-		</tr>
-		<tr>
-			<td style="text-align:left;">배송비</td>
-			<td style="text-align:right;">
-				<c:if test="${(sum) >= 50000}"> 
-					<span>0</span>
-					<c:set var="delivery" value="0"/>
-					<input type="hidden" name="delivery" class="delivery" value="0"/>
-				</c:if>
-				<c:if test="${(sum) < 50000}">
-					<fmt:formatNumber value="2500" type="number" />
-					<input type="hidden" name="delivery" class="delivery" value="2500"/>
-					<c:set var="delivery" value="2500"/>
-				</c:if>원
-			</td>
-		</tr>
-		<tr>
-			<td style="text-align:left;">포인트 사용</td>
-			<td style="text-align:right;">
-			<input type="text" id="usePoint" style="border:none; text-align: right;" value="(-) 0"/>
-			P</td>
-		</tr>
-		<tr>
-			<td style="text-align:left;">포인트 적립</td>
-			<td style="text-align:right;">(+)
-			<c:if test="${sessionScope.loginuser.level == 1}">
-				<fmt:formatNumber value="${sum*0.01}" type="number"/>P
-				<input type="hidden" id="rvsPoint" value="${sum*0.01}"/>
-			</c:if>
-			<c:if test="${sessionScope.loginuser.level == 2}">
-				<fmt:formatNumber value="${sum*0.03}" type="number"/>P
-				<input type="hidden" id="rvsPoint" value="${sum*0.03}"/>
-			</c:if>
-			<c:if test="${sessionScope.loginuser.level == 3}">
-				<fmt:formatNumber value="${sum*0.05}" type="number"/>P
-				<input type="hidden" id="rvsPoint" value="${sum*0.05}"/>
-			</c:if>
-			</td>
-		</tr>
-		<tr>
-			<td style="text-align:left; font-size:13pt; font-weight:bold;">최종 결제금액</td>
-			<td style="text-align:right; font-size:15pt; font-weight:bold;"> 
-				<input style="border:none; text-align: right;" id="totalPrice"/>
-				원
-				<input type="hidden" class="totalprice" />
-			</td>
-		</tr>
-	</table>
+	<div id="final"></div>
 	<br><br>
 	
 	<table class="left" style="width:40%;">
@@ -869,7 +862,7 @@ function goCheckOut(){
 						<div class="modal-body">
 							<div class="terms">
 								제1조(목적)
-			이 약관은 (유)내고향시푸드(전자거래 사업자)이 운영하는 홈페이지(이하 "쇼핑몰"이라 한다)에서 제공하는 인터넷 관련 서비스(이하 "서비스"라 한다)를 이용함에 있어 (유)내고향시푸드와 이용자의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.
+			이 약관은 (주)Ladies and Gents(전자거래 사업자)이 운영하는 홈페이지(이하 "쇼핑몰"이라 한다)에서 제공하는 인터넷 관련 서비스(이하 "서비스"라 한다)를 이용함에 있어 (주)Ladies and Gents와 이용자의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.
 			※ 「PC통신 등을 이용하는 전자거래에 대해서도 그 성질에 반하지 않는 한 이 약관을 준용합니다」
 			
 			
