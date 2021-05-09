@@ -94,6 +94,7 @@ $(function(){
 	    	$("[name=addr3]").val(addr1);
 	    	$("[name=addr4]").val(addr2);
 	    	$("[name=extraAddress2]").val(extraAddress);	
+	    	alert(delivery);
     	}
     	else {
     		$("input#shipName").val("");
@@ -237,7 +238,8 @@ function displayOdr(){
 			"pdetailnum":"${requestScope.pdetailnum}",
 			"optionname":"${requestScope.optionname}",
 			"pname":"${requestScope.pname}",
-			"level":"${sessionScope.loginuser.level}"},
+			"level":"${sessionScope.loginuser.level}",
+			"pimage":"${requestScope.pimage}"},
 		dataType:"JSON",
 		success:function(json){
 			var cnt=json.length;
@@ -247,7 +249,7 @@ function displayOdr(){
 				console.log("gl"+item.point);
 				 html+='<tr id="prodInfo">'
 				 			+'<td></td>'
-							+'<td><a href="<%=ctxPath%>/Info.to?pnum="'+item.pnum+'"><img class="pimage1" src="<%=ctxPath%>/images/${ord.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>'
+							+'<td><a href="<%=ctxPath%>/Info.to?pnum="'+item.pnum+'"><img class="pimage1" src="<%=ctxPath%>/images/'+item.pimage+'" width= "90px;" height="90px;"/></a></td>'
 							+'<td align="left"><span class="cname"><a href="<%=ctxPath%>/Info.to?pnum='+item.pname+'">'+item.pname+'</a></span><br>[옵션: '+item.optionname+']</td>'
 							+'<td>'+item.oqty+'</td>'
 							+'<td>'+item.saleprice+'원</td>'		 //	물건 1개 값				
@@ -309,7 +311,6 @@ function displayOdr(){
 			
 	});
 	
-	console.log("홍"+str_pnum);
 }
 
 
@@ -994,7 +995,8 @@ function goCheckOut(){
 			<input type='hidden' name='pdetailnum' value='${requestScope.pdetailnum}'>
 			<input type='hidden' name='optionname' value='${requestScope.optionname}'>
 			<input type='hidden' name='pname' value='${requestScope.pname}'>
-			<input type='hidden' name='level' value='${sesseionScope.loginuser.level}'>			
+			<input type='hidden' name='level' value='${sesseionScope.loginuser.level}'>	
+			<input type='hidden' name='pimage' value='${requestScope.pimage}'>			
 </form>
 </div>
 

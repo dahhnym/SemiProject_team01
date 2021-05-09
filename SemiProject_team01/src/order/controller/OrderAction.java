@@ -34,8 +34,9 @@ public class OrderAction extends AbstractController {
 			String pdetailnum = request.getParameter("pdetailnum");
 			String optionname = request.getParameter("optionname");
 			String pname = request.getParameter("pname");
+			String pimage = request.getParameter("pimage");
 
-		/*	
+			/*	
 			String pnum = "1,2";
 			String oqty = "3,4";
 			String saleprice ="1,2";
@@ -48,6 +49,7 @@ public class OrderAction extends AbstractController {
 			request.setAttribute("pdetailnum", pdetailnum);
 			request.setAttribute("optionname", optionname);
 			request.setAttribute("pname", pname);
+			request.setAttribute("pimage", pimage);
 			
 			 
 	        super.setRedirect(false);
