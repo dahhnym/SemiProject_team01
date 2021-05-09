@@ -12,7 +12,7 @@ public class OrderVO {
 	private	String orderdate; //주문일자 
 	private String odrstatus; //주문처리상태
 	private String odrprgrss; //주문진행상태
-	private	int invoicenum; //송장번호
+	private	String invoicenum; //송장번호
 	private	String delidate ;//-배송완료일자
 	//------------- 주문자------------
 	private String odrname;// 주문자명
@@ -87,11 +87,11 @@ public class OrderVO {
 		this.orderdate = orderdate;
 	}
 
-	public int getInvoicenum() {
+	public String getInvoicenum() {
 		return invoicenum;
 	}
 
-	public void setInvoicenum(int invoicenum) {
+	public void setInvoicenum(String invoicenum) {
 		this.invoicenum = invoicenum;
 	}
 

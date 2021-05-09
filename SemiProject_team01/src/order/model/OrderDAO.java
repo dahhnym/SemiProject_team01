@@ -168,7 +168,10 @@ public class OrderDAO implements InterOrderDAO {
 		try {
 			  conn = ds.getConnection();
 			  
-			  String sql = "select odrcode, totalcost, orderdate, odrstatus, odrprgrss, invoicenum, odrname,payment ,deliname,delimobile ,delipostcode,deliaddress ,delidtaddress,deliextddress,delimsg \n"+
+			  				// 주문테이블에서 주문자, 결제,배송 관련 정보 가져오기
+			  String sql = "select odrcode, totalcost, orderdate, odrstatus, odrprgrss, "
+			  		+ "invoicenum, odrname,payment ,deliname,delimobile ,delipostcode,"
+			  		+ "deliaddress ,delidtaddress,deliextddress,delimsg \n"+
 					  "from tbl_order\n"+
 					  "where odrcode=?";
 			  
@@ -184,7 +187,7 @@ public class OrderDAO implements InterOrderDAO {
 				  orderInfo.setOrderdate(rs.getString(3));
 				  orderInfo.setOdrstatus(rs.getString(4));
 				  orderInfo.setOdrprgrss(rs.getString(5));
-				  orderInfo.setInvoicenum(rs.getInt(6));
+				  orderInfo.setInvoicenum(rs.getString(6));
 				  orderInfo.setOdrname(rs.getString(7));
 				  orderInfo.setPayment(rs.getString(8));
 				  orderInfo.setDeliname(rs.getString(9));
@@ -195,23 +198,22 @@ public class OrderDAO implements InterOrderDAO {
 				  orderInfo.setDeliextddress(rs.getString(14));
 				  orderInfo.setDelimsg(rs.getString(15));
 			  }
-				  
 		} finally {
 			close();
 		}
-		
-		
 		return orderInfo;
 	}
 
 
 	////////////////// 주문하기 진행 과정 ///////////////////
+    // 1. 주문테이블에 insert(수동커밋처리)
+	// 2. 주문상세테이블에 insert(수동커밋처리)
+    // 3. 제품테이블에서 제품번호에 해당하는 잔고량을 주문량 만큼 감하기 update(수동커밋처리) 
+    // 4. 장바구니 테이블에서 cartnum 값에 해당하는 행들을 삭제(delete OR update)하기(수동커밋처리) 
+    // 5. 회원 테이블에서 로그인한 사용자의 사용point를 감하고 적립point 더하기(update)(수동커밋처리) 
+    // 6. **** 모든처리가 성공되었을시 commit 하기(commit) **** 
+
 	
-	
-	
-	////
-	
-    // 1. tbl_order에서  생성하면 주문코드 반환
 	@Override
 	public int orderAdd(Map<String, Object> paraMap) throws SQLException {
 		int isSuccess = 0;
@@ -220,10 +222,10 @@ public class OrderDAO implements InterOrderDAO {
 	      try {
 	    	  conn = ds.getConnection();
 	          
-	          conn.setAutoCommit(false);// 수동커믹
+	          conn.setAutoCommit(false);// 수동커밋처리
 	          
-	          // 우선은 userid 로만 받아서 하는 걸로 test 하기
-	          
+	    	  // ** 1. tbl_order에 insert ** //
+
 	          String sql = " insert into tbl_order( fk_userid, totalcost, odrname, odrmobile,odremail,odrpostcode,odraddress,odrdtaddress,odrextddress,"+ 
 	          		"payment ,deliname,delimobile,delipostcode,deliaddress,delidtaddress,deliextddress,delimsg,odrcode) values\r\n" + 
 	          		"(?, ?,  ?, ?,  ?, ?, ?, ?, "+ 
@@ -456,7 +458,7 @@ public class OrderDAO implements InterOrderDAO {
 	}
 
 
-	// 주문내역 리스트 가져오기 (select)
+	// 선택한 주문 상품 리스트 가져오기 (select)
 	@Override
 	public List<OrderDetailVO> orderList(int odrcode) throws SQLException {
 
@@ -465,7 +467,7 @@ public class OrderDAO implements InterOrderDAO {
 	      try {
 	          conn = ds.getConnection();
 	          
-
+	          			// 제품 테이블 + 주문상세테이블 JOIN 같은 주문번호인 것들만
 			String sql = "select A.pimage1, pname, optionname, odrqty, saleprice, odrprice,A.pnum \n"+
 			"from tbl_product A join tbl_odrdetail B \n"+
 			"on A.pnum = B.fk_pnum  \n"+
@@ -586,12 +588,13 @@ public class OrderDAO implements InterOrderDAO {
 		try {
 			 conn = ds.getConnection();
 			 
+			 			// 제품테이블 + 제품상세테이블 + 리뷰테이블에서 목록에 보여줄 정보들 select
 			 String sql = "select A.pnum, A.pimage1, A.pname, B.optionname, C.stars, C.rvdate\n"+
 					 "from tbl_product A join tbl_odrdetail B on A.pnum = B.fk_pnum\n"+
 					 "join tbl_review C\n"+
 					 "on B.odrdetailno = C.fk_odrdetailno \n"+
 					 "where B.fk_userid = ? and not exists (select fk_odrdetailno from tbl_review where fk_userid = ? )";
-			 
+			 				// 로그인한 유저이면서 리뷰테이블에 이미 존재하는 제품상세번호인지 아닌지 찾기
 			 pstmt = conn.prepareStatement(sql);
 			 
 			 pstmt.setString(1,userid);
@@ -670,7 +673,7 @@ public class OrderDAO implements InterOrderDAO {
 		return pdrvListNo;
 	}
 	
-	// 미성한 리뷰 리스트 보여주기
+	// 보류중인 리뷰 리스트 보여주기
 	@Override
 	public List<OrderDetailVO> pendingReview(String userid) throws SQLException {
 
@@ -680,10 +683,11 @@ public class OrderDAO implements InterOrderDAO {
 			try {
 				 conn = ds.getConnection();
 				 
+				 			// 제품테이블 + 제품상세테이블에서 목록에 보여줄 정보 select
 				 String sql = "select A.pnum, A.pimage1, A.pname, B.optionname\n"+
 						 "from tbl_product A join tbl_odrdetail B on A.pnum = B.fk_pnum\n"+
 						 "where fk_userid = ? and exists (select fk_odrdetailno from tbl_review where fk_userid = ? )";
-
+				 			// 로그인한 유저이면서 리뷰 테이블에 이미 존재하는 제품상세번호인지 아닌지 찾기
 				 pstmt = conn.prepareStatement(sql);
 				 
 				 pstmt.setString(1,userid);
@@ -793,15 +797,16 @@ public class OrderDAO implements InterOrderDAO {
 		          conn = ds.getConnection();
 		          
 					
-
+		          			// 주문내역리스트에서 보여줄 정보들 select함 (제품테이블+제품상세테이블+주문테이블 JOIN)
 				String sql = "select C.odrcode, A.pimage1, pname, optionname, odrqty, odrstatus, odrprgrss,orderdate,odrprice,A.pnum \n"+
 				"from tbl_product A join tbl_odrdetail B \n"+
 				"on A.pnum = B.fk_pnum \n"+
 				"join tbl_order C \n"+
 				"on B.fk_odrcode = C.odrcode  \n"+
-				"where B.fk_userid = ? and odrstatus not in ('취소','교환','반품')\n"+
+				"where B.fk_userid = ? and odrstatus not in ('취소','교환','반품')\n"+ //where 조건절에서 배송상태가 취소,교환,반품이 아닌 것 + userid 일치하는 것
 				"order by odrcode desc";
-		        		          
+				
+			
 		          
 		          pstmt = conn.prepareStatement(sql);
 		          pstmt.setString(1, userid);
@@ -849,7 +854,7 @@ public class OrderDAO implements InterOrderDAO {
 		
 		}
 
-		// 취소 반품 교환 내역 
+		// 취소 반품 교환 내역 리스트가져오기 (select)
 		@Override
 		public List<OrderDetailVO> orderCancelList(String userid) throws SQLException {
 			List<OrderDetailVO> orderList =  new ArrayList<>();
@@ -862,7 +867,7 @@ public class OrderDAO implements InterOrderDAO {
 					"on A.pnum = B.fk_pnum \n"+
 					"join tbl_order C \n"+
 					"on B.fk_odrcode = C.odrcode  \n"+
-					"where B.fk_userid = ? and odrstatus in ('취소','교환','반품')\n"+
+					"where B.fk_userid = ? and odrstatus in ('취소','교환','반품')\n"+ //where 조건절에서 배송상태가 취소,교환,반품인 것 + userid 일치하는 것
 					"order by odrcode desc";
 			
 				  pstmt = conn.prepareStatement(sql);
