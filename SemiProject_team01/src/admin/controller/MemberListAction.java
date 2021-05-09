@@ -113,7 +113,7 @@ public class MemberListAction extends AbstractController {
 			while(!(loop > blockSize || pageNo > totalPage )) {	// blockSize가 현재 10이므로 loop가 11로 넘어가면 안된다 따라서 loop가 blockSize인 10보다 커지면 while문 탈출
 																// totalPage보다도 pageNo가 커지면 안된다 현재는 totalPage가 42인데 pageNo가 계속해서 반복하면서 43,44 나오면 안된다..
 				if(pageNo == Integer.parseInt(currentShowPageNo)) {
-					pageBar += "&nbsp;<span style='font-weight: bolder; padding: 2px 4px;'>"+pageNo+"</span>&nbsp;";
+					pageBar += "&nbsp;<span style='font-weight: bolder; font-size: 18px;'>"+pageNo+"</span>&nbsp;";
 				
 				} else {
 					pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'>"+pageNo+"</a>&nbsp;";

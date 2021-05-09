@@ -376,7 +376,7 @@ public class ProductDAO implements InterProductDAO {
 				conn = ds.getConnection();
 				String sql = " select ceil( count(*)/? ) "
 						   + " from tbl_product";
-				/*
+				
 				// ======검색어가 있는경우 시작 =========== 
 				String colname = paraMap.get("searchType");
 				String searchWord = paraMap.get("searchWord");
@@ -387,18 +387,15 @@ public class ProductDAO implements InterProductDAO {
 					sql += " and "+colname+" like '%'||?||'%' ";
 					// 위치홀더는 데이터값에만 사용됨. 테이블명이나 컬럼명에는 위치홀더를 사용할 수 없다.
 				}
-				// ======검색어가 있는경우 끝 =========== */
+				// ======검색어가 있는경우 끝 =========== 
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, paraMap.get("sizePerPage"));
-				System.out.println("sizePerPage "+paraMap.get("sizePerPage"));
 				
-				
-				/*
 				if( searchWord != null && !searchWord.trim().isEmpty()) {
 					// 검색어를 아예 안 쓰거나 공백(space)만 입력한 것이 아닌 검색어를 입력한 경우
 					pstmt.setString(2, searchWord);
-				} */
+				} 
 				
 				rs = pstmt.executeQuery();
 				
