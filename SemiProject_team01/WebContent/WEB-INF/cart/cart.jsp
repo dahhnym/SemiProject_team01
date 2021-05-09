@@ -352,7 +352,7 @@ $(document).ready(function(){
 									return;
 								}
 								else if(json.n==0){
-									alert("해당 상품은 이미 장바구니에 존재합니다.");
+									alert("해당 상품은 이미 위시리스트에 존재합니다.");
 									return;
 								}
 							},
