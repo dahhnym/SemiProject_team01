@@ -65,9 +65,184 @@
 		
 		// 수정하기 버튼을 누른 경우
 		$("button#alter").click(function(){
-			window.scrollTo(0,0);
-			goCheck();	// 유효성 검사 함수
+			/* window.scrollTo(0,0); */
 			
+			// 유효성 검사 함수
+			var bool=false;
+			// 비밀번호 체크 함수
+			var pwd = $("input#pwd").val().trim();
+			if(pwd==""){
+				$("span#pwdCheck").show();
+				$("span#pwdCheck").html("비밀번호를 입력해주세요.");
+				bool=true;
+				return;
+			} else {
+				// 비밀번호 8-15자리, 영문자,숫자,특수기호 혼합 정규표현식
+				var regExp= /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
+				var boolpwd = regExp.test(pwd);
+				if(!boolpwd){
+					$("span#pwdCheck").html("비밀번호는 8-15자리의 영문자, 숫자, 특수기호를 혼합해야 합니다.");
+					bool=true;
+					return;
+				} else {
+					$("span#pwdCheck").hide();
+					bool=false;
+				}
+
+				
+			}
+			
+			
+			// 비밀번호 체크 함수
+			var pwd2 = $("input#pwd2").val().trim();
+			if(pwd2==""){
+				$("span#pwdCheck2").show();
+				$("span#pwdCheck2").html("비밀번호 확인을 입력해주세요.");
+				bool=true;
+				console.log("두번째비번 "+bool);
+				return;
+			} else {
+				// 비밀번호 8-15자리, 영문자,숫자,특수기호 혼합 정규표현식
+				if($("input#pwd").val().trim()!=pwd2){
+					$("span#pwdCheck2").show();
+					$("span#pwdCheck2").html("일치하지 않는 비밀번호입니다.");
+					bool=true;
+					return;
+				} else {
+					$("span#pwdCheck2").hide();
+					bool=false;
+				}
+			}
+			
+			
+			// 이름 체크 함수
+			var name = $("input#name").val().trim();
+			if(name==""){
+				$("span#nameCheck").show();
+				$("span#nameCheck").html("이름을 입력해주세요.");
+				$(this).focus();
+				bool=true;
+				return;
+			} else {
+				$("span#nameCheck").hide();
+				bool=false;
+			}
+			
+			
+			// 생년월일 체크 함수
+			var birthday = $("input#birthday").val().trim();
+			if(birthday==""){
+				$("span#birthdayCheck").show();
+				$("span#birthdayCheck").html("생년월일을 입력해주세요.");
+				$(this).focus();
+				bool=true;
+				return;
+			} else {
+				// 8자리 생년월일 정규표현식
+				var regExp=/^(19[0-9][0-9]|20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+				var bool = regExp.test(birthday);
+				if(!bool){
+					$("span#birthdayCheck").show();
+					$("span#birthdayCheck").html("생년월일 날짜형식이 올바르지 않습니다.");
+					bool=true;
+					return;
+				} else {
+					$("span#birthdayCheck").hide();
+					bool=false;
+				}
+			}
+			
+			
+			// 성별 체크 함수
+			if($("input#gender").val().trim()==""){
+				$("span#genderCheck").show();
+				$("span#genderCheck").html("성별을 선택해주세요.");
+				bool=true;
+				return;
+			}
+
+			
+			// 이메일 아이디 체크 함수
+			var emailID = $("input#emailID").val().trim();
+			if(emailID==""){
+				$("span#emailIDCheck").show();
+				$("span#emailIDCheck").html("이메일 아이디를 입력해주세요.");
+				$(this).focus();
+				bool=true;
+				return;
+			} else {
+				$("span#emailIDCheck").hide();
+				bool=false;
+			}
+			
+			
+			// 기타 이메일 주소 체크
+			if($("select#selectedEmailAddress").val()=="기타"){	// select 기타 선정시
+				var etcEmailAddress = $("input#etcEmailAddress").val().trim();
+				var regExp=/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
+				var b = regExp.test(etcEmailAddress);
+				
+				if(etcEmailAddress==""){
+					$("span#etcEmailAddressCheck").show();
+					$("span#etcEmailAddressCheck").html("이메일 주소를 입력해주세요.");
+					$(this).focus();
+					bool=true;
+					return;
+					
+				} else {
+					if(etcEmailAddress.includes("@")){
+						$("span#etcEmailAddressCheck").show();
+						$("span#etcEmailAddressCheck").html("@ 제외 주소값만 입력해주세요.");
+						bool=true;
+						return;
+					} else if(!b) {
+						$("span#etcEmailAddressCheck").show();
+						$("span#etcEmailAddressCheck").html("이메일 형식이 올바르지 않습니다. 다시 입력해주세요.");
+						bool=true;
+						return;
+					} else {
+						$("span#etcEmailAddressCheck").hide();
+						bool=false;
+					}
+				}
+			}
+
+			// 전화번호 체크
+			var ph2 = $("input#ph2").val().trim();
+			if(ph2==""){
+				$("span#ph2Check").show();
+				$("span#ph2Check").html("전화번호를 입력해주세요.");
+				$(this).focus();
+				bool=true;
+				return;
+			} else {
+				// 010 뒤 8자리 정규표현식
+				var regExp=/[0-9]{8}/;
+				var bool = regExp.test(ph2);
+				if(!bool){
+					$("span#ph2Check").show();
+					$("span#ph2Check").html("010 뒤 숫자 8자리를 입력해주세요.");
+					bool=true;
+					return;
+				} else {
+					$("span#ph2Check").hide();
+					bool=false;
+				}
+			}
+			
+			// 우편번호 체크
+			var postcode = $("input#postcode").val().trim();
+			if(postcode==""){
+				$("span#postcodeCheck").show();
+				$("span#postcodeCheck").html("우편번호 찾기를 해주세요.");
+				bool=true;
+				return;
+			} else {
+				$("span#postcodeCheck").hide();
+				bool=false;
+			}
+			
+			console.log(bool);
 			if(!bool) {
 				var frm = document.altInfoFrm;
 				frm.action="altInfo.to";
@@ -78,180 +253,11 @@
 	});// end of $(function() --------------------------------------------------
 	
 	// register 버튼 클릭시, 유효성 검사	==> 에러문구 안뜨는 이유 *정정사항
-	function goCheck(){	
-		
-		// 비밀번호 체크 함수
-		var pwd = $("input#pwd").val().trim();
-		if(pwd==""){
-			$("span#pwdCheck").show();
-			$("span#pwdCheck").html("비밀번호를 입력해주세요.");
-			bool=true;
-
-		} else {
-			// 비밀번호 8-15자리, 영문자,숫자,특수기호 혼합 정규표현식
-			var regExp= /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
-			var bool = regExp.test(pwd);
-			if(!bool){
-				$("span#pwdCheck").html("비밀번호는 8-15자리의 영문자, 숫자, 특수기호를 혼합해야 합니다.");
-				bool=true;
-				return;
-			} else {
-				$("span#pwdCheck").hide();
-				bool=false;
-			}
-		}
-		
-		
-		// 비밀번호 체크 함수
-		var pwd2 = $("input#pwd2").val().trim();
-		if(pwd2==""){
-			$("span#pwdCheck2").show();
-			$("span#pwdCheck2").html("비밀번호 확인을 입력해주세요.");
-			bool=true;
-			return;
-		} else {
-			// 비밀번호 8-15자리, 영문자,숫자,특수기호 혼합 정규표현식
-			if($("input#pwd").val().trim()!=pwd2){
-				$("span#pwdCheck2").show();
-				$("span#pwdCheck2").html("일치하지 않는 비밀번호입니다.");
-				bool=true;
-				return;
-			} else {
-				$("span#pwdCheck2").hide();
-				bool=false;
-			}
-		}
-		
-		
-		// 이름 체크 함수
-		var name = $("input#name").val().trim();
-		if(name==""){
-			$("span#nameCheck").show();
-			$("span#nameCheck").html("이름을 입력해주세요.");
-			$(this).focus();
-			bool=true;
-			return;
-		} else {
-			$("span#nameCheck").hide();
-			bool=false;
-		}
-		
-		
-		// 생년월일 체크 함수
-		var birthday = $("input#birthday").val().trim();
-		if(birthday==""){
-			$("span#birthdayCheck").show();
-			$("span#birthdayCheck").html("생년월일을 입력해주세요.");
-			$(this).focus();
-			bool=true;
-			return;
-		} else {
-			// 6자리 생년월일 정규표현식
-			var regExp=/([0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1,2][0-9]|3[0,1]))/;
-			var bool = regExp.test(birthday);
-			if(!bool){
-				$("span#birthdayCheck").show();
-				$("span#birthdayCheck").html("생년월일 날짜형식이 올바르지 않습니다.");
-				bool=true;
-				return;
-			} else {
-				$("span#birthdayCheck").hide();
-				bool=false;
-			}
-		}
-		
-		
-		// 성별 체크 함수
-		if($("input#gender").val().trim()==""){
-			$("span#genderCheck").show();
-			$("span#genderCheck").html("성별을 선택해주세요.");
-			bool=true;
-			return;
-		}
-
-		
-		// 이메일 아이디 체크 함수
-		var emailID = $("input#emailID").val().trim();
-		if(emailID==""){
-			$("span#emailIDCheck").show();
-			$("span#emailIDCheck").html("이메일 아이디를 입력해주세요.");
-			$(this).focus();
-			bool=true;
-			return;
-		} else {
-			$("span#emailIDCheck").hide();
-			bool=false;
-		}
-		
-		
-		// 기타 이메일 주소 체크
-		if($("select#selectedEmailAddress").val()=="기타"){	// select 기타 선정시
-			var etcEmailAddress = $("input#etcEmailAddress").val().trim();
-			var regExp=/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
-			var b = regExp.test(etcEmailAddress);
-			
-			if(etcEmailAddress==""){
-				$("span#etcEmailAddressCheck").show();
-				$("span#etcEmailAddressCheck").html("이메일 주소를 입력해주세요.");
-				$(this).focus();
-				bool=true;
-				return;
-				
-			} else {
-				if(etcEmailAddress.includes("@")){
-					$("span#etcEmailAddressCheck").show();
-					$("span#etcEmailAddressCheck").html("@ 제외 주소값만 입력해주세요.");
-					bool=true;
-					return;
-				} else if(!b) {
-					$("span#etcEmailAddressCheck").show();
-					$("span#etcEmailAddressCheck").html("이메일 형식이 올바르지 않습니다. 다시 입력해주세요.");
-					bool=true;
-					return;
-				} else {
-					$("span#etcEmailAddressCheck").hide();
-					bool=false;
-				}
-			}
-		}
-
-		// 전화번호 체크
-		var ph2 = $("input#ph2").val().trim();
-		if(ph2==""){
-			$("span#ph2Check").show();
-			$("span#ph2Check").html("전화번호를 입력해주세요.");
-			$(this).focus();
-			bool=true;
-			return;
-		} else {
-			// 010 뒤 8자리 정규표현식
-			var regExp=/[0-9]{8}/;
-			var bool = regExp.test(ph2);
-			if(!bool){
-				$("span#ph2Check").show();
-				$("span#ph2Check").html("010 뒤 숫자 8자리를 입력해주세요.");
-				bool=true;
-				return;
-			} else {
-				$("span#ph2Check").hide();
-				bool=false;
-			}
-		}
-		
-		// 우편번호 체크
-		var postcode = $("input#postcode").val().trim();
-		if(postcode==""){
-			$("span#postcodeCheck").show();
-			$("span#postcodeCheck").html("우편번호 찾기를 해주세요.");
-			bool=true;
-			return;
-		} else {
-			$("span#postcodeCheck").hide();
-			bool=false;
+	/* function goCheck(){	
 		}
 		
 	}// end of function goCheck() ------------------------------------------------------------------
-
+ */
 	
 	// 성별 값 input 입력함수
 	function genderInput(checkedbtn){

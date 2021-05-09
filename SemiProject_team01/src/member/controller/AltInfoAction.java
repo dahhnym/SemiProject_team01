@@ -72,7 +72,7 @@ public class AltInfoAction extends AbstractController {
 				e.printStackTrace();
 			}
 		} else {
-			// super.setRedirect(false);
+			super.setRedirect(false);
 		    super.setViewPage("/WEB-INF/member/altInfo.jsp");
 		}
 

@@ -454,6 +454,7 @@ public class MemberDAO implements InterMemberDAO {
 	      try {
 	         conn = ds.getConnection();
 
+
 	         String sql = "update tbl_member set pwd = ?, email = ?, mobile = ?, postcode=?,address=?,detailaddress = ?, extraaddress =?, gender=?,birthday=?\n"+
 	               "where userid=?";
 	         
@@ -472,6 +473,7 @@ public class MemberDAO implements InterMemberDAO {
 	         pstmt.setString(10, member.getUserid());
 	           
 	         n=pstmt.executeUpdate();
+
 
 	      } catch(GeneralSecurityException | UnsupportedEncodingException e) {
 	         e.printStackTrace();
