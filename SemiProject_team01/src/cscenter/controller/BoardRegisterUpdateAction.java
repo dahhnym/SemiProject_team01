@@ -88,8 +88,15 @@ public class BoardRegisterUpdateAction extends AbstractController {
 				
 			} catch(SQLException e) {
 				e.printStackTrace();
-				super.setRedirect(true);
-				super.setViewPage(request.getContextPath()+"/error.up");
+				//로그인 안한 경우
+				String message = "에러발생 ;P";
+		        String loc = "javascript:history.back()";
+		         
+		        request.setAttribute("message", message);
+		        request.setAttribute("loc", loc);
+		         
+		      //super.setRedirect(false);
+		        super.setViewPage("/WEB-INF/msg.jsp");
 			}
 			
 			
