@@ -400,22 +400,10 @@ public class MemberDAO implements InterMemberDAO {
 			
 			while(rs.next()) {
 				
-				String maskedPhoneNum = aes.decrypt(rs.getString(3)); //복호화
-				String num1 = maskedPhoneNum.substring(0, 3);
-                String num3 = maskedPhoneNum.substring(7);
-                maskedPhoneNum = num1 + "****" + num3;
-				
 				MemberVO mvo = new MemberVO();
 				mvo.setUserid(rs.getString(1));
 				mvo.setName(rs.getString(2));
-				mvo.setMobile(maskedPhoneNum); 
-				
-				
-
-
-출처: https://yongdev91.tistory.com/4 [developheo]
-
-				
+				mvo.setMobile(aes.decrypt(rs.getString(3))); //복호화
 				mvo.setLevel(rs.getString(4));
 				mvo.setIdle(rs.getString(5));
 				mvo.setStatus(rs.getString(6));
@@ -459,41 +447,39 @@ public class MemberDAO implements InterMemberDAO {
 	
 	
 	// 멤버수정하기
-	@Override
-	public int altMemberInfo(MemberVO member) throws SQLException {
-		int n=0;
-		
-		try {
-			conn = ds.getConnection();
+	   @Override
+	   public int altMemberInfo(MemberVO member) throws SQLException {
+	      int n=0;
+	      
+	      try {
+	         conn = ds.getConnection();
 
-			String sql = " insert into tbl_member(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday) "  + 
-					     " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
-			
+	         String sql = "update tbl_member set pwd = ?, email = ?, mobile = ?, postcode=?,address=?,detailaddress = ?, extraaddress =?, gender=?,birthday=?\n"+
+	               "where userid=?";
+	         
 
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setString(1, member.getUserid());
-			pstmt.setString(2, Sha256.encrypt(member.getPwd())); // 암호 단방향 암호화
-			pstmt.setString(3, member.getName());
-			pstmt.setString(4, aes.encrypt(member.getEmail())); // 이메일 양방향 암호화
-			pstmt.setString(5, aes.encrypt(member.getMobile())); // 휴대폰 번호 양방향 암호화
-			pstmt.setString(6, member.getPostcode());
-	        pstmt.setString(7, member.getAddress());
-	        pstmt.setString(8, member.getDetailaddress());
-	        pstmt.setString(9, member.getExtraaddress());
-	        pstmt.setString(10, member.getGender());
-	        pstmt.setString(11, member.getBirthday());
-	        pstmt.setString(12, member.getAdagreements());
-	        
-	        n=pstmt.executeUpdate();
+	         pstmt = conn.prepareStatement(sql);
+	         
+	         pstmt.setString(1, Sha256.encrypt(member.getPwd())); // 암호 단방향 암호화
+	         pstmt.setString(2, aes.encrypt(member.getEmail())); // 이메일 양방향 암호화
+	         pstmt.setString(3, aes.encrypt(member.getMobile())); // 휴대폰 번호 양방향 암호화
+	         pstmt.setString(4, member.getPostcode());
+	         pstmt.setString(5, member.getAddress());
+	         pstmt.setString(6, member.getDetailaddress());
+	         pstmt.setString(7, member.getExtraaddress());
+	         pstmt.setString(8, member.getGender());
+	         pstmt.setString(9, member.getBirthday());
+	         pstmt.setString(10, member.getUserid());
+	           
+	         n=pstmt.executeUpdate();
 
-		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} finally {
-			close();
-		}		
-		return n;
-	}
+	      } catch(GeneralSecurityException | UnsupportedEncodingException e) {
+	         e.printStackTrace();
+	      } finally {
+	         close();
+	      }      
+	      return n;
+	   }
 	
 	
 	// session에 저장하기
