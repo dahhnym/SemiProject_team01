@@ -508,12 +508,6 @@ $(document).ready(function(){
     	
     });
     
-    // 새로고침
-    if(self.name!='reload'){
-        self.name='reload'
-        self.location.reload();
-     } else self.name="";
-
 }); // end of $(document).ready(function(){})-------
 
 	
