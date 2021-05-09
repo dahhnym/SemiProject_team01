@@ -112,10 +112,10 @@ button#btnPersionInfo {
 
 div#altInfoContains {
 	margin: 0 auto;	
-	width: 70%;
+	width: 40%;
 }
 button#alter {
-	margin: 50px 30px 0 20%;
+	margin: 50px 30px 0 15%;
 	width: 150px;	
 }
 button#cancel {
