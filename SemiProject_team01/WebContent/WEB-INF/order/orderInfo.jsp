@@ -39,7 +39,10 @@
 			</tr>
 			<tr>
 				<th>주문처리상태</th>
-				<td>${orderInfo.odrstatus}&nbsp;${orderInfo.odrprgrss}
+				<td>${orderInfo.odrstatus}&nbsp;${orderInfo.odrprgrss}&nbsp;
+				<!-- 배송조회 바로 가능한 링크 --> 
+				<a style="color:blue; text-decoration: underline;" 					
+				href="https://www.doortodoor.co.kr/parcel/doortodoor.do?fsp_action=PARC_ACT_002&fsp_cmd=retrieveInvNoACT&invc_no=${orderInfo.invoicenum}">${orderInfo.invoicenum}</a>
 				</td>				
 			</tr>
 		</table>
@@ -71,10 +74,10 @@
 					<th>합계</th>
 				</tr>
 			</thead>
-			<c:if test="${not empty requestScope.orderList}">						
-				<tbody align="center">
+				<tbody align="center">				
+				
+					<!-- control단에서 받아온 orderList로 상품 리스트 보여주기  시작--> 				
 					<c:forEach items="${requestScope.orderList}" var="odr" varStatus="status">
-		
 						<tr id="prodInfo">
 							<td><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}"><img class="pimage1" src="<%=ctxPath%>/images/${odr.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
 							<td align="left"><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}">${odr.pvo.pname}</a><br>[옵션: ${odr.optionname} ]</td>
@@ -107,8 +110,11 @@
 							<td><fmt:formatNumber value="${odr.odrprice}" type="number"/>원</td>
 						</tr>
 					</c:forEach>
+					<!-- control단에서 받아온 orderList로 상품 리스트 보여주기  끝--> 					
 			</tbody>
-		</c:if>
+			
+			
+<!-- 상품합계금액 sum, 배송비 delivery, 총결제금액 totalsum 계산하기 --> 			
 <c:set var="sum" value="0"/>
 <c:forEach items="${requestScope.orderList}" var="odr">
 	<c:set var="sum" value="${sum+odr.odrprice}"/>
@@ -120,7 +126,7 @@
 </c:if>
 
 <c:set var="totalsum" value="${sum+delivery}"/>
-
+<!-- 상품합계금액 sum, 배송비 delivery, 총결제금액 totalsum 계산하기 --> 	
 				<tr>
 					<td id="sumtbl" colspan="8">상품구매금액 <fmt:formatNumber value="${sum}" type="number" />원 + 배송비&nbsp;					
 						<fmt:formatNumber value="${delivery}" type="number" />원

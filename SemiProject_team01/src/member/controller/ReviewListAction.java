@@ -26,12 +26,17 @@ public class ReviewListAction extends AbstractController {
 		String userid = loginuser.getUserid();
 		
 		InterOrderDAO odao = new OrderDAO();
+		// 보류중인 리뷰(pending review) 리스트
 		List<OrderDetailVO> pdrvList = odao.pendingReview(userid);
-		request.setAttribute("pdrvList", pdrvList);		
-	//	int pdrvListNo = odao.pdrvListNo(userid);
-
+		request.setAttribute("pdrvList", pdrvList);
+		
+		// 작성한 리뷰(written review) 리스트
 		List<OrderDetailVO> wtrvList = odao.writtenReview(userid);
 		request.setAttribute("wtrvList", wtrvList);
+		
+		
+		//	int pdrvListNo = odao.pdrvListNo(userid);
+
 	/*	if( loginuser != null ) {*/
 			// 회원 로그인 했을 경우
 		/*	

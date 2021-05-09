@@ -10,11 +10,7 @@ import common.controller.AbstractController;
 
 public class OrderViewAction extends AbstractController {
  
-	
-	
 	/////////   주문페이지에서 상품리스트 보여주는 곳    /////////
-	
-	
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -36,18 +32,17 @@ public class OrderViewAction extends AbstractController {
 		String[] pnameArr = pname.split(",");
 		String[] pimageArr = pimage.split(",");
 		
-		for(int i=0;i<pnumArr.length; i++) {
-			System.out.println("~~~~ 확인용 pnum: " + pnumArr[i] + "pname:"+pnameArr[i]+", oqty: " + oqtyArr[i] + ", saleprice: " + salepriceArr[i]);
-		}
-	
 		JSONArray jsArr = new JSONArray();
-		int cnt=pnumArr.length;
-		int point=0;
-		int sum=0; // 가격합
-		int totalsum=0; //가격합+배송비
-		int delivery =2500;
-		 if( pnumArr.length > 0 ) { 
-			 for(int i=0;i<pnumArr.length; i++) {
+		
+		int cnt=pnumArr.length; // 보여줄 제품배열의 갯수
+		int point=0; // 누적포인트 
+		int sum=0; // 제품가격합산 
+		int totalsum=0; // 제품가격합산+배송비
+		int delivery =2500; // 배송비 2500원이 초기값
+		
+		 if( pnumArr.length > 0 ) { // 제품 갯수가 1개 이상일 때
+			 
+			 for(int i=0;i<pnumArr.length; i++) { // 배열 갯수만큼 반복문 돌리기
 
 				 JSONObject jsobj = new JSONObject();
 				 
@@ -65,13 +60,11 @@ public class OrderViewAction extends AbstractController {
 						point=(int) (totalprice*0.05);			
 					}
 					
-
-					
-					if(cnt == 1 && sum>50000) {
-						delivery=0;
-						 
+					if(cnt == 1 && sum>50000) { // 제일 마지막 제품일 때 제품가격합산>50000일때
+						delivery=0; // 배송비는 0으로 바뀐다						
 					}
-					totalsum = totalprice + delivery;//총합
+					
+					totalsum = totalprice + delivery;//총결제금액=제품가격합산+배송비
 					
 				 jsobj.put("pnum", pnumArr[i]);
 				 jsobj.put("oqty",oqtyArr[i]);
@@ -83,9 +76,9 @@ public class OrderViewAction extends AbstractController {
 				 jsobj.put("point", point);
 				 jsobj.put("sum", sum);//물건*갯수들의 합
 				 jsobj.put("totalsum", totalsum);//물건*갯수들의 합+배송비
-				 jsobj.put("delivery", delivery);
+				 jsobj.put("delivery", delivery);//어차피 최종 상품의 배송비만 사용할 예정
 				 jsobj.put("pimage", pimageArr[i]);
-				 System.out.println(pimageArr[i]);
+
 				 jsArr.put(jsobj);
 				 cnt--;
 			 } 

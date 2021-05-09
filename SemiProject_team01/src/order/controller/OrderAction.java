@@ -23,11 +23,9 @@ public class OrderAction extends AbstractController {
 
 		// 로그인한 사용자 정보를 조회해오기
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
-		
-		
-		
+				
 		if(loginuser !=null) {
-			
+			// 주문페이지로 넘어오는 값들 order 뷰단으로 넘겨주기
 			String pnum = request.getParameter("pnum");
 			String oqty = request.getParameter("oqty");
 			String saleprice = request.getParameter("saleprice");
@@ -36,13 +34,6 @@ public class OrderAction extends AbstractController {
 			String pname = request.getParameter("pname");
 			String pimage = request.getParameter("pimage");
 
-			/*	
-			String pnum = "1,2";
-			String oqty = "3,4";
-			String saleprice ="1,2";
-			String pdetailnum ="1,2";
-			String optionname ="12,3";
-			*/		
 			request.setAttribute("pnum", pnum);
 			request.setAttribute("oqty", oqty);
 			request.setAttribute("saleprice", saleprice);
@@ -50,11 +41,11 @@ public class OrderAction extends AbstractController {
 			request.setAttribute("optionname", optionname);
 			request.setAttribute("pname", pname);
 			request.setAttribute("pimage", pimage);
-			
-			 
+						 
 	        super.setRedirect(false);
 			super.setViewPage("/WEB-INF/order/order.jsp");
 		}
+		
 		else{
 			String message = "로그인을 해야 이용 가능한 페이지입 니다.";
 			String loc = request.getContextPath()+"/login/login.to";

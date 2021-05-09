@@ -17,23 +17,20 @@ public class OrderInfoAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-
+		// 로그인한 사용자 가져오기 위한 용도
         HttpSession session = request.getSession();
-        MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 
         InterOrderDAO odao = new OrderDAO();
         
         // 주문코드 알아오기
         int odrcode =Integer.parseInt(request.getParameter("odrcode"));
         System.out.println(odrcode);
+        
         // 주문정보 알아오기
-        
         OrderVO orderInfo = odao.selectOrderInfo(odrcode);
-        
         request.setAttribute("orderInfo", orderInfo);
         
         // 주문내역 리스트 가져오기
-
         List<OrderDetailVO> orderList = odao.orderList(odrcode);
         request.setAttribute("orderList", orderList);
 

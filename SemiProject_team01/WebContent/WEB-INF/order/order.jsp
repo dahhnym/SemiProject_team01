@@ -120,7 +120,7 @@ $(function(){
 	
 	
 	
-	// 연락처 hp2 숫자 4자리 아닐 경우
+	// 연락처 숫자 4자리 아닐 경우
 	$("[name=hp2]").blur(function(){
          
             var regExp = /^[1-9][0-9]{3}$/i; 
@@ -133,7 +133,7 @@ $(function(){
             }
          });
     
-	
+	// 연락처 숫자 4자리 아닐 경우
     $("input#hp3").blur(function(){
        
        var regExp = /^\d{4}$/i; 
@@ -225,29 +225,29 @@ $(function(){
 
 //////////////////////////////////////////////////////////////////////////////////
 
-
+// 주문할 상품 내역 보여주는 메소드
 function displayOdr(){
 	
 	$.ajax({
 		url:"<%= request.getContextPath()%>/orderView.to",
 		tyle:"POST",
-		data:{"pnum":"${requestScope.pnum}",
-			"oqty":"${requestScope.oqty}",
-			"saleprice":"${requestScope.saleprice}",
-			"pdetailnum":"${requestScope.pdetailnum}",
-			"optionname":"${requestScope.optionname}",
-			"pname":"${requestScope.pname}",
-			"level":"${sessionScope.loginuser.level}",
-			"pimage":"${requestScope.pimage}"},
+		data:{"pnum":"${requestScope.pnum}",			// 제품번호
+			"oqty":"${requestScope.oqty}",				// 주문수량
+			"saleprice":"${requestScope.saleprice}",	// 제품판매가격
+			"pdetailnum":"${requestScope.pdetailnum}",	// 제품상세번호
+			"optionname":"${requestScope.optionname}",	// 옵션명
+			"pname":"${requestScope.pname}",			// 제품명
+			"level":"${sessionScope.loginuser.level}",	// 로그인유저 등급
+			"pimage":"${requestScope.pimage}"},			// 제품이미지
 		dataType:"JSON",
 		success:function(json){
 			var cnt=json.length;
-			var html = "";
-			var html2 ="";
-			var html3="";
-			var pointsum=0;
-			var deli=0;
-			$.each(json, function(index,item){
+			var html = "";	// 개별 제품 정보 및 가격
+			var html2 ="";	// 결제하기 했을 때 넘겨줄 input hidden 값 (상품합계금액, 배송비, 총결제금액)
+			var html3="";	// 맨 아래 하단에 보여줄 값 (상품합계금액, 배송비, 총결제금액)
+			var pointsum=0;	// 누적포인트 합산값
+			var deli=0;		// 최종 배송비
+			$.each(json, function(index,item){		// each문 돌려서 제품 개별로 html 뿌려주기
 				 html+='<tr id="prodInfo">'
 				 			+'<td></td>'
 							+'<td><a href="<%=ctxPath%>/Info.to?pnum="'+item.pnum+'"><img class="pimage1" src="<%=ctxPath%>/images/'+item.pimage+'" width= "90px;" height="90px;"/></a></td>'
@@ -486,7 +486,7 @@ function goDel(ordnum) {
 
 
 
-//!!!!!!!!!!! ==== 결제하기 눌렀을 때 ==== !!!!!!!!!!!**********아직 미완성********
+//!!!!!!!!!!! ==== 결제하기 눌렀을 때 ==== !!!!!!!!!!!
 function goCheckOut(){
 	 //// 최종적으로 필수입력사항에 모두 입력이 되었는지 검사한다. ////
  var bFlagRequiredInfo = false;
@@ -536,7 +536,6 @@ function goCheckOut(){
              var pdetailnum  = $("[name=pdetailnum]").val();
              var optionname = $("[name=optionname]").val();
              var pname = $("[name=pname]").val();
-           console.log(pnum+"gg");
            
         //     var queryString = $("form[name=orderForm]").serialize();
              
@@ -545,7 +544,6 @@ function goCheckOut(){
              var delivery = $("[name=delivery]").val();
              
              
-   console.log(odrname+odrmobile+odremail+odrpostcode+odraddress+odrdtaddress+odrextddress+fk_payment+deliname+delimobile+delipostcode+deliaddress+delidtaddress+delimsg+usePoint+rvsPoint);
              
              $.ajax({
 	           	 url:"<%=request.getContextPath()%>/orderAdd.to",
@@ -665,9 +663,8 @@ function goCheckOut(){
 	
 	<hr>
 	
-	
-	<table id="ordererInfo" class="left">
-		
+	<!-- 주문자 정보는 기본적으로 로그인한 유저의 정보들로 뿌려준다 -->
+	<table id="ordererInfo" class="left">	<!-- 주문자 정보 -->
 			<tr>
 				<th>
 					<label for="name" >이름&nbsp;<span class="star">*</span></label>
