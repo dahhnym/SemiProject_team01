@@ -19,9 +19,11 @@ public class GetSmallCategoryAction extends AbstractController {
 		// 그에 맞는 select의 option명을 설정해주기 위한 Action단
 		
 		String fk_bigcateno = request.getParameter("fk_bigcateno");
+		if(fk_bigcateno == "") {
+			fk_bigcateno = "1";
+		}
 		InterCsBoardDAO bdao = new CsBoardDAO();
 		List<CsBoardVO> boardList = bdao.GetSmallCategoryList(fk_bigcateno);
-		
 		JSONArray jsonArr = new JSONArray();
 		
 		if(boardList.size() > 0) {
@@ -35,7 +37,7 @@ public class GetSmallCategoryAction extends AbstractController {
 				 jsonArr.put(jsonObj);
 			}
 			String json = jsonArr.toString();
-			System.out.println("json" + json);
+			//System.out.println("json" + json);
 			request.setAttribute("json", json);
 			
 			super.setViewPage("/WEB-INF/jsonview.jsp");		

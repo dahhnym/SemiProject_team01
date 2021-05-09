@@ -16,6 +16,12 @@ input#boardpwd {
 <script>
 
 	$(function() {
+		
+		if(self.name!='reload'){
+		      self.name='reload'
+		      self.location.reload();
+		   } else self.name="";
+		
 		$("span.error").hide();
 		
 		<%-- 비밀번호 작성 후 입력창에서 마우스가 벗어나면 정규화에 맞게 값을 입력했는지 확인해줌 --%>
