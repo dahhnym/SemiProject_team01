@@ -376,7 +376,7 @@
          <c:forEach var="pvo" items="${requestScope.productList}" varStatus="status">
 		   <c:if test="${status.index < 6}">
           <div class="col-md-2">
-            <div class="card mb-2" onclick="location.href='<%=ctxPath%>/Info.to?pnum=${pvo.pnum}'">
+            <div class="card mb-2" onclick="location.href='<%=ctxPath%>/product/Info.to?pnum=${pvo.pnum}'">
               <img class="card-img-top" src="<%=ctxPath%>/images/${pvo.pimage1}" style="width:100%; height:222px;"
                    alt="Card image cap">
               <div class="card-body" onclick="location.href='<%=ctxPath%>/Info.to?pnum=${pvo.pnum}'" style="height:110px;">
@@ -401,7 +401,7 @@
          <c:forEach var="pvo" items="${requestScope.productList}" varStatus="status">
 		   <c:if test="${status.index >= 6 && status.index < 12}">
           <div class="col-md-2">
-            <div class="card mb-2" onclick="location.href='<%=ctxPath%>/Info.to?pnum=${pvo.pnum}'">
+            <div class="card mb-2" onclick="location.href='<%=ctxPath%>/product/Info.to?pnum=${pvo.pnum}'">
               <img class="card-img-top" src="<%=ctxPath%>/images/${pvo.pimage1}" style="width:100%; height:222px;"
                    alt="Card image cap">
               <div class="card-body" onclick="location.href='<%=ctxPath%>/Info.to?pnum=${pvo.pnum}'" style="height:110px;">
@@ -426,7 +426,7 @@
          <c:forEach var="pvo" items="${requestScope.productList}" varStatus="status">
 		   <c:if test="${status.index >= 12}">
           <div class="col-md-2">
-            <div class="card mb-2" onclick="location.href='<%=ctxPath%>/Info.to?pnum=${pvo.pnum}'">
+            <div class="card mb-2" onclick="location.href='<%=ctxPath%>/product/Info.to?pnum=${pvo.pnum}'">
               <img class="card-img-top" src="<%=ctxPath%>/images/${pvo.pimage1}" style="width:100%; height:222px;"
                    alt="Card image cap">
               <div class="card-body" onclick="location.href='<%=ctxPath%>/Info.to?pnum=${pvo.pnum}'" style="height:110px;">

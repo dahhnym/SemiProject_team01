@@ -50,9 +50,6 @@ public class ListAction_front extends AbstractController {
 		
 		// 상품에 대한 총페이지 수 알아오기(select)
 		int totalPage = pdao.getTotalPage(cnum);
-	//	System.out.println("총페이지: "+totalPage);
-		
-		
 		
 		if(Integer.parseInt(currentShowPageNo)>totalPage) {
 			currentShowPageNo="1";
