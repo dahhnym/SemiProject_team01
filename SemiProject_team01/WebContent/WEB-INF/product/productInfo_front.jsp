@@ -311,7 +311,7 @@
 			<hr style="background:#fff; margin: 10px 0; color:#fff; display:block;">
 
 			<div id="purchaseinfo">
-				<p><b>구매혜택</b><!-- DB에서 포인트 가져오기 --> Point 적립예정</p>
+				<!-- <p><b>구매혜택</b>DB에서 포인트 가져오기 Point 적립예정</p> -->
 				<p><b>배송 방법</b>&nbsp;&nbsp;택배</p>
 				<p><b>배송비</b>&nbsp;&nbsp;2,500원(50,000원 이상 무료배송)</p>
 			</div>

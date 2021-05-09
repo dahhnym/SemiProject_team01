@@ -58,6 +58,7 @@ public class ProductRegisterAction extends AbstractController {
                
                ServletContext svlCtx = session.getServletContext();
                String imagesDir = svlCtx.getRealPath("/images");
+               System.out.println(imagesDir);
                      
          
             System.out.println(session);
