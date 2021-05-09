@@ -147,16 +147,7 @@ $(document).ready(function(){
 					<th style="text-align: center;">내역</th>
 				</tr>
 				<tr>
-				<%-- <c:if>
-						<tr>
-								<td colspan="4" height="150px;"><span >적립금 내역이 없습니다.</span></td>
-						</tr>
-					</c:if>
-					--%>
-					<td style="text-align: center;"></td>
-					<td style="text-align: center;"></td>
-					<td style="text-align: center;"></td>
-					<td style="text-align: center;"></td>
+						<td colspan="4" height="150px;" style="vertical-align: middle; text-align: center; font-size: 13pt;" ><span >적립금 내역이 없습니다.</span></td>		
 				</tr>
 				
 			</table>
