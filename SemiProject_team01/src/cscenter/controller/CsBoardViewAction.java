@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
 import cscenter.model.*;
+import my.util.MyUtil;
 
 public class CsBoardViewAction extends AbstractController {
 
@@ -19,7 +20,7 @@ public class CsBoardViewAction extends AbstractController {
 		String fk_bigcateno = request.getParameter("fk_bigcateno"); //카테고리 번호
 				
 		if(fk_bigcateno == null) {
-			fk_bigcateno = "0";
+			fk_bigcateno = "";
 		}
 		// *** 카테고리번호에 해당하는 제품들을 페이징 처리하여 보여주기 *** //
 		String currentShowPageNo = request.getParameter("currentShowPageNo");
@@ -27,10 +28,14 @@ public class CsBoardViewAction extends AbstractController {
 		// 카테고리 메뉴에서 카테고리명만을 클릭했을 경우에는 currentShowPageNo 은 null 이 된다.
 		// currentShowPageNo 이 null 이라면 currentShowPageNo 을 1 페이지로 바꾸어야 한다.
 		
+		String sizePerPage = request.getParameter("sizePerPage");
+		
 		if(currentShowPageNo == null) {
 			currentShowPageNo = "1";
 		}
-		
+		if(sizePerPage == null ) { 
+			sizePerPage = "10";
+		}
 		// 한 페이지당 화면상에 보여줄 제품의 개수는 10 으로 한다. sizePerPage 는 ProductDAO 에서 상수로 설정해 두었음.
 		
 		// === GET 방식이므로 사용자가 웹브라우저 주소창에서 currentShowPageNo 에 숫자 아닌 문자를 입력한 경우 또는 
@@ -45,15 +50,21 @@ public class CsBoardViewAction extends AbstractController {
 		InterCsBoardDAO bdao = new CsBoardDAO();
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("fk_bigcateno", fk_bigcateno);
-		paraMap.put("currentShowPageNo", currentShowPageNo);
 		String bigcatename = bdao.getBigCategoryName(fk_bigcateno);
 		
 		request.setAttribute("bigcatename", bigcatename);
 		
+		
+		paraMap.put("currentShowPageNo", currentShowPageNo);
+		paraMap.put("sizePerPage", sizePerPage);
+		
+		 //  페이지바를 만들기 위해서 특정카테고리의 제품개수에 대한 총페이지수 알아오기(select)
+		int totalPage = bdao.getTotalPage(fk_bigcateno);
+		
 		// 특정 카테고리에 속하는 제품들을 페이지바를 이용한 페이징 처리하여 조회(select)해오기 
 		List<CsBoardVO> BoardList = bdao.selectBoardByCategory(paraMap, fk_bigcateno);
 		request.setAttribute("BoardList", BoardList);
-		
+		request.setAttribute("sizePerPage", sizePerPage);
 		
 		/*
 		 * String fk_bigcatename = bdao.getBigCategoryName(fk_bigcateno);
@@ -74,8 +85,7 @@ public class CsBoardViewAction extends AbstractController {
 	          5블럭   [이전] 41 42 
 	       */
 	      
-	      //  페이지바를 만들기 위해서 특정카테고리의 제품개수에 대한 총페이지수 알아오기(select)
-		int totalPage = bdao.getTotalPage(fk_bigcateno);
+	     
 		// ==== !!! 공식 !!! ==== // 
 		   /*
 		       1  2  3  4  5  6  7  8  9  10  -- 첫번째 블럭의 페이지번호 시작값(pageNo)은  1 이다.
@@ -125,17 +135,17 @@ public class CsBoardViewAction extends AbstractController {
 	   // **** [맨처음][이전] 만들기 **** //
 	      // pageNo - 1 == 11 - 1 == 10 ==> currentShowPageNo
 	      if( pageNo != 1 ) {
-	         pageBar += "&nbsp;<a href='mallByCategory.up?fk_bigcateno="+fk_bigcateno+"&currentShowPageNo=1'>[맨처음]</a>&nbsp;"; 
-	         pageBar += "&nbsp;<a href='mallByCategory.up?fk_bigcateno="+fk_bigcateno+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a>&nbsp;";
+	         pageBar += "&nbsp;<a href='csBoardView.to?fk_bigcateno="+fk_bigcateno+"&currentShowPageNo=1&sizePerPage="+sizePerPage+"'>[맨처음]</a>&nbsp;"; 
+	         pageBar += "&nbsp;<a href='csBoardView.to?fk_bigcateno="+fk_bigcateno+"&currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"'>[이전]</a>&nbsp;";
 	      }
 	      
 	      while( !(loop > blockSize || pageNo > totalPage) ) {
 	         
 	         if( pageNo == Integer.parseInt(currentShowPageNo) ) {
-	            pageBar += "&nbsp;<span style='border:solid 1px gray; color:red; padding: 2px 4px;'>"+pageNo+"</span>&nbsp;"; 
+	            pageBar += "&nbsp;<span>"+pageNo+"</span>&nbsp;"; 
 	         }
 	         else {
-	            pageBar += "&nbsp;<a href='mallByCategory.up?fk_bigcateno="+fk_bigcateno+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a>&nbsp;";    
+	            pageBar += "&nbsp;<a href='csBoardView.to?fk_bigcateno="+fk_bigcateno+"&currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"'>"+pageNo+"</a>&nbsp;";    
 	         }
 	         
 	         loop++;    // 1 2 3 4 5 6 7 8 9 10 
@@ -150,12 +160,27 @@ public class CsBoardViewAction extends AbstractController {
 	      
 	   //   if( !(pageNo > totalPage) ) {
 	      if( pageNo <= totalPage ) {
-	         pageBar += "&nbsp;<a href='mallByCategory.up?fk_bigcateno="+fk_bigcateno+"&currentShowPageNo="+pageNo+"'>[다음]</a>&nbsp;"; 
-	         pageBar += "&nbsp;<a href='mallByCategory.up?fk_bigcateno="+fk_bigcateno+"&currentShowPageNo="+totalPage+"'>[마지막]</a>&nbsp;";
+	         pageBar += "&nbsp;<a href='csBoardView.to?fk_bigcateno="+fk_bigcateno+"&currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"'>[다음]</a>&nbsp;"; 
+	         pageBar += "&nbsp;<a href='csBoardView.to?fk_bigcateno="+fk_bigcateno+"&currentShowPageNo="+totalPage+"&sizePerPage="+sizePerPage+"'>[마지막]</a>&nbsp;";
 	      }
 	      
 	      
 	      request.setAttribute("pageBar", pageBar);
+	      
+		///////////////////////////////////////////////////////////////////
+		// *** 현재 페이지를 돌아갈 페이지(goBackURL)로 주소 지정하기 ***//
+		String currentURL = MyUtil.getCurrentURL(request);
+		//회원조회를 했을 시 현재 그 페이지로 그대로 되돌아가기 위한 용도로 쓰임.
+		
+		//System.out.println("~~~ 확인용 currentURL : " + currentURL);
+		//~~~ 확인용 currentURL : member/memberList.up?currentShowPageNo=5&sizePerPage=10&searchType=name&searchWord=%EC%98%81
+		
+		currentURL = currentURL.replaceAll("&", " ");
+		
+		request.setAttribute("goBackURL", currentURL);
+		//System.out.println("~~~ 확인용 currentURL : " + currentURL);
+	      
+	      
 	      request.setAttribute("fk_bigcateno", fk_bigcateno);
 		super.setViewPage("/WEB-INF/cscenter/CsBoardView.jsp");
 	}

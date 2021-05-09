@@ -20,13 +20,8 @@ public class BoardRegisterAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		// 사용자가 작성한 글 등록
-		
-		String method = request.getMethod();
-		
-		if("GET".equalsIgnoreCase(method)) {
-			super.setViewPage("/WEB-INF/cscenter/CsBoardWrite.jsp");
-		} else {
+		// 사용자가 작성한 글 등록		
+
 			
 			// 로그인 또는 로그아웃을 하면 시작페이지로 가는 것이 아니라 방금 보았던 그 페이지로 그대로 가기 위한 것임. 
 			super.goBackURL(request);
@@ -77,7 +72,7 @@ public class BoardRegisterAction extends AbstractController {
 				
 				if(n == 1) {
 					 String message = "글 등록 완료"; 
-	        		 String loc = request.getContextPath() + "/cscenter/csBoardView.to";
+	        		 String loc = request.getContextPath() + "/cscenter/csBoardView.to?fk_bigcateno=" + fk_bigcateno;
 	        		 
 	        		 request.setAttribute("message", message); request.setAttribute("loc", loc);
 					 
@@ -87,7 +82,8 @@ public class BoardRegisterAction extends AbstractController {
 					 String message = "글 등록 실패"; 
 	        		 String loc = "javascript:history.back()";
 	        		 
-	        		 request.setAttribute("message", message); request.setAttribute("loc", loc);
+	        		 request.setAttribute("message", message); 
+	        		 request.setAttribute("loc", loc);
 					 
 					 super.setRedirect(false); //false는 forward 방식
 					 super.setViewPage("/WEB-INF/msg.jsp");
@@ -95,15 +91,21 @@ public class BoardRegisterAction extends AbstractController {
 				
 			} catch(SQLException e) {
 				e.printStackTrace();
-				super.setRedirect(true);
-				super.setViewPage(request.getContextPath()+"/error.up");
+				String message = "글 등록 실패";
+		        String loc = request.getContextPath() + "/cscenter/csBoardView.to";
+		         
+		        request.setAttribute("message", message);
+		        request.setAttribute("loc", loc);
+		         
+		      //super.setRedirect(false);
+		        super.setViewPage("/WEB-INF/msg.jsp");
 			}
 			
 			
 		}else {
 			//로그인 안한 경우
 			String message = "로그인하세요.";
-	        String loc = "javascript:history.back()";
+	        String loc = request.getContextPath() + "/cscenter/csHome.to";
 	         
 	        request.setAttribute("message", message);
 	        request.setAttribute("loc", loc);
@@ -112,6 +114,6 @@ public class BoardRegisterAction extends AbstractController {
 	        super.setViewPage("/WEB-INF/msg.jsp");
 		}
 
-	}}
+	}
 
 }

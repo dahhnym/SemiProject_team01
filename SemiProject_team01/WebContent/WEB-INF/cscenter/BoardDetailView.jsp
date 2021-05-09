@@ -56,11 +56,15 @@ textarea#commentContents {font-size: 12pt;}
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
+		
+		if(self.name!='reload'){
+		      self.name='reload'
+		      self.location.reload();
+		   } else self.name="";
+		
 		$("span.error").hide();
 		
 		
-		var loginuserid = "${bvo.mvo.name}";
-		console.log("login" + loginuserid);
 		if(${sessionScope.loginuser.userid eq 'admin'}) { // 로그인 한 사용자가 관리자일 때
 			$("form#commentFrm").css("display","inline-block"); // 답변을 쓸 수 있는 form의 style을 none->inline-block으로 바꿔준다.
 			$("div.btn-sumit").css("display","none"); // 사용자가 글을 수정, 삭제할 수 있는 버튼은 관리자일 때 보일 수 없게한다.

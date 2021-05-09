@@ -9,12 +9,26 @@
 		background-color:#D5D5D5;
 		cursor:pointer;
 	}
+	span {
+	font-size: 17pt;
+}
+
+span {
+	color: #555;
+}
+a:hover {
+	color: #999;
+}
 </style>
 <script type="text/javascript">
 
 
 	$(function() {
 		
+		if(self.name!='reload'){
+		      self.name='reload'
+		      self.location.reload();
+		   } else self.name="";
 		
 		$("tr.boardlist").click(function() {
 			if(${empty sessionScope.loginuser}) {
@@ -42,7 +56,15 @@
 <div class="container_b containers">
 <br><br><br>
 <h1 align="center" style="font-weight:bold;">고객센터</h1><br>
-<h2 align="center"><a class="menu_cs" href="<%=request.getContextPath()%>/cscenter/csHome.to">${requestScope.bigcatename}</a></h2><br> 
+<h2 align="center"><a class="menu_cs" href="<%=request.getContextPath()%>/cscenter/csHome.to">
+<c:if test="${empty requestScope.fk_bigcateno}">
+전체보기
+</c:if>
+<c:if test="${not empty requestScope.fk_bigcateno}">
+${requestScope.bigcatename}
+</c:if>
+
+</a></h2><br> 
 <div>
 <c:if test="${not empty requestScope.BoardList}">
 <table class="table">
@@ -63,7 +85,7 @@
 	        <td>${bvo.cbscvo.cbbcvo.bigcatename}</td>
 	        <td id="boardno" style="display:none">${bvo.boardno}</td>
 	        <td colspan="2">${bvo.boardtitle}</td>
-	        <td>${bvo.fk_userid}</td>
+	        <td>${bvo.mvo.name}</td>
 	        <td>${bvo.boardregistdate}</td>
       	</tr>
         </c:forEach>

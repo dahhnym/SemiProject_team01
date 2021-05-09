@@ -12,6 +12,12 @@
 
   
   $(function() {
+	  
+	  if(self.name!='reload'){
+	      self.name='reload'
+	      self.location.reload();
+	   } else self.name="";
+	  
 	  var html = "";
 	  
 	  $(document).on('click','a.nav-link',function(){
@@ -113,7 +119,7 @@
   	<div align="center">
   	<table>
   		<tr>
-  			<td class="pd_right"><h3><a class="menu_cs" href="<%=request.getContextPath()%>/cscenter/csBoardView.to">전체보기</a></h3></td>
+  			<td class="pd_right"><h3><a class="menu_cs" href="<%=request.getContextPath()%>/cscenter/csBoardView.to?">전체보기</a></h3></td>
   			<td class="pd_right"><h3><a class="menu_cs" href="<%=request.getContextPath()%>/cscenter/csBoardView.to?fk_bigcateno=1">상품문의</a></h3></td>
   			<td class="pd_right"><h3><a class="menu_cs" href="<%=request.getContextPath()%>/cscenter/csBoardView.to?fk_bigcateno=2">배송전취소/변경</a></h3></td>
   			<td class="pd_right"><h3><a class="menu_cs" href="<%=request.getContextPath()%>/cscenter/csBoardView.to?fk_bigcateno=3">배송/교환/반품</a></h3></td>

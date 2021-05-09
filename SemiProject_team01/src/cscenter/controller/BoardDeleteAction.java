@@ -22,7 +22,7 @@ public class BoardDeleteAction extends AbstractController {
 		
 		if(n == 1) {
 			String message = "글 삭제 성공"; 
-	   		 String loc = request.getContextPath()+"/cscenter/csBoardView?fk_bigcateno="+fk_bigcateno;
+	   		 String loc = request.getContextPath()+"/cscenter/csBoardView.to?fk_bigcateno="+fk_bigcateno;
 	   		 
 	   		 request.setAttribute("message", message); request.setAttribute("loc", loc);
 			 

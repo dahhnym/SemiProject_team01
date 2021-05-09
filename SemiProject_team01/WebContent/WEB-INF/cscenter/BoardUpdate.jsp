@@ -16,6 +16,12 @@ div.mb-3 > select#fk_bigcateno, select#fk_smallcateno {
 <script>
 
 	$(document).ready(function() {
+		
+		if(self.name!='reload'){
+		      self.name='reload'
+		      self.location.reload();
+		   } else self.name="";
+		
 		$("span.error").hide(); <%-- 에러메세지 숨기기 --%>
 		
 		<%-- 사용자가 어떤 카테고리에서 글쓰기 버튼을 눌렀는지. 그에 따라 미리 select의 값을 입력해준다. --%>
