@@ -48,7 +48,6 @@ public class ProductListAction extends AbstractController {
 				currentShowPageNo = "1";
 			}
 
-			// *** 검색 기능 추후 추가예정 ***
 			// == 검색어가 들어온 경우 ==
 			String searchType = request.getParameter("searchType");
 			String searchWord = request.getParameter("searchWord");
@@ -81,7 +80,7 @@ public class ProductListAction extends AbstractController {
 			
 			String pageBar = "";
 			
-			int blockSize = 10;
+			int blockSize = 5;
 			
 			int loop = 1;
 			// loop는 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수(지금은 10개)까지만 증가하는 용도이다. 
@@ -102,17 +101,17 @@ public class ProductListAction extends AbstractController {
 			
 			// *** [맨처음] [이전] 만들기 *** //
 			if( pageNo != 1 ) {
-				pageBar += "&nbsp;<a href='productList.to?currentShowPageNo=1&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'>[맨처음]</a>&nbsp;";
-				pageBar += "&nbsp;<a href='productList.to?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'>[이전]</a>&nbsp;";
+				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo=1&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'><i class='fas fa-angle-double-left' style='font-size:15px'></i></a>&nbsp;";
+				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'><i class='fas fa-angle-left' style='font-size:15px'></i></a>&nbsp;";
 			}
 			
 			
 			while(!(loop > blockSize || pageNo > totalPage )) {
 				if(pageNo == Integer.parseInt(currentShowPageNo)) {
-					pageBar += "&nbsp;<span style='font-weight: bolder; font-size:14pt; padding: 2px 4px;'>"+pageNo+"</span>&nbsp;";
+					pageBar += "&nbsp;<span style='font-weight: bolder; font-size:18px;'>"+pageNo+"</span>&nbsp;";
 				
 				} else {
-					pageBar += "&nbsp;<a href='productList.to?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'>"+pageNo+"</a>&nbsp;";
+					pageBar += "&nbsp;<a href='productList.to?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"' >"+pageNo+"</a>&nbsp;";
 				
 				}
 				loop++;
@@ -121,18 +120,18 @@ public class ProductListAction extends AbstractController {
 			
 			// *** [다음] [마지막] 만들기 *** //
 			if( pageNo <= totalPage ) {
-				pageBar += "&nbsp;<a href='productList.to?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'>[다음]</a>&nbsp;";
-				pageBar += "&nbsp;<a href='productList.to?currentShowPageNo="+totalPage+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'>[마지막]</a>";
+				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'><i class='fas fa-angle-right' style='font-size:15px;'></i></a>&nbsp;";
+				pageBar += "&nbsp;<a href='memberList.to?currentShowPageNo="+totalPage+"&sizePerPage="+sizePerPage+"&searchType="+searchType+"&searchWord="+searchWord+"'><i class='fas fa-angle-double-right' style='font-size:15px;'></i></a>";
 			} 
 			
 			
 			request.setAttribute("pageBar", pageBar);
 			
 			// *** 현재 페이지를 돌아갈 페이지(goBackURL)로 
-			String currentURL = MyUtil.getCurrentURL(request);
+			//String currentURL = MyUtil.getCurrentURL(request);
 			
-			currentURL = currentURL.replaceAll("&", " ");
-			request.setAttribute("goBackURL", currentURL);
+			//currentURL = currentURL.replaceAll("&", " ");
+			//request.setAttribute("goBackURL", currentURL);
 			
 			//super.setRedirect(false);
 			super.setViewPage("/WEB-INF/admin/productList.jsp");

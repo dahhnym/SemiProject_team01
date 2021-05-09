@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>  
 <% String ctxPath=request.getContextPath(); %>
 
 <jsp:include page="../header.jsp"/>
@@ -76,6 +77,11 @@ input#back{
 
 	$(document).ready(function(){
 		
+		if("${fn:trim(requestScope.searchWord)}" != ""){
+			$("select#searchType").val("${requestScope.searchType}");
+			$("input#searchWord").val("${requestScope.searchWord}");
+		}
+		
 		$("select#sizePerPage").bind("change", function(){
 			goSearch();
 		});
@@ -83,6 +89,11 @@ input#back{
 		if("${requestScope.sizePerPage}" != "") {
 			$("select#sizePerPage").val("${requestScope.sizePerPage}");
 		}
+		
+		$("select#sizePerPage").bind("change", function(){
+			goSearch();
+		});
+		
 		
 		
 	});
@@ -111,8 +122,9 @@ input#back{
 	<form name="productFrm">
 		<select id="searchType" name="searchType">
 			<option value="pname">제품명</option>
-			<option value="pcompany">제조사</option>
+			<option value="pnum">제품번호</option>
 			<option value="cname">카테고리</option>
+			<option value="sname">스펙명</option>
 		</select>
 		<input type="text" id="searchWord" name="searchWord" />
 		
