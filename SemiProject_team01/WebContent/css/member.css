@@ -51,12 +51,20 @@ button#register {
 	font-size: 11pt;
 	color: red;
 }
-.gender {
+.checkedGender {
 	color: #fff;
-    background-color: #6c757d;
-    border-color: #6c757d;
+    background-color: #6C757D;
 }
-
+span.gender {
+	text-align:center;
+	vertical-align:middle;
+	font-size: 11pt;	
+	border: 1px solid gray;
+	border-radius: 10px;
+	width: 30%;
+	margin: 0 auto;
+	display: inline-block;
+}
 
 
 /* personalInfo.jsp 적용 ////////////////////////////////////////////// */
@@ -147,4 +155,7 @@ button#btnPersionDel {
 	height: 30px;
 	width: 100px;
 }
+
+
+/* delAccount.jsp 적용 ////////////////////////////////////////////// */
 
