@@ -78,7 +78,12 @@
 
 </style>
 <script>
-	$(function(){});
+	$(function(){
+		if(self.name!='reload'){
+			self.name='reload'
+			self.location.reload();
+		} else self.name="";
+	});
 </script>
 
 <div class="container">

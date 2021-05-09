@@ -496,7 +496,7 @@ public class MemberDAO implements InterMemberDAO {
 	}
 	
 	
-	// 수정한 유저 session에 저장하기
+	// session에 저장하기
 	@Override
 	public MemberVO getLoginuser(MemberVO member) throws SQLException {
 		MemberVO loginuser = null;

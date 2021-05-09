@@ -17,6 +17,7 @@
 
 <script>
 	$(function(){
+		
 		var bool = false;
 		
 		$(document).on("click","button#btnPersionInfo",function(){

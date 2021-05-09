@@ -9,6 +9,11 @@
 	var bool = false;
 
 	$(function(){
+		if(self.name!='reload'){
+			self.name='reload'
+			self.location.reload();
+		} else self.name="";
+		
 		$("div#etcEmailAddress").hide();
 		$("div.infoConfirm").hide();
 		

@@ -13,6 +13,11 @@
  	var loginuser = "${sessionScope.loginuser}"
  	
 	$(function(){
+		if(self.name!='reload'){
+			self.name='reload'
+			self.location.reload();
+		} else self.name="";
+		
 		$("div#confirm").html("");
 		
 		if(saveid != null) {

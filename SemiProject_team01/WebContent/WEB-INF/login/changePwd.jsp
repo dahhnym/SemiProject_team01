@@ -10,6 +10,11 @@
 	var b_check = false;
 
 	$(function(){
+		if(self.name!='reload'){
+			self.name='reload'
+			self.location.reload();
+		} else self.name="";
+		
 		$("span.confirm").hide();
 		
 		$("button#changePwd").click(function(){

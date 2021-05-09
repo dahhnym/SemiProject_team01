@@ -12,6 +12,10 @@
     var bool = false;
 	
 	$(function(){
+		if(self.name!='reload'){
+			self.name='reload'
+			self.location.reload();
+		} else self.name="";
 		
 		$("span.confirm").hide();
 		$("tr#etc").hide();

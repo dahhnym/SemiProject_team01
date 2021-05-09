@@ -41,7 +41,7 @@ public class GoogleMail {
     	MimeMessage msg = new MimeMessage(ses);
     	
     	// 제목 설정
-    	String subject = "localhost:9090/MyMVC/home.up 회원님의 비밀번호를 찾기위한 인증코드 발송";
+    	String subject = "[ladies and gents] 임시비밀번호 발송";
     	msg.setSubject(subject);
     	
     	// 보내는 사람의 메일주소
@@ -54,7 +54,12 @@ public class GoogleMail {
     	msg.addRecipient(Message.RecipientType.TO, toAddr);
     	    	
     	// 메시지 본문의 내용과 형식, 캐릭터 셋 설정
-    	msg.setContent("발송된 인증코드 : <span style='font-size:14pt; color:red;'>"+certificationCode+"</span>", "text/html;charset=UTF-8");
+    	msg.setContent("<h3>고객님의 임시비밀번호 발급 내역을 안내해 드립니다.</h3><br><br>"
+    			     + "임시비밀번호 : <span style='font-size:14pt; color:red;'>"+certificationCode+"</span><br><br>"
+    			     + "비밀번호를 변경한 적이 없는데 메일을 받았다면 다른 사람이 내 계정 정보를 알아내어 변경했을 수 있습니다. <br>"
+    			     + "비밀번호를 다시 설정하시고, 비밀번호가 변경된 수단이 안전한지도 함께 점검해 주세요.<br><br>"
+    			     + "이용해주셔서 감사합니다!", 
+    			     "text/html;charset=UTF-8");
     	
     	// 메일 발송하기
     	Transport.send(msg);
