@@ -31,7 +31,12 @@ a.pagebar-style {
 
 <script type="text/javascript">
 
-
+$(document).ready(function(){
+	if(self.name!='reload'){
+	      self.name='reload'
+	      self.location.reload();
+	   } else self.name="";
+});
 
 <%-- 제품 이미지 클릭시 제품 상세 페이지 이동--%>
 function goProdDetail(imgs) {
@@ -61,7 +66,7 @@ function goProdDetail(imgs) {
       <c:forEach var="pvo" items="${requestScope.productList}" varStatus="status">
 		<div class='prodInfo' style="position: relative; bottom: 0;">
 		   <ul style='list-style-type: none; position: absolute'> 
-		        <li style='padding-bottom: 5px;'><a href="<%=ctxPath%>/Info.to?pnum=${pvo.pnum}"><img style="width: 100%; height: 280px;" src="/SemiProject_team01/images/${pvo.pimage1}"/></a></li> 
+		        <li style='padding-bottom: 5px;'><a href="<%=ctxPath%>/product/Info.to?pnum=${pvo.pnum}"><img style="width: 100%; height: 280px;" src="/SemiProject_team01/images/${pvo.pimage1}"/></a></li> 
 				<c:choose>
 				<c:when test="${pvo.spvo.snum eq 1}">
 		        	<li class="infoliststyle"><img src="<%=ctxPath%>/images/new.png"/></li>

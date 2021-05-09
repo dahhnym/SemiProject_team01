@@ -15,6 +15,11 @@ var start = 1;
 
 $(document).ready(function(){
 
+	if(self.name!='reload'){
+	      self.name='reload'
+	      self.location.reload();
+	   } else self.name="";
+	
 	$("span#totalNEWCount").hide();
 	$("span#countNEW").hide();
 	
