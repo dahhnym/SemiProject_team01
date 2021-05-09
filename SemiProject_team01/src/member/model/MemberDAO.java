@@ -403,12 +403,20 @@ public class MemberDAO implements InterMemberDAO {
 				MemberVO mvo = new MemberVO();
 				mvo.setUserid(rs.getString(1));
 				mvo.setName(rs.getString(2));
-				mvo.setMobile(aes.decrypt(rs.getString(3))); //복호화
+				
+				//휴대폰번호 마스킹처리
+				String maskedPhoneNum = aes.decrypt(rs.getString(3));
+				String num1 = maskedPhoneNum.substring(0, 3);
+                String num3 = maskedPhoneNum.substring(7);
+                maskedPhoneNum = num1 + "****" + num3;
+                
+				mvo.setMobile(maskedPhoneNum); //복호화
 				mvo.setLevel(rs.getString(4));
 				mvo.setIdle(rs.getString(5));
 				mvo.setStatus(rs.getString(6));
 				
 				memberList.add(mvo);
+				
 				
 			}//end of while(rs.next())------------------------------------------------
 			
