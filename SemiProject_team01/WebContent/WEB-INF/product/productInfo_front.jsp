@@ -20,7 +20,10 @@
  
  <script>
   $( function() {
-	  
+	  if(self.name!='reload'){
+	      self.name='reload'
+	      self.location.reload();
+	   } else self.name="";
 	// 색상 옵션 선택 전 수량선택div 숨기기
 	$("div#oqty").hide();
 	

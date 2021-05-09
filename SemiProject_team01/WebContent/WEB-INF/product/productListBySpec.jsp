@@ -27,16 +27,12 @@ nav#sortby-nav > ul > li {
 
 <script type="text/javascript">
 
-var lenProd = 8;
-var start = 1;
-var cnum = 1;
-
 $(document).ready(function(){
-
-	
-
-
-}); //end of $(document).ready(function() --------------------
+	if(self.name!='reload'){
+	      self.name='reload'
+	      self.location.reload();
+	   } else self.name="";
+});
 
 
 <%-- 제품 이미지 클릭시 제품 상세 페이지 이동--%>
@@ -79,7 +75,7 @@ function goProdDetail(imgs) {
       <div id="proddiv">
       <c:forEach var="pvo" items="${requestScope.productList}" varStatus="status">
 		<div class='prodInfo' style="position: relative; bottom: 0;">
-	        <div class="main-image" style='padding-bottom: 5px;'><a href="<%=ctxPath%>/Info.to?pnum=${pvo.pnum}"><img style="width: 100%; height: 280px;" src="<%=ctxPath%>/images/${pvo.pimage1}"/></a></div> 
+	        <div class="main-image" style='padding-bottom: 5px;'><a href="<%=ctxPath%>/product/Info.to?pnum=${pvo.pnum}"><img style="width: 100%; height: 280px;" src="<%=ctxPath%>/images/${pvo.pimage1}"/></a></div> 
 		   <ul style='list-style-type: none; position: absolute'> 
 				<c:choose>
 				<c:when test="${pvo.spvo.snum eq 1}">

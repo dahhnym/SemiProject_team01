@@ -78,41 +78,47 @@ public class CsBoardDAO implements InterCsBoardDAO {
 	}
 
 	@Override
-	public List<CsBoardVO> GetSmallCategoryList(String fk_bigcateno) throws SQLException {
-		List<CsBoardVO> boardList = new ArrayList<>();
-	      try {
-		           conn = ds.getConnection();
-		           
-		           String sql = " select smallcateno, smallcatename, bigcatename " + 
-						           	  " from tbl_smallcategory JOIN tbl_bigcategory " +
-						           	  " ON fk_bigcateno = bigcateno " + 
-						           	  " where fk_bigcateno = ? ";
-		           
-		           
-		           pstmt = conn.prepareStatement(sql);
-		           pstmt.setString(1, fk_bigcateno);
-		           
-		           rs = pstmt.executeQuery();
-		           
-		           while(rs.next()) {
-		        	   CsBoardVO boardvo = new CsBoardVO();
-		        	   CsBoardSmallCategoryVO smallvo = new CsBoardSmallCategoryVO();
-		        	   CsBoardBigCategoryVO bigvo = new CsBoardBigCategoryVO();
-		        	   
-		        	   smallvo.setSmallcateno(rs.getInt(1));       	   
-		        	   smallvo.setSmallcatename(rs.getString(2));
-		        	   bigvo.setBigcatename(rs.getString(3));
-		        	   
-		        	   smallvo.setCbbcvo(bigvo);
-		        	   boardvo.setCbscvo(smallvo);
-		        	   boardList.add(boardvo);
-	           }// end of while----------------
-	           
-	      } finally {
-	         close();
-	      }
-	      return boardList;
-	}
+	   public List<CsBoardVO> GetSmallCategoryList(String fk_bigcateno) throws SQLException {
+	      List<CsBoardVO> boardList = new ArrayList<>();
+	         try {
+	                 conn = ds.getConnection();
+	                 
+	                 String sql = " select smallcateno, smallcatename, bigcatename " + 
+	                                  " from tbl_smallcategory JOIN tbl_bigcategory " +
+	                                  " ON fk_bigcateno = bigcateno ";
+	                                  
+	                 if(fk_bigcateno != "0") {
+	                    sql += " where fk_bigcateno = ? ";
+	                 }
+	                 
+	                 pstmt = conn.prepareStatement(sql);
+	                 
+	                 if(fk_bigcateno != "0") {
+	                    pstmt.setString(1, fk_bigcateno);
+	                 }  
+	                 
+	                 
+	                 rs = pstmt.executeQuery();
+	                 
+	                 while(rs.next()) {
+	                    CsBoardVO boardvo = new CsBoardVO();
+	                    CsBoardSmallCategoryVO smallvo = new CsBoardSmallCategoryVO();
+	                    CsBoardBigCategoryVO bigvo = new CsBoardBigCategoryVO();
+	                    
+	                    smallvo.setSmallcateno(rs.getInt(1));             
+	                    smallvo.setSmallcatename(rs.getString(2));
+	                    bigvo.setBigcatename(rs.getString(3));
+	                    
+	                    smallvo.setCbbcvo(bigvo);
+	                    boardvo.setCbscvo(smallvo);
+	                    boardList.add(boardvo);
+	              }// end of while----------------
+	              
+	         } finally {
+	            close();
+	         }
+	         return boardList;
+	   }
 
 	@Override
 	public List<CsBoardVO> selectBoardByCategory(Map<String, String> paraMap, String fk_bigcateno) throws SQLException {
@@ -231,32 +237,38 @@ public class CsBoardDAO implements InterCsBoardDAO {
 	}
 
 	@Override
-	public String getBigCategoryName(String fk_bigcateno) throws SQLException {
-		String catename = "";
-		
-		try {
-			conn = ds.getConnection();
-			
-			String sql = " select bigcatename "
-							+ " from tbl_smallcategory JOIN tbl_bigcategory "
-							+ " ON fk_bigcateno = bigcateno "
-							+ " where fk_bigcateno = ? ";
-			
-			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, fk_bigcateno);
-			
-			rs = pstmt.executeQuery();
-	        rs.next();
-	        
-	        catename = rs.getString(1);
-					
-		}finally {
-			close();
-		}
-		
-		return catename;
-	}
+	   public String getBigCategoryName(String fk_bigcateno) throws SQLException {
+	      String catename = "";
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " select bigcatename "
+	                     + " from tbl_smallcategory JOIN tbl_bigcategory "
+	                     + " ON fk_bigcateno = bigcateno ";
+	         
+	         if(fk_bigcateno !="0") {
+	            sql += " where fk_bigcateno = ? ";
+	         }
+	         pstmt = conn.prepareStatement(sql);
+	         
+	         if(fk_bigcateno != "0") {
+	            pstmt.setString(1, fk_bigcateno);
+	         }
+	         
+	         rs = pstmt.executeQuery();
+	           if(rs.next()) {
+	              catename = rs.getString(1);
+	           }
+	           
+	           
+	               
+	      }finally {
+	         close();
+	      }
+	      
+	      return catename;
+	   }
 
 	@Override
 	public int checkUserPwd(String boardpwd, String boardno) throws SQLException {
