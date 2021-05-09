@@ -1315,7 +1315,7 @@ $(document).ready(function(){
 		</div>
 
 </div>
-
+</div>
 <div class="cartform">
 </div>	
 
