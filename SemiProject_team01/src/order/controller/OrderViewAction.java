@@ -26,13 +26,15 @@ public class OrderViewAction extends AbstractController {
 		String optionname = request.getParameter("optionname");
 		String pname = request.getParameter("pname");
 		String level = request.getParameter("level");
-
+		String pimage = request.getParameter("pimage");
+		
 		String[] pnumArr = pnum.split(",");
 		String[] oqtyArr = oqty.split(",");
 		String[] salepriceArr = saleprice.split(",");
 		String[] pdetailnumArr = pdetailnum.split(",");
 		String[] optionnameArr = optionname.split(",");
 		String[] pnameArr = pname.split(",");
+		String[] pimageArr = pimage.split(",");
 		
 		for(int i=0;i<pnumArr.length; i++) {
 			System.out.println("~~~~ 확인용 pnum: " + pnumArr[i] + "pname:"+pnameArr[i]+", oqty: " + oqtyArr[i] + ", saleprice: " + salepriceArr[i]);
@@ -65,7 +67,7 @@ public class OrderViewAction extends AbstractController {
 					
 
 					
-					if(cnt == 1 && sum<50000) {
+					if(cnt == 1 && sum>50000) {
 						delivery=0;
 						 
 					}
@@ -82,7 +84,8 @@ public class OrderViewAction extends AbstractController {
 				 jsobj.put("sum", sum);//물건*갯수들의 합
 				 jsobj.put("totalsum", totalsum);//물건*갯수들의 합+배송비
 				 jsobj.put("delivery", delivery);
-				 
+				 jsobj.put("pimage", pimageArr[i]);
+				 System.out.println(pimageArr[i]);
 				 jsArr.put(jsobj);
 				 cnt--;
 			 } 
