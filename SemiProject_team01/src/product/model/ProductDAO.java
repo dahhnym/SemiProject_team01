@@ -120,6 +120,9 @@ public class ProductDAO implements InterProductDAO {
 	public int getPnumOfProduct() throws SQLException{
 		    int pnum = 0;
 		    try {
+		    	
+		    	 conn = ds.getConnection();
+		    	 
 	          String sql = " select seq_tbl_product_pnum.nextval AS PNUM " +
 	                     " from dual ";
 	                  // seq_tbl_product_pnum: 시퀀스명

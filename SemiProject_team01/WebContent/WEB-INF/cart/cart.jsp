@@ -92,39 +92,7 @@ $(document).ready(function(){
 		}
 	});
 	
-<%--	
-$("input.prodOqty").bind("spinstop",function(){
-		
-		var index = $("input.prodOqty").index($(this));
-	//	alert(index);
-		var cartnum = $("input.cartnum").eq(index).val();
-	//	alert(cartnum);
-		var oqty = $("input.prodOqty").eq(index).val();
-	//	alert(oqty);
-		var fk_pdetailnum = $("input.fk_pdetailnum").eq(index).val();
-	//	alert($(this).val());
-		 $.ajax({
-				url:"<%= ctxPath%>/cart/updateOqtyCart.to",
-				type: "post",
-				data: {"userid":"${sessionScope.loginuser.userid}","cartnum":cartnum, "oqty": oqty,"fk_pdetailnum":fk_pdetailnum},
-				dataType: "json",
-				success:function(json){
-					if(json.n==1){
-						location.href="javascript:history.go(0);";
-					}
-					else if(json.n==0){ // 재고 수량이 변경할 수량보다 적을 경우
-						alert("상품의 수량이 재고수량 보다 많습니다.");
-						return;
-					}
-				},
-				 error: function(request, status, error){
-			            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-			     }  
-			});
-			
-	});
-	
-	--%>
+
 	
 	// 장바구니 전체 클릭 
 	$("input#prodAllCheck").click(function(){
@@ -540,7 +508,11 @@ $("input.prodOqty").bind("spinstop",function(){
     	
     });
     
-    
+    // 새로고침
+    if(self.name!='reload'){
+        self.name='reload'
+        self.location.reload();
+     } else self.name="";
 
 }); // end of $(document).ready(function(){})-------
 
@@ -1146,7 +1118,7 @@ $("input.prodOqty").bind("spinstop",function(){
 								</td>
 								<td scope="col" style="border-right: solid 1px #CCD1D1;">
 									<c:if test="${sum >= 50000}"> 
-										<span>무료</span><c:set var="delivery" value="0"/><input type="hidden" class="sumdelivery" value="0"/>
+										<span>[무료]</span><c:set var="delivery" value="0"/><input type="hidden" class="sumdelivery" value="0"/>
 									</c:if>
 									<c:if test="${sum < 50000}">
 										<fmt:formatNumber value="2500" type="number" />원
@@ -1291,13 +1263,13 @@ $("input.prodOqty").bind("spinstop",function(){
 										</c:if>
 									</td>
 									<td scope="col">
-										<span><c:if test="${wish.pvo.saleprice >=50000} ">
-												[무료]
+										<c:if test="${wish.pvo.saleprice >= 50000}">
+												<span>[무료]</span>
 												</c:if>
 												<c:if test="${wish.pvo.saleprice < 50000}">
 												<fmt:formatNumber  value="2500" type="number" />원
 												</c:if>
-										</span>
+										
 									</td>
 									<td scope="col" class="total">
 										<strong>
