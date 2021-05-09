@@ -27,12 +27,14 @@ public class OrderListAction extends AbstractController {
 			InterOrderDAO odao = new OrderDAO();
 			
 			// 주문내역 리스트 가져오기 (select)
-			List<OrderDetailVO> orderList = odao.orderList(userid);
+			List<OrderDetailVO> orderList = odao.orderListView(userid);
 			
 			request.setAttribute("orderList", orderList);
 			
-			
-			
+			// 취소.교환.반품 내역 가져오기(select)
+			List<OrderDetailVO> cancelList = odao.orderCancelList(userid);
+					
+			request.setAttribute("cancelList", cancelList);
 			
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/order/orderList.jsp");

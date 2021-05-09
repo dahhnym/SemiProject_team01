@@ -168,10 +168,9 @@ public class OrderDAO implements InterOrderDAO {
 		try {
 			  conn = ds.getConnection();
 			  
-			  String sql = "select odrcode,totalcost,orderdate,odrstatus,odrprgrss,invoicenum \n"+
-					  ",odrname,payment,deliname,delimobile,delipostcode,deliaddress,delidtaddress,deliextddress,delimsg\n"+
+			  String sql = "select odrcode, totalcost, orderdate, odrstatus, odrprgrss, invoicenum, odrname,payment ,deliname,delimobile ,delipostcode,deliaddress ,delidtaddress,deliextddress,delimsg \n"+
 					  "from tbl_order\n"+
-					  "where odrcode = ? ";
+					  "where odrcode=?";
 			  
 			  pstmt = conn.prepareStatement(sql);
 			  pstmt.setInt(1, odrcode);
@@ -195,8 +194,6 @@ public class OrderDAO implements InterOrderDAO {
 				  orderInfo.setDelidtaddress(rs.getString(13));
 				  orderInfo.setDeliextddress(rs.getString(14));
 				  orderInfo.setDelimsg(rs.getString(15));
-			  
-				  
 			  }
 				  
 		} finally {
@@ -461,58 +458,47 @@ public class OrderDAO implements InterOrderDAO {
 
 	// 주문내역 리스트 가져오기 (select)
 	@Override
-	public List<OrderDetailVO> orderList(String userid) throws SQLException {
+	public List<OrderDetailVO> orderList(int odrcode) throws SQLException {
 
 		List<OrderDetailVO> orderList =  new ArrayList<>();
 	      
 	      try {
 	          conn = ds.getConnection();
 	          
-				
-	          String sql = "select C.odrcode, A.pimage1, pname, optionname, odrqty, odrstatus, odrprgrss,orderdate,odrprice,A.pnum \n"+
-	        		  "from tbl_product A join tbl_odrdetail B \n"+
-	        		  "on A.pnum = B.fk_pnum \n"+
-	        		  "join tbl_order C \n"+
-	        		  "on B.fk_odrcode = C.odrcode  \n"+
-	        		  "where B.fk_userid = ? "+
-	        		  " order by odrcode desc";
+
+			String sql = "select A.pimage1, pname, optionname, odrqty, saleprice, odrprice,A.pnum \n"+
+			"from tbl_product A join tbl_odrdetail B \n"+
+			"on A.pnum = B.fk_pnum  \n"+
+			"where B.fk_odrcode = ? \n"+
+			"order by odrdetailno desc";
 	        		          
 	          
 	          pstmt = conn.prepareStatement(sql);
-	          pstmt.setString(1, userid);
+	          pstmt.setInt(1, odrcode);
 	          rs = pstmt.executeQuery();
 	          
+	          
 	          while(rs.next()) {
-	        	  int odrcode = rs.getInt(1);
-	        	  String pimage1 = rs.getString(2);
-	        	  String pname= rs.getString(3);
-	        	  String optionname = rs.getString(4);
-	        	  int odrqty = rs.getInt(5);
-	        	  String odrstatus = rs.getString(6);
-	        	  String odrprgrss = rs.getString(7);
-	        	  String orderdate = rs.getString(8);
-	        	  int odrprice = rs.getInt(9);   
-	        	  int pnum = rs.getInt(10);
+	        	  String pimage1 = rs.getString(1);
+	        	  String pname= rs.getString(2);
+	        	  String optionname = rs.getString(3);
+	        	  int odrqty = rs.getInt(4);
+	        	  int saleprice = rs.getInt(5);
+	        	  int odrprice = rs.getInt(6);   
+	        	  int pnum = rs.getInt(7);
 	        	  
 	        	  OrderDetailVO odtvo = new OrderDetailVO();
-	        	  odtvo.setFk_odrcode(odrcode);
 	        	  odtvo.setOptionname(optionname);
 	        	  odtvo.setOdrqty(odrqty);
-	        	  odtvo.setOdrprice(odrprice);
-	        	  
-	        	  OrderVO ovo = new OrderVO();
-	        	  ovo.setOdrstatus(odrstatus);
-	        	  ovo.setOdrprgrss(odrprgrss);
-	        	  ovo.setOrderdate(orderdate);
+	        	  odtvo.setOdrprice(odrprice);	        	  
 	        	  
 	        	  ProductVO pvo = new ProductVO();
 	        	  pvo.setPimage1(pimage1);
 	        	  pvo.setPname(pname);
 	        	  pvo.setPnum(pnum);
+	        	  pvo.setSaleprice(saleprice);
 	        	  
-	        	  odtvo.setOvo(ovo);
-	        	  odtvo.setPvo(pvo);
-	        	  
+	        	  odtvo.setPvo(pvo);	        	  
 	        	  orderList.add(odtvo);
 	        	  
 	          }	          
@@ -601,15 +587,15 @@ public class OrderDAO implements InterOrderDAO {
 			 conn = ds.getConnection();
 			 
 			 String sql = "select A.pnum, A.pimage1, A.pname, B.optionname, C.stars, C.rvdate\n"+
-					 "from tbl_product A join tbl_odrdetail B\n"+
-					 "on pnum = B.fk_pnum\n"+
+					 "from tbl_product A join tbl_odrdetail B on A.pnum = B.fk_pnum\n"+
 					 "join tbl_review C\n"+
-					 "on odrdetailno = fk_odrdetailno \n"+
-					 "where B.fk_userid= ? and B.odrdetailno=fk_odrdetailno";
+					 "on B.odrdetailno = C.fk_odrdetailno \n"+
+					 "where B.fk_userid = ? and not exists (select fk_odrdetailno from tbl_review where fk_userid = ? )";
 			 
 			 pstmt = conn.prepareStatement(sql);
 			 
 			 pstmt.setString(1,userid);
+			 pstmt.setString(2,userid);
 			
 			 rs = pstmt.executeQuery();
 			 
@@ -629,6 +615,9 @@ public class OrderDAO implements InterOrderDAO {
 	        	 rvo.setStars(rs.getInt(5));
 	        	 rvo.setRvdate(rs.getString(6));
 				 
+	        	 odtvo.setRvo(rvo);
+	        	 odtvo.setPvo(pvo);
+	        	  
 	        	 wtrvList.add(odtvo);
 	        	 
 			 }// end of while(rs.next())---------------------------------------
@@ -693,7 +682,7 @@ public class OrderDAO implements InterOrderDAO {
 				 
 				 String sql = "select A.pnum, A.pimage1, A.pname, B.optionname\n"+
 						 "from tbl_product A join tbl_odrdetail B on A.pnum = B.fk_pnum\n"+
-						 "where fk_userid = ? and B.odrdetailno not in (select fk_odrdetailno from tbl_review where fk_userid = ?)";
+						 "where fk_userid = ? and exists (select fk_odrdetailno from tbl_review where fk_userid = ? )";
 
 				 pstmt = conn.prepareStatement(sql);
 				 
@@ -706,12 +695,14 @@ public class OrderDAO implements InterOrderDAO {
 					 
 					 ProductVO pvo = new ProductVO();
 					 pvo.setPnum(rs.getInt(1));
-					 pvo.setPname(rs.getString(2));
-					 pvo.setPimage1(rs.getString(3));
+					 pvo.setPimage1(rs.getString(2));
+					 pvo.setPname(rs.getString(3));
+
 					 
 					 OrderDetailVO odtvo = new OrderDetailVO();
 					 odtvo.setOptionname(rs.getString(4));
 					 
+					 odtvo.setPvo(pvo);
 					 pdrvList.add(odtvo);
 				 }// end of while(rs.next())---------------------------------------
 
@@ -790,6 +781,135 @@ public class OrderDAO implements InterOrderDAO {
 		      return seq;
 		}
 	
+		
+		
+		// 주문내역orderList.to 리스트 가져오기 (select)
+		@Override
+		public List<OrderDetailVO> orderListView(String userid) throws SQLException {
+
+			List<OrderDetailVO> orderList =  new ArrayList<>();
+		      
+		      try {
+		          conn = ds.getConnection();
+		          
+					
+
+				String sql = "select C.odrcode, A.pimage1, pname, optionname, odrqty, odrstatus, odrprgrss,orderdate,odrprice,A.pnum \n"+
+				"from tbl_product A join tbl_odrdetail B \n"+
+				"on A.pnum = B.fk_pnum \n"+
+				"join tbl_order C \n"+
+				"on B.fk_odrcode = C.odrcode  \n"+
+				"where B.fk_userid = ? and odrstatus not in ('취소','교환','반품')\n"+
+				"order by odrcode desc";
+		        		          
+		          
+		          pstmt = conn.prepareStatement(sql);
+		          pstmt.setString(1, userid);
+		          rs = pstmt.executeQuery();
+		          
+		          while(rs.next()) {
+		        	  int odrcode = rs.getInt(1);
+		        	  String pimage1 = rs.getString(2);
+		        	  String pname= rs.getString(3);
+		        	  String optionname = rs.getString(4);
+		        	  int odrqty = rs.getInt(5);
+		        	  String odrstatus = rs.getString(6);
+		        	  String odrprgrss = rs.getString(7);
+		        	  String orderdate = rs.getString(8);
+		        	  int odrprice = rs.getInt(9);   
+		        	  int pnum = rs.getInt(10);
+		        	  
+		        	  OrderDetailVO odtvo = new OrderDetailVO();
+		        	  odtvo.setFk_odrcode(odrcode);
+		        	  odtvo.setOptionname(optionname);
+		        	  odtvo.setOdrqty(odrqty);
+		        	  odtvo.setOdrprice(odrprice);
+		        	  
+		        	  OrderVO ovo = new OrderVO();
+		        	  ovo.setOdrstatus(odrstatus);
+		        	  ovo.setOdrprgrss(odrprgrss);
+		        	  ovo.setOrderdate(orderdate);
+		        	  
+		        	  ProductVO pvo = new ProductVO();
+		        	  pvo.setPimage1(pimage1);
+		        	  pvo.setPname(pname);
+		        	  pvo.setPnum(pnum);
+		        	  
+		        	  odtvo.setOvo(ovo);
+		        	  odtvo.setPvo(pvo);
+		        	  
+		        	  orderList.add(odtvo);
+		        	  
+		          }	          
+		      } finally {
+		         close();
+		      }
+		      
+		      return orderList;
+		
+		}
+
+		// 취소 반품 교환 내역 
+		@Override
+		public List<OrderDetailVO> orderCancelList(String userid) throws SQLException {
+			List<OrderDetailVO> orderList =  new ArrayList<>();
+		      
+		      try {
+		          conn = ds.getConnection();
+		          
+			String sql = "select C.odrcode, A.pimage1, pname, optionname, odrqty, odrstatus, odrprgrss,orderdate,odrprice,A.pnum \n"+
+					"from tbl_product A join tbl_odrdetail B \n"+
+					"on A.pnum = B.fk_pnum \n"+
+					"join tbl_order C \n"+
+					"on B.fk_odrcode = C.odrcode  \n"+
+					"where B.fk_userid = ? and odrstatus in ('취소','교환','반품')\n"+
+					"order by odrcode desc";
+			
+				  pstmt = conn.prepareStatement(sql);
+		          pstmt.setString(1, userid);
+		          rs = pstmt.executeQuery();
+		          
+		          while(rs.next()) {
+		        	  int odrcode = rs.getInt(1);
+		        	  String pimage1 = rs.getString(2);
+		        	  String pname= rs.getString(3);
+		        	  String optionname = rs.getString(4);
+		        	  int odrqty = rs.getInt(5);
+		        	  String odrstatus = rs.getString(6);
+		        	  String odrprgrss = rs.getString(7);
+		        	  String orderdate = rs.getString(8);
+		        	  int odrprice = rs.getInt(9);   
+		        	  int pnum = rs.getInt(10);
+		        	  
+		        	  OrderDetailVO odtvo = new OrderDetailVO();
+		        	  odtvo.setFk_odrcode(odrcode);
+		        	  odtvo.setOptionname(optionname);
+		        	  odtvo.setOdrqty(odrqty);
+		        	  odtvo.setOdrprice(odrprice);
+		        	  
+		        	  OrderVO ovo = new OrderVO();
+		        	  ovo.setOdrstatus(odrstatus);
+		        	  ovo.setOdrprgrss(odrprgrss);
+		        	  ovo.setOrderdate(orderdate);
+		        	  
+		        	  ProductVO pvo = new ProductVO();
+		        	  pvo.setPimage1(pimage1);
+		        	  pvo.setPname(pname);
+		        	  pvo.setPnum(pnum);
+		        	  
+		        	  odtvo.setOvo(ovo);
+		        	  odtvo.setPvo(pvo);
+		        	  
+		        	  orderList.add(odtvo);
+		        	  
+		          }	          
+	      } finally {
+	         close();
+	      }
+	      
+	      return orderList;
+		}
+		
 	
 	
 }

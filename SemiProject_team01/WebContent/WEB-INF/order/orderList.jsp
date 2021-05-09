@@ -53,6 +53,8 @@
 			$("#" + tab_id).addClass('current');
 		});
 		
+		
+		
         var dateFormat = "mm/dd/yy",
         from = $( "#from" )
           .datepicker({
@@ -68,35 +70,22 @@
           changeMonth: true,
           numberOfMonths: 1
         })
+        
         .on( "change", function() {
           from.datepicker( "option", "maxDate", getDate( this ) );
       
-          }
+          });
 	
           
         $('input#odrcode').click(function(){
       	  
       	  var odrcode = $(this).val();
-			console.log(odrcode);
 
-      	  $.ajax({
-      		  url:"<%= ctxPath%>/orderInfo.to",
-        		type:"post",
-        		data:{"odrcode":odrcode},
-        		dataType: "json",
-    			success:function(json){ 
-    				location.href="<%= ctxPath%>/orderInfo.to";
-    				console.log(odrcode);
-    			},
-    			 error: function(request, status, error){
-		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		     	}  
-    			
-      	  });
-        
+			location.href="<%= ctxPath%>/orderInfo.to?odrcode="+odrcode;
         });
-		
-  	 ); // end of $( function()
+
+
+	}); // end of $( function()
 	
 	function getDate( element ) {
 	      var date;
@@ -107,10 +96,10 @@
 	      }
 	 
 	      return date;
-	    }
+	    
 	  } ; // end of function getDate( element ) 
 	  
-	
+ 
 
 </script>
 
@@ -190,13 +179,13 @@
 		<tbody align="center">
 			<c:forEach items="${requestScope.orderList}" var="odr" varStatus="status">
 			<tr id="prodInfo">
-				<td>${odr.ovo.orderdate}<br>[<input type="button" id="odrcode" style=";font-size:11pt; border:none; background-color:white; underline;" value="${odr.fk_odrcode}"/>]</td>
+				<td>${odr.ovo.orderdate}<br>[<input type="button" id="odrcode" style=";font-size:11pt; border:none; background-color:white; text-decoration: underline;" value="${odr.fk_odrcode}"/>]</td>
 				<td><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}"><img class="pimage1" src="<%=ctxPath%>/images/${odr.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
 				<td align="left"><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}">${odr.pvo.pname}</a><br>[옵션: ${odr.optionname} ]</td>
 				<td>${odr.odrqty}</td>
 				<td><fmt:formatNumber value="${odr.odrprice}" type="number" />원</td>
 				<td>${odr.ovo.odrstatus}&nbsp;${odr.ovo.odrprgrss}</td>
-				<td><button>취소/교환/반품</button></td>
+				<td><button onclick="location.href='<%=ctxPath%>/member/memberCsBoardView.to'" style="border:none; background-color:white; text-decoration: underline;">취소/교환/반품</button></td>
 			</tr>
 			</c:forEach>
 		</tbody>
@@ -250,31 +239,29 @@
 				<th width="25%">상품정보</th>
 				<th>수량</th>
 				<th>상품구매금액</th>
-				<th>주문처리상태</th>
 				<th>취소/교환/반품</th>
+				<th>주문처리상태</th>
 			</tr>
 		</thead>
-		<c:if test="${empty requestScope.orderList}">
+		<c:if test="${empty requestScope.cancelList}">
 			<tbody>
 				<tr>
 					<td colspan="7" height="150px;"><span style="color: black;">취소/교환/반품하신 상품이 없습니다.</span></td>
 				</tr>
 			</tbody>
 		</c:if>
-		<c:if test="${not empty requestScope.orderList}">						
+		<c:if test="${not empty requestScope.cancelList}">						
 		<tbody align="center">
-			<c:forEach items="${requestScope.orderList}" var="odr" varStatus="status">
-		
+			<c:forEach items="${requestScope.cancelList}" var="odr" varStatus="status">
 			<tr id="prodInfo">
-				<td>${odr.ovo.orderdate}<br><a href="">[ ${odr.fk_odrcode} ]</a></td>
+				<td>${odr.ovo.orderdate}<br>[<input type="button" id="odrcode" style=";font-size:11pt; border:none; background-color:white; text-decoration: underline;" value="${odr.fk_odrcode}"/>]</td>
 				<td><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}"><img class="pimage1" src="<%=ctxPath%>/images/${odr.pvo.pimage1}" width= "90px;" height="90px;"/></a></td>
-				<td align="left"><a href="">${odr.pvo.pname}</a><br>[옵션: ${odr.optionname} ]</td>
-				<td>1</td>
+				<td align="left"><a href="<%=ctxPath%>/Info.to?pnum=${odr.pvo.pnum}">${odr.pvo.pname}</a><br>[옵션: ${odr.optionname} ]</td>
+				<td>${odr.odrqty}</td>
 				<td><fmt:formatNumber value="${odr.odrprice}" type="number" />원</td>
-				<td>${odr.ovo.odrprgrss}</td>
 				<td>${odr.ovo.odrstatus}</td>
+				<td>${odr.ovo.odrprgrss}</td>
 			</tr>
-			
 			</c:forEach>
 		</tbody>
 		</c:if>

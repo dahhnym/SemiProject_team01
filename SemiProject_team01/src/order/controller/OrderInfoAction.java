@@ -25,18 +25,16 @@ public class OrderInfoAction extends AbstractController {
         
         // 주문코드 알아오기
         int odrcode =Integer.parseInt(request.getParameter("odrcode"));
-        
+        System.out.println(odrcode);
         // 주문정보 알아오기
         
         OrderVO orderInfo = odao.selectOrderInfo(odrcode);
         
         request.setAttribute("orderInfo", orderInfo);
         
-        
         // 주문내역 리스트 가져오기
-		String userid = loginuser.getUserid();
 
-        List<OrderDetailVO> orderList = odao.orderList(userid);
+        List<OrderDetailVO> orderList = odao.orderList(odrcode);
         request.setAttribute("orderList", orderList);
 
         
