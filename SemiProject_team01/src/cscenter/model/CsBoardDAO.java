@@ -45,18 +45,37 @@ public class CsBoardDAO implements InterCsBoardDAO {
 	public int registerBoard(CsBoardVO board) throws SQLException {
 		int n = 0;
 		
+		String cateno = board.getFk_smallcateno();
+		String str = "";
+		
 		try {
 			conn = ds.getConnection();
 			
-			String str = "";
+			String sql = "select smallcatename " + 
+								"from tbl_smallcategory JOIN tbl_bigcategory " + 
+								"ON fk_bigcateno = bigcateno" +
+							    " where smallcateno = ? ";
 			
-			if(board.getFk_smallcateno() == "6" || board.getFk_smallcateno() == "7") {
-				str = "";
-			} else {
-				str = "["+board.getFk_smallcateno()+"]";
+			pstmt = conn.prepareStatement(sql);
+			
+			if(cateno == null) {
+				pstmt.setString(1,"6");
+			}else {
+				pstmt.setString(1,cateno);
 			}
 			
-			String sql = "insert into tbl_csBoard(boardno, boardtitle, boardcontent, boardpwd, boardfile, fk_userid, fk_smallcateno) "     
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				if("없음".equals(rs.getString(1))) {
+					str = "";
+				}else {
+					str = "["+rs.getString(1)+"]";
+				}
+			}
+			
+			
+			sql = "insert into tbl_csBoard(boardno, boardtitle, boardcontent, boardpwd, boardfile, fk_userid, fk_smallcateno) "     
 							+ "values(seq_csboard_boardno.nextval,?, ?, ?, ?, ?, ?)"; 
 			
 			pstmt = conn.prepareStatement(sql);
@@ -83,11 +102,13 @@ public class CsBoardDAO implements InterCsBoardDAO {
 	         try {
 	                 conn = ds.getConnection();
 	                 
+	                 //System.out.println("뿌엥" + fk_bigcateno);
+	                 
 	                 String sql = " select smallcateno, smallcatename, bigcatename " + 
 	                                  " from tbl_smallcategory JOIN tbl_bigcategory " +
 	                                  " ON fk_bigcateno = bigcateno ";
 	                                  
-	                 if(fk_bigcateno != "0") {
+	                 if(fk_bigcateno != "") {
 	                    sql += " where fk_bigcateno = ? ";
 	                 }
 	                 
@@ -126,36 +147,38 @@ public class CsBoardDAO implements InterCsBoardDAO {
 	      
 	      try {
 	          conn = ds.getConnection();
-	          
+	         
 	          String str = "";
 	          
-	          if(fk_bigcateno != "0") {
+	          if(fk_bigcateno != "") {
 	        	  str = " where fk_bigcateno = ? ";
 	          }
 	          
-	          String sql =  " select boardno, boardtitle, boardcontent, boardregistdate ,boardfile ,boardpwd ,fk_userid ,fk_smallcateno, fk_bigcateno, bigcatename "+
-				        		  " from "+
-				        		  " ( "+
-				        		  "     select rownum as rno, boardno, boardtitle, boardcontent, boardregistdate ,boardfile ,boardpwd ,fk_userid ,fk_smallcateno, fk_bigcateno, bigcatename "+
-				        		  "     from "+
-				        		  "     ( "+
-				        		  "         select boardno, boardtitle, boardcontent, boardregistdate ,boardfile ,boardpwd ,fk_userid ,fk_smallcateno, fk_bigcateno, bigcatename "+
-				        		  "         from tbl_csBoard JOIN tbl_smallcategory "+
-				        		  "         ON fk_smallcateno = smallcateno "+
-				        		  "         JOIN tbl_bigcategory "+
-				        		  "         ON fk_bigcateno = bigcateno" +
-				        		  str +
-				        		  "     )V "+
-				        		  " )T "+
-				        		  " where rno between ? and ?" +
-				        		  " order by boardregistdate desc ";
+	          
+	          String sql =   " select boardno, boardtitle, boardcontent, boardregistdate ,boardfile ,boardpwd ,fk_userid ,fk_smallcateno,fk_bigcateno, bigcatename, name " + 
+						      		" from " + 
+						      		" ( " + 
+						      		"     select rownum as rno, boardno, boardtitle, boardcontent, boardregistdate ,boardfile ,boardpwd ,fk_userid ,fk_smallcateno,fk_bigcateno, bigcatename, name " + 
+						      		"     from " + 
+						      		"     ( " + 
+						      		"         select boardno, boardtitle, boardcontent, boardregistdate ,boardfile ,boardpwd ,fk_userid ,fk_smallcateno,fk_bigcateno, bigcatename, name " + 
+						      		"         from tbl_csBoard JOIN tbl_smallcategory " + 
+						      		"         ON fk_smallcateno = smallcateno " + 
+						      		"         JOIN tbl_bigcategory " + 
+						      		"         ON fk_bigcateno = bigcateno " + 
+						      		"         JOIN tbl_member " + 
+						      		"         ON fk_userid = userid " + str + " order by boardregistdate desc  " +
+						      		"     )V " + 
+						      		" )T " + 
+						      		" where rno between ? and ?";
+	          
 	          
 	          pstmt = conn.prepareStatement(sql);
 	          
 	          int currentShowPageNo = Integer.parseInt( paraMap.get("currentShowPageNo") );
 	          int sizePerPage = 10; // 한 페이지당 화면상에 보여줄 제품의 개수는 10 으로 한다.
 	          
-	          if(fk_bigcateno != "0") {
+	          if(fk_bigcateno != "") {
 	        	  pstmt.setString(1, paraMap.get("fk_bigcateno"));
 		          pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식
 		          pstmt.setInt(3, (currentShowPageNo * sizePerPage)); // 공식 	
@@ -170,7 +193,6 @@ public class CsBoardDAO implements InterCsBoardDAO {
 	          while( rs.next() ) {
 	             
 	             CsBoardVO bvo = new CsBoardVO();
-	                                                   
 	             
 	             bvo.setBoardno(rs.getInt(1));
 	             bvo.setBoardtitle(rs.getString(2));
@@ -189,7 +211,10 @@ public class CsBoardDAO implements InterCsBoardDAO {
 	             bigvo.setBigcatename(rs.getString(10));
 	             smallvo.setCbbcvo(bigvo);
 	             
-	             
+	             MemberVO mvo = new MemberVO();
+		         mvo.setName(rs.getString(11));
+		         bvo.setMvo(mvo);
+		         
 	             boardList.add(bvo);
 	             
 	          }// end of while-----------------------------------------
@@ -213,12 +238,12 @@ public class CsBoardDAO implements InterCsBoardDAO {
 				         		" JOIN tbl_bigcategory " + 
 				         		" ON fk_bigcateno = bigcateno ";
 	         
-	          if(fk_bigcateno != "0") {
+	          if(fk_bigcateno != "") {
 	        	 sql += " where fk_bigcateno = ? ";
 	         }
 	         pstmt = conn.prepareStatement(sql);
 	         
-	         if(fk_bigcateno != "0") {
+	         if(fk_bigcateno != "") {
 	        	 pstmt.setString(1, fk_bigcateno);
 	         }
 	        
@@ -247,12 +272,12 @@ public class CsBoardDAO implements InterCsBoardDAO {
 	                     + " from tbl_smallcategory JOIN tbl_bigcategory "
 	                     + " ON fk_bigcateno = bigcateno ";
 	         
-	         if(fk_bigcateno !="0") {
+	         if(fk_bigcateno !="") {
 	            sql += " where fk_bigcateno = ? ";
 	         }
 	         pstmt = conn.prepareStatement(sql);
 	         
-	         if(fk_bigcateno != "0") {
+	         if(fk_bigcateno != "") {
 	            pstmt.setString(1, fk_bigcateno);
 	         }
 	         

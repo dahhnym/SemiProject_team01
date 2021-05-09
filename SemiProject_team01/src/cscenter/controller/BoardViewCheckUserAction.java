@@ -34,15 +34,22 @@ public class BoardViewCheckUserAction extends AbstractController {
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("n", n);
 			String json = jsonObj.toString();
-			System.out.println("json" + json);
 			request.setAttribute("json", json);
 			super.setViewPage("/WEB-INF/jsonview.jsp");
 			
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
-			super.setRedirect(true);
-			super.setViewPage(request.getContextPath()+"/error.up");
+			//SQL 오류 시
+			String message = "에러발생 ;P";
+	        String loc = "javascript:history.back()";
+	         
+	        request.setAttribute("message", message);
+	        request.setAttribute("loc", loc);
+	         
+	      //super.setRedirect(false);
+	        super.setViewPage("/WEB-INF/msg.jsp");
+			
 		}
 
 	}
