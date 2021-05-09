@@ -57,7 +57,7 @@ public class MemberRegisterAction extends AbstractController {
 					request.setAttribute("pwd", pwd);
 					
 					HttpSession session = request.getSession();
-					session.setAttribute("loginuser", loginuser);
+					session.setAttribute("loginuser", loginuser);	// 자동로그인
 					
 					String message = userid+"님 ladies and gents 에 가입을 환영합니다!";
 					String loc = request.getContextPath()+"/home.to";  // 로그인된 상태로 홈으로 이동
