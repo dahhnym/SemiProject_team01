@@ -352,7 +352,7 @@ $(document).ready(function(){
 									return;
 								}
 								else if(json.n==0){
-									alert("해당 상품은 이미 장바구니에 존재합니다.");
+									alert("해당 상품은 이미 위시리스트에 존재합니다.");
 									return;
 								}
 							},
@@ -508,12 +508,6 @@ $(document).ready(function(){
     	
     });
     
-    // 새로고침
-    if(self.name!='reload'){
-        self.name='reload'
-        self.location.reload();
-     } else self.name="";
-
 }); // end of $(document).ready(function(){})-------
 
 	
@@ -1321,7 +1315,7 @@ $(document).ready(function(){
 		</div>
 
 </div>
-
+</div>
 <div class="cartform">
 </div>	
 
