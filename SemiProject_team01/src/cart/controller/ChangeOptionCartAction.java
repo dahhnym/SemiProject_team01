@@ -41,19 +41,19 @@ public class ChangeOptionCartAction extends AbstractController {
 			int n = cdao.changeOptionCart(oldpdetailnum,newpdetailnum,userid);
 		
 
-		      JSONObject jsobj = new JSONObject();
+		    JSONObject jsobj = new JSONObject();
 				
-				jsobj.put("n", n);
+			jsobj.put("n", n);
 				 
-				String json = jsobj.toString(); // 문자열 형태로 변환해줌
+			String json = jsobj.toString(); 
 				 
-				request.setAttribute("json", json);
+			request.setAttribute("json", json);
 			
-				super.setRedirect(false);
-				super.setViewPage("/WEB-INF/jsonview.jsp");
+			super.setRedirect(false);
+			super.setViewPage("/WEB-INF/jsonview.jsp");
 			
 			
-			}
+		}
 	}
 
 }

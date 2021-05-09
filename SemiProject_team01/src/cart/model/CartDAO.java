@@ -344,7 +344,6 @@ public class CartDAO implements InterCartDAO {
 	        rs = pstmt.executeQuery();
 			
 	        if(rs.next()) {
-	        	// 원래 있던 제품을 제품을 장바구니에 추가로 넣을 때
 	        	 int cartnum = rs.getInt(1); 
 	        	
 	        	sql= " update tbl_cart set oqty = oqty + 1 " 
@@ -361,33 +360,33 @@ public class CartDAO implements InterCartDAO {
 	        }
 	        
 	        else{
-	        	// 장바구니에 존재하지 않는 새로운 제품을 넣고자 하는 경우
+
 	        	sql = " select pqty " + 
 					  " from tbl_proddetail " +  
 					  " where pdetailnum= ? ";
-	        	// 제품 수량알아오기
+
 				pstmt = conn.prepareStatement(sql);
 		        pstmt.setInt(1, Integer.parseInt(pdetailnum));
 	          
 		        rs = pstmt.executeQuery();
 			
 		        if(rs.next()) {
-		        int pqty = rs.getInt(1);
-	        	if(pqty==0) {
-	        		n=0; // 제품 수량이 0이면 결과값 0주기
-	        	}
-	        	else {
-		        	sql = " insert into tbl_cart(cartnum, fk_userid, fk_pnum, oqty,fk_pdetailnum) "
-		                    + " values(seq_cart_num.nextval, ?, ?, 1, ?) ";
-		        
-		        	pstmt = conn.prepareStatement(sql);
-		        	pstmt.setString(1, userid);
-		        	pstmt.setInt(2,Integer.parseInt(fk_pnum));
-		        	pstmt.setInt(3, Integer.parseInt(pdetailnum));
-		        
-		        	n = pstmt.executeUpdate();
-	        	}
-	        }
+			        int pqty = rs.getInt(1);
+		        	if(pqty==0) {
+		        		n=0; 
+		        	}
+		        	else {
+			        	sql = " insert into tbl_cart(cartnum, fk_userid, fk_pnum, oqty,fk_pdetailnum) "
+			                    + " values(seq_cart_num.nextval, ?, ?, 1, ?) ";
+			        
+			        	pstmt = conn.prepareStatement(sql);
+			        	pstmt.setString(1, userid);
+			        	pstmt.setInt(2,Integer.parseInt(fk_pnum));
+			        	pstmt.setInt(3, Integer.parseInt(pdetailnum));
+			        
+			        	n = pstmt.executeUpdate();
+		        	}
+		        }
 	        }
 		}finally {
 			close();
